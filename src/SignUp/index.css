@@ -1,0 +1,279 @@
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  width: 320px;
+  background: #fff;
+  padding: 30px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.title-step {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.logo-section {
+  margin-bottom: 24px;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  display: block;
+}
+
+.logo-text {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ff649b;
+  margin-top: 8px;
+}
+
+.input-field {
+  margin-bottom: 12px;
+  position: relative;
+}
+
+input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+  color: #333;
+  outline: none;
+}
+
+input::placeholder {
+  color: #a0a0a0;
+}
+
+.id-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.id-field input {
+  flex-grow: 1;
+  margin-bottom: 0;
+}
+
+.btn-check {
+  background-color: #ff649b;
+  color: white;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.btn-check:hover {
+  background-color: #f0508a;
+}
+
+/* 비밀번호 필드 스타일 */
+.pw-field {
+  display: flex;
+  align-items: center;
+}
+
+.pw-field input {
+  flex-grow: 1;
+  padding-right: 40px;
+}
+
+.toggle-pw {
+  position: absolute;
+  right: 5px;
+  top: 2px;
+  cursor: pointer;
+}
+
+.toggle-icon {
+  width: 20px;
+  height: auto;
+}
+
+.msg-error {
+  font-size: 0.75rem;
+  color: #ff649b;
+  text-align: left;
+  margin-top: -8px;
+  margin-bottom: 12px;
+}
+
+/* 커스텀 셀렉트 박스 스타일 */
+.select-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.select-wrap.two-col {
+  display: flex;
+  justify-content: space-between;
+}
+
+.select-group {
+  width: 49%;
+}
+
+.select-box {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.arrow {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.options-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+  margin-top: 4px;
+}
+
+.option-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.option-item:hover {
+  background-color: #f5f5f5;
+}
+
+.option-item.disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 버튼 스타일 */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #ff649b;
+  color: white;
+  transition: background-color 0.2s;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+
+.btn-submit:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+  color: #a0a0a0;
+}
+
+.link-login {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 20px;
+}
+
+.link-login a {
+  color: #ff649b;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link-login a:hover {
+  text-decoration: underline;
+}
+
+/* 카테고리 선택 페이지 스타일 */
+.category-wrap {
+  text-align: left;
+  margin-top: -10px;
+}
+
+.category-text {
+  font-size: 0.9rem;
+  color: #5c5c5c;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.category-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  margin-top: 2rem;
+}
+
+.category-item {
+  background-color: #ffffff;
+  color: #5c5c5c;
+  padding: 10px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #d6d6d7;
+  box-sizing: border-box;
+}
+
+.category-item:hover {
+  background-color: #e0e0e0;
+}
+
+.category-item.active {
+  background-color: #ff649b;
+  color: white;
+  border-color: #ff649b;
+}
