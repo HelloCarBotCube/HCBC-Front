@@ -1,0 +1,164 @@
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8f8f8;
+}
+.all {
+  font-family: pretendard;
+  width: 512px;
+  height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  background-color: #ffffff;
+  transform: scale(0.8);
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.inputId {
+  margin-top: 36px;
+  padding: 0px 50px;
+}
+input {
+  width: 256px;
+  height: 56px;
+  border-radius: 16px;
+  border: solid 1px #d6d6d7;
+  padding: 0px 16px;
+  font-size: 16px;
+  font-weight: 500;
+}
+input:focus {
+  outline: none;
+  border: solid 1px #ff6b9f;
+}
+.footer {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  margin-top: 20px;
+}
+.name {
+  font-weight: 900;
+  font-size: 40px;
+  color: #ff99b8;
+  gap: 12px;
+  width: 127px;
+  height: 48px;
+  position: relative;
+  left: 5px;
+}
+button {
+  width: 348px;
+  height: 60px;
+  border-radius: 16px;
+  border: none;
+  background-color: #ff6b9f;
+  margin-top: 60px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+button:hover {
+  background-color: #ff4f8d;
+}
+.link {
+  text-decoration: none;
+  color: #ff6b9f;
+  font-weight: 700;
+  font-size: 16px;
+}
+.not {
+  font-weight: 500;
+  font-size: 16px;
+}
+svg {
+  width: 80px;
+  height: 80px;
+}
+.message {
+  color: #e94253;
+  font-weight: 500;
+  font-size: medium;
+}
+#message {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 348px;
+  margin-top: 4px;
+  min-height: 24px;
+}
+
+.inputBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputBox input {
+  width: 256px;
+  height: 56px;
+  border-radius: 16px;
+  border: solid 1px #d6d6d7;
+  padding: 0 50px 0 40px; /* 왼쪽 40px, 오른쪽 50px */
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.inputBox input:focus {
+  outline: none;
+  border: solid 1px #ff6b9f;
+}
+
+/* 눈 아이콘 */
+.pwToggle {
+  position: absolute;
+  right: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pwToggle svg {
+  width: 24px;
+  height: 24px;
+  fill: #858486;
+}
+.pwToggle:hover svg {
+  fill: #ff6b9f;
+}
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  top: 70%; /* 아이콘을 기본적으로 수직 중앙 */
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.idIcon {
+  width: 20px;
+  height: 20px;
+}
+.pwIcon {
+  width: 16px;
+  height: 20px;
+  transform: translateY(-10px);
+}
+.show {
+  width: 50px;
+  height: 50px;
+}
+.notShow {
+  width: 20px;
+  height: 20px;
+}
