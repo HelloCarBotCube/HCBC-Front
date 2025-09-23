@@ -27,10 +27,10 @@ body {
 }
 .inputId {
   margin-top: 36px;
-  padding: 0px 50px;
+  padding: 0px 500px;
 }
 input {
-  width: 100em;
+  width: 348px;
   height: 56px;
   border-radius: 16px;
   border: solid 1px #d6d6d7;

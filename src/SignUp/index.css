@@ -19,7 +19,7 @@ body {
   width: 320px;
   background: #fff;
   padding: 30px 24px;
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   text-align: center;
 }
@@ -59,7 +59,7 @@ input {
   width: 100%;
   padding: 12px 14px;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 16px;
   box-sizing: border-box;
   font-size: 0.95rem;
   color: #333;
@@ -82,11 +82,11 @@ input::placeholder {
 }
 
 .btn-check {
-  background-color: #ff649b;
+  background-color: #ff6b9f;
   color: white;
   padding: 10px 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 16px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -94,7 +94,7 @@ input::placeholder {
 }
 
 .btn-check:hover {
-  background-color: #f0508a;
+  background-color: #ff99b8;
 }
 
 /* 비밀번호 필드 스타일 */
@@ -122,7 +122,7 @@ input::placeholder {
 
 .msg-error {
   font-size: 0.75rem;
-  color: #ff649b;
+  color: #ff6b9f;
   text-align: left;
   margin-top: -8px;
   margin-bottom: 12px;
@@ -149,7 +149,7 @@ input::placeholder {
   width: 100%;
   padding: 12px 14px;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 16px;
   background-color: #fff;
   cursor: pointer;
   display: flex;
@@ -173,7 +173,7 @@ input::placeholder {
   max-height: 150px;
   overflow-y: auto;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 16px;
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   z-index: 10;
@@ -201,11 +201,11 @@ input::placeholder {
   width: 100%;
   padding: 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: 16px;
   font-size: 1.05rem;
   font-weight: bold;
   cursor: pointer;
-  background-color: #ff649b;
+  background-color: #ff6b9f;
   color: white;
   transition: background-color 0.2s;
   box-sizing: border-box;
@@ -225,7 +225,7 @@ input::placeholder {
 }
 
 .link-login a {
-  color: #ff649b;
+  color: #ff6b9f;
   text-decoration: none;
   font-weight: bold;
 }
@@ -273,7 +273,7 @@ input::placeholder {
 }
 
 .category-item.active {
-  background-color: #ff649b;
+  background-color: #ff6b9f;
   color: white;
-  border-color: #ff649b;
+  border-color: #ff6b9f;
 }
