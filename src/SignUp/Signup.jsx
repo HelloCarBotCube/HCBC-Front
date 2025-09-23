@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./index.css";
 
 // SVG 로고 컴포넌트
@@ -465,7 +465,7 @@ const App = () => {
   };
 
   return (
-    <div className="wrap">
+    <div className="signup-page">
       <div className="card">
         <div className="logo-section">
           <HcbcLogo />
