@@ -1,6 +1,7 @@
 body {
+  transform: scale(0.6);
   font-family: "Pretendard";
-  background-color: #f9f9f9;
+  background-color: #F8F8F8;
   margin: 0;
   display: flex;
   justify-content: center;
@@ -16,73 +17,55 @@ body {
 }
 
 .card {
-  width: 320px;
+  width: 376px;
   background: #fff;
-  padding: 30px 24px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 40px 68px;
+  border-radius: 20px;
   text-align: center;
 }
 
-.title-step {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #333;
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-
-.logo-section {
-  margin-bottom: 24px;
-}
-
 .logo {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   margin: 0 auto;
   display: block;
 }
 
 .logo-text {
-  font-size: 2rem;
+  font-size: 40px;
   font-weight: 900;
   color: #ff99b8;
-  margin-top: 8px;
+  margin-top: 12px;
+  margin-bottom: 44px;
 }
 
-.input-field {
-  margin-bottom: 12px;
+.input-field {  
+  margin-bottom: 24px;
   position: relative;
+  width: 376px;
+  height: 56px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 input {
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #e0e0e0;
+  padding: 0px 20px;  
+  border: 1px solid #d6d6d7;
   border-radius: 16px;
   box-sizing: border-box;
-  font-size: 0.95rem;
-  color: #333;
+  font-size: 16px;
+  color: #5c5c5c;
   outline: none;
 }
 
 input::placeholder {
-  color: #a0a0a0;
-}
-
-.id-field {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.id-field input {
-  flex-grow: 1;
-  margin-bottom: 0;
+  color: #858486;
+  font-weight: 400;
 }
 
 .btn-check {
-  background-color: #ff6b9f;
+  background-color: #FF6B9F;
   color: white;
   padding: 10px 12px;
   border: none;
@@ -94,10 +77,9 @@ input::placeholder {
 }
 
 .btn-check:hover {
-  background-color: #ff99b8;
+  background-color: #ff4f8d;
 }
 
-/* 비밀번호 필드 스타일 */
 .pw-field {
   display: flex;
   align-items: center;
@@ -128,17 +110,19 @@ input::placeholder {
   margin-bottom: 12px;
 }
 
-/* 커스텀 셀렉트 박스 스타일 */
 .select-wrap {
   position: relative;
-  width: 100%;
-  margin-bottom: 12px;
+  width: 376px;
+  margin-bottom: 24px;
   text-align: left;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .select-wrap.two-col {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 0px;
 }
 
 .select-group {
@@ -147,17 +131,19 @@ input::placeholder {
 
 .select-box {
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #e0e0e0;
+  height: 56px;
+  padding: 0px 20px;
+  border: 1px solid #d6d6d7;
   border-radius: 16px;
   background-color: #fff;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.95rem;
-  color: #333;
+  font-size: 16px;
+  color: #858486;
   box-sizing: border-box;
+  font-weight: 400;
 }
 
 .arrow {
@@ -172,19 +158,19 @@ input::placeholder {
   width: 100%;
   max-height: 150px;
   overflow-y: auto;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #d6d6d7;
   border-radius: 16px;
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   z-index: 10;
   margin-top: 4px;
+  font-weight: 400;
 }
 
 .option-item {
   padding: 10px 14px;
   cursor: pointer;
-  font-size: 0.95rem;
-  color: #333;
+  font-size: 16px;
+  color: #5c5c5c;
 }
 
 .option-item:hover {
@@ -192,49 +178,50 @@ input::placeholder {
 }
 
 .option-item.disabled {
-  color: #ccc;
+  color: #5c5c5c;
   cursor: not-allowed;
 }
 
-/* 버튼 스타일 */
 .btn-submit {
-  width: 100%;
+  width: 376px;
   padding: 14px;
   border: none;
   border-radius: 16px;
-  font-size: 1.05rem;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
   background-color: #ff6b9f;
   color: white;
   transition: background-color 0.2s;
   box-sizing: border-box;
-  margin-top: 20px;
+  margin-top: 60px;
+  height: 60px;
 }
 
 .btn-submit:disabled {
-  background-color: #e0e0e0;
+  background-color: #d6d6d7;
   cursor: not-allowed;
   color: #a0a0a0;
 }
 
 .link-login {
-  font-size: 0.85rem;
+  font-size: 16px;
   color: #888;
-  margin-top: 20px;
+  margin-top: 24px;
+  font-weight: 500;
+  margin-bottom: 4px;
 }
 
 .link-login a {
   color: #ff6b9f;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .link-login a:hover {
   text-decoration: underline;
 }
 
-/* 카테고리 선택 페이지 스타일 */
 .category-wrap {
   text-align: left;
   margin-top: -10px;
@@ -269,7 +256,7 @@ input::placeholder {
 }
 
 .category-item:hover {
-  background-color: #e0e0e0;
+  background-color: #d6d6d7;
 }
 
 .category-item.active {
