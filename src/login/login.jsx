@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./index.css";
 function App() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
@@ -149,7 +150,7 @@ function App() {
       </button>
       <div className="footer">
         <span className="not">아직 회원이 아니라면?</span>
-        <a className="link" href="#">
+        <a className="link" href="/signup">
           회원가입하기
         </a>
       </div>

@@ -77,7 +77,7 @@ const EyeHide = (props) => (
 const dongData = {
   광산구: [
     "도산동",
-    "등림동",
+    "동곡동",
     "본량동",
     "비아동",
     "삼도동",
@@ -86,14 +86,14 @@ const dongData = {
     "신가동",
     "신창동",
     "신흥동",
+    "어룡동",
     "우산동",
     "운남동",
     "월곡동",
     "임곡동",
     "첨단동",
-    "평동",
     "하남동",
-    "하산동",
+    "평동",
   ],
   남구: [
     "대촌동",
@@ -102,7 +102,6 @@ const dongData = {
     "봉선동",
     "사직동",
     "송암동",
-    "송하동",
     "양림동",
     "월산동",
     "일산동",
@@ -116,23 +115,33 @@ const dongData = {
     "산수동",
     "서남동",
     "지산동",
-    "학운동",
+    "지원동",
     "지원동",
     "충장동",
+    "학운동",
+    "학동",
   ],
   북구: [
     "건국동",
+    "동림동",
     "두암동",
     "매곡동",
+    "문화동",
     "문흥동",
     "삼각동",
     "석곡동",
+    "신안동",
+    "신용동",
+    "양상동",
+    "오치동",
     "용봉동",
     "운암동",
     "우산동",
     "일곡동",
     "임동",
+    "중앙동",
     "중흥동",
+    "풍향동",
   ],
   서구: [
     "광천동",
@@ -140,7 +149,9 @@ const dongData = {
     "농성동",
     "동천동",
     "상무동",
-    "쌍촌동",
+    "서창동",
+    "양동",
+    "유덕동",
     "치평동",
     "풍암동",
     "화정동",
@@ -276,15 +287,21 @@ const App = () => {
                 <div className="options-list">
                   <div
                     className="option-item"
-                    onClick={() => handleGenderSelect("남")}
+                    onClick={() => handleGenderSelect("남자")}
                   >
-                    남
+                    남자
                   </div>
                   <div
                     className="option-item"
-                    onClick={() => handleGenderSelect("여")}
+                    onClick={() => handleGenderSelect("여자")}
                   >
-                    여
+                    여자
+                  </div>
+                  <div
+                    className="option-item"
+                    onClick={() => handleGenderSelect("기타")}
+                  >
+                    기타
                   </div>
                 </div>
               )}
@@ -345,7 +362,7 @@ const App = () => {
               다음으로
             </button>
             <p className="link-login">
-              이미 회원이라면? <a href="#">로그인하기</a>
+              이미 회원이라면? <a href="/">로그인하기</a>
             </p>
           </>
         );
