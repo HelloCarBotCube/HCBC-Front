@@ -1,6 +1,7 @@
 body {
+  transform: scale(0.6);
   font-family: "Pretendard";
-  background-color: #f8f8f8;
+  background-color: #F8F8F8;
   margin: 0;
   display: flex;
   justify-content: center;
@@ -15,7 +16,6 @@ body {
   align-items: center;
   transform: scale(0.8);
 }
-
 .card {
   width: 376px;
   background: #fff;
@@ -23,14 +23,16 @@ body {
   border-radius: 20px;
   text-align: center;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 17c591bb4dc733cf4a2a590b1b15503d6f4d0c7f
 .logo {
   width: 80px;
   height: 80px;
   margin: 0 auto;
   display: block;
 }
-
 .logo-text {
   font-size: 40px;
   font-weight: 900;
@@ -38,8 +40,12 @@ body {
   margin-top: 12px;
   margin-bottom: 44px;
 }
+<<<<<<< HEAD
 
 .input-field {
+=======
+.input-field {  
+>>>>>>> 17c591bb4dc733cf4a2a590b1b15503d6f4d0c7f
   margin-bottom: 24px;
   position: relative;
   width: 376px;
@@ -47,10 +53,13 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
-
 input {
   width: 100%;
+<<<<<<< HEAD
   padding: 0px 20px;
+=======
+  padding: 0px 20px;  
+>>>>>>> 17c591bb4dc733cf4a2a590b1b15503d6f4d0c7f
   border: 1px solid #d6d6d7;
   border-radius: 16px;
   box-sizing: border-box;
@@ -65,7 +74,7 @@ input::placeholder {
 }
 
 .btn-check {
-  background-color: #ff6b9f;
+  background-color: #FF6B9F;
   color: white;
   padding: 10px 12px;
   border: none;
