@@ -1,5 +1,6 @@
 import { useState } from "react";
-function App() {
+import "./index.css";
+function Login() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [message, setMessage] = useState("");
@@ -149,9 +150,7 @@ function App() {
       </button>
       <div className="footer">
         <span className="not">아직 회원이 아니라면?</span>
-        <a className="link" href="#">
-          회원가입하기
-        </a>
+        <Link to="/Signup"> 회원가입하기</Link>
       </div>
     </div>
   );

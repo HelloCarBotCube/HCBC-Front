@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./index.css";
 
 // SVG 로고 컴포넌트
@@ -166,7 +167,7 @@ const categories = [
 ];
 
 // 메인 앱 컴포넌트
-const App = () => {
+const Signup = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -460,4 +461,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Signup;
