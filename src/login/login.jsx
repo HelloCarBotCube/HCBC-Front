@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./index.css";
+import { Link } from "react-router-dom";
 function Login() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
@@ -150,9 +151,10 @@ function Login() {
       </button>
       <div className="footer">
         <span className="not">아직 회원이 아니라면?</span>
-        <Link to="/Signup"> 회원가입하기</Link>
+        <Link to="/signup"> 회원가입하기</Link>
       </div>
     </div>
   );
 }
-export default App;
+
+export default Login;
