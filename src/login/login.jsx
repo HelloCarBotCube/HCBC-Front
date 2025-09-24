@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./index.css";
+
 function App() {
+  const navigate = useNavigate();
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [message, setMessage] = useState("");
@@ -8,13 +11,14 @@ function App() {
   const handleLogin = () => {
     // 서버 없이 프론트에서 직접 검사
     if (id === "test" && pw === "1234") {
+      // 로그인 성공 시 메인 페이지로 이동
+      navigate("/main");
+    } else {
       setMessage("등록된 회원을 찾을 수 없습니다");
-      // 나중에 페이지 이동이나 상태 저장 가능
-      // window.location.href = "/home";
     }
   };
   return (
-    <div className="all">
+    <div className="login-page">
       <svg
         viewBox="0 0 1092 1092"
         fill="none"
