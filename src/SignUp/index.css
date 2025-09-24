@@ -271,13 +271,11 @@ input::placeholder {
 .category-item:hover {
   background-color: #d6d6d7;
 }
-
 .category-item.active {
   background-color: #ff6b9f;
   color: white;
   border-color: #ff6b9f;
 }
-
 svg {
     width: 40px;
     height: 40px;

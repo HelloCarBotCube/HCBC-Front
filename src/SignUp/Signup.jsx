@@ -156,7 +156,6 @@ const dongData = {
     "화정동",
   ],
 };
-
 // 카테고리 데이터
 const categories = [
   "운동",
