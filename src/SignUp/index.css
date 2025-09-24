@@ -8,13 +8,11 @@ body {
   align-items: center;
   min-height: 100vh;
 }
-
-.signup-page {
+.wrap {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: scale(0.8);
 }
 .card {
   width: 376px;
@@ -23,10 +21,6 @@ body {
   border-radius: 20px;
   text-align: center;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 17c591bb4dc733cf4a2a590b1b15503d6f4d0c7f
 .logo {
   width: 80px;
   height: 80px;
@@ -41,12 +35,7 @@ body {
   margin-top: 12px;
   margin-bottom: 44px;
 }
-<<<<<<< HEAD
-
-.input-field {
-=======
 .input-field {  
->>>>>>> 17c591bb4dc733cf4a2a590b1b15503d6f4d0c7f
   margin-bottom: 24px;
   position: relative;
   width: 376px;
@@ -56,11 +45,7 @@ body {
 }
 input {
   width: 100%;
-<<<<<<< HEAD
-  padding: 0px 20px;
-=======
   padding: 0px 20px;  
->>>>>>> 17c591bb4dc733cf4a2a590b1b15503d6f4d0c7f
   border: 1px solid #d6d6d7;
   border-radius: 16px;
   box-sizing: border-box;
@@ -286,11 +271,13 @@ input::placeholder {
 .category-item:hover {
   background-color: #d6d6d7;
 }
+
 .category-item.active {
   background-color: #ff6b9f;
   color: white;
   border-color: #ff6b9f;
 }
+
 svg {
     width: 40px;
     height: 40px;
