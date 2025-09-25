@@ -30,7 +30,7 @@ body {
   padding: 0px 50px;
 }
 input {
-  width: 256px;
+  width: 100em;
   height: 56px;
   border-radius: 16px;
   border: solid 1px #d6d6d7;
