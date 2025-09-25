@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./index.css";
 
 // SVG 로고 컴포넌트
@@ -40,6 +41,7 @@ const HcbcLogo = () => {
 // 비밀번호 숨기기 아이콘 SVG 컴포넌트 (눈 모양)
 const EyeShow = (props) => (
   <svg
+    className="eyeSvg"
     width="40"
     height="40"
     viewBox="0 0 40 40"
@@ -58,6 +60,7 @@ const EyeShow = (props) => (
 // 비밀번호 보이기 아이콘 SVG 컴포넌트 (눈 가림)
 const EyeHide = (props) => (
   <svg
+    className="eyeSvg"
     width="40"
     height="40"
     viewBox="0 0 40 40"
@@ -176,6 +179,7 @@ const categories = [
 
 // 메인 앱 컴포넌트
 const App = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -449,7 +453,10 @@ const App = () => {
             </div>
             <button
               className="btn-submit"
-              onClick={() => alert("회원가입 완료!")}
+              onClick={() => {
+                alert("회원가입이 완료되었습니다!");
+                navigate("/"); // 로그인 페이지로 이동
+              }}
               disabled={!isStep3Valid}
             >
               회원가입하기
