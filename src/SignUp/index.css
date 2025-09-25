@@ -1,103 +1,100 @@
 body {
   font-family: "Pretendard";
-  background-color: #f9f9f9;
+  background-color: #f8f8f8;
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
-
 .wrap {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .card {
-  width: 320px;
+  width: 376px;
   background: #fff;
-  padding: 30px 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 40px 68px;
+  border-radius: 20px;
   text-align: center;
+  transform: scale(0.8);
 }
-
-.title-step {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #333;
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-
-.logo-section {
-  margin-bottom: 24px;
-}
-
 .logo {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   margin: 0 auto;
   display: block;
 }
 
 .logo-text {
-  font-size: 2rem;
+  font-size: 40px;
   font-weight: 900;
   color: #ff99b8;
-  margin-top: 8px;
+  margin-top: 12px;
+  margin-bottom: 44px;
 }
-
 .input-field {
-  margin-bottom: 12px;
+  margin-bottom: 24px;
   position: relative;
+  width: 376px;
+  height: 56px;
+  margin-left: auto;
+  margin-right: auto;
 }
-
 input {
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  padding: 0px 20px;
+  border: 1px solid #d6d6d7;
+  border-radius: 16px;
   box-sizing: border-box;
-  font-size: 0.95rem;
-  color: #333;
+  font-size: 16px;
+  color: #5c5c5c;
   outline: none;
 }
 
 input::placeholder {
-  color: #a0a0a0;
+  color: #858486;
+  font-weight: 400;
 }
 
 .id-field {
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  margin-bottom: 24px;
 }
 
 .id-field input {
   flex-grow: 1;
-  margin-bottom: 0;
 }
 
 .btn-check {
-  background-color: #ff649b;
+  background-color: #ff6b9f;
   color: white;
   padding: 10px 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 16px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: background-color 0.2s;
   white-space: nowrap;
+
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 0 0;
+  width: 90px;
+  font-weight: 400;
 }
 
 .btn-check:hover {
-  background-color: #f0508a;
+  background-color: #ff4f8d;
 }
 
-/* 비밀번호 필드 스타일 */
 .pw-field {
   display: flex;
   align-items: center;
@@ -110,35 +107,37 @@ input::placeholder {
 
 .toggle-pw {
   position: absolute;
-  right: 5px;
-  top: 2px;
+  right: 15px;
+  top: 8px;
   cursor: pointer;
 }
 
 .toggle-icon {
-  width: 20px;
+  width: 40px;
   height: auto;
 }
 
 .msg-error {
   font-size: 0.75rem;
-  color: #ff649b;
+  color: #ff6b9f;
   text-align: left;
   margin-top: -8px;
   margin-bottom: 12px;
 }
 
-/* 커스텀 셀렉트 박스 스타일 */
 .select-wrap {
   position: relative;
-  width: 100%;
-  margin-bottom: 12px;
+  width: 376px;
+  margin-bottom: 24px;
   text-align: left;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .select-wrap.two-col {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 .select-group {
@@ -147,17 +146,19 @@ input::placeholder {
 
 .select-box {
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  height: 56px;
+  padding: 0px 20px;
+  border: 1px solid #d6d6d7;
+  border-radius: 16px;
   background-color: #fff;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.95rem;
-  color: #333;
+  font-size: 16px;
+  color: #858486;
   box-sizing: border-box;
+  font-weight: 400;
 }
 
 .arrow {
@@ -172,19 +173,19 @@ input::placeholder {
   width: 100%;
   max-height: 150px;
   overflow-y: auto;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid #d6d6d7;
+  border-radius: 16px;
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   z-index: 10;
   margin-top: 4px;
+  font-weight: 400;
 }
 
 .option-item {
   padding: 10px 14px;
   cursor: pointer;
-  font-size: 0.95rem;
-  color: #333;
+  font-size: 16px;
+  color: #5c5c5c;
 }
 
 .option-item:hover {
@@ -192,58 +193,59 @@ input::placeholder {
 }
 
 .option-item.disabled {
-  color: #ccc;
+  color: #5c5c5c;
   cursor: not-allowed;
 }
 
-/* 버튼 스타일 */
 .btn-submit {
-  width: 100%;
+  width: 376px;
   padding: 14px;
   border: none;
-  border-radius: 8px;
-  font-size: 1.05rem;
+  border-radius: 16px;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
-  background-color: #ff649b;
+  background-color: #ff6b9f;
   color: white;
   transition: background-color 0.2s;
   box-sizing: border-box;
-  margin-top: 20px;
+  margin-top: 40px;
+  height: 60px;
 }
 
 .btn-submit:disabled {
-  background-color: #e0e0e0;
+  background-color: #d6d6d7;
   cursor: not-allowed;
   color: #a0a0a0;
 }
 
 .link-login {
-  font-size: 0.85rem;
+  font-size: 16px;
   color: #888;
-  margin-top: 20px;
+  margin-top: 24px;
+  font-weight: 500;
+  margin-bottom: 4px;
 }
 
 .link-login a {
-  color: #ff649b;
+  color: #ff6b9f;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .link-login a:hover {
   text-decoration: underline;
 }
 
-/* 카테고리 선택 페이지 스타일 */
 .category-wrap {
   text-align: left;
   margin-top: -10px;
 }
 
 .category-text {
-  font-size: 0.9rem;
+  font-size: 16px;
   color: #5c5c5c;
-  margin-bottom: 12px;
+  margin-bottom: 0px;
   display: flex;
   justify-content: center;
 }
@@ -252,16 +254,15 @@ input::placeholder {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 20px;
-  margin-top: 2rem;
+  margin-top: 32px;
 }
 
 .category-item {
   background-color: #ffffff;
   color: #5c5c5c;
-  padding: 10px 14px;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  padding: 15px 18px;
+  border-radius: 100px;
+  font-size: 15px;
   cursor: pointer;
   transition: all 0.2s;
   border: 1px solid #d6d6d7;
@@ -269,11 +270,16 @@ input::placeholder {
 }
 
 .category-item:hover {
-  background-color: #e0e0e0;
+  background-color: #d6d6d7;
 }
 
 .category-item.active {
-  background-color: #ff649b;
+  background-color: #ff6b9f;
   color: white;
-  border-color: #ff649b;
+  border-color: #ff6b9f;
+}
+
+.eyeSvg {
+  width: 40px;
+  height: 40px;
 }

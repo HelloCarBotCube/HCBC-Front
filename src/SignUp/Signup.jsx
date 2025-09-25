@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./index.css";
 
 // SVG 로고 컴포넌트
@@ -40,6 +41,7 @@ const HcbcLogo = () => {
 // 비밀번호 숨기기 아이콘 SVG 컴포넌트 (눈 모양)
 const EyeShow = (props) => (
   <svg
+    className="eyeSvg"
     width="40"
     height="40"
     viewBox="0 0 40 40"
@@ -58,6 +60,7 @@ const EyeShow = (props) => (
 // 비밀번호 보이기 아이콘 SVG 컴포넌트 (눈 가림)
 const EyeHide = (props) => (
   <svg
+    className="eyeSvg"
     width="40"
     height="40"
     viewBox="0 0 40 40"
@@ -92,8 +95,8 @@ const dongData = {
     "월곡동",
     "임곡동",
     "첨단동",
-    "하남동",
     "평동",
+    "하남동",
   ],
   남구: [
     "대촌동",
@@ -116,7 +119,6 @@ const dongData = {
     "서남동",
     "지산동",
     "지원동",
-    "지원동",
     "충장동",
     "학운동",
     "학동",
@@ -135,8 +137,8 @@ const dongData = {
     "양상동",
     "오치동",
     "용봉동",
-    "운암동",
     "우산동",
+    "운암동",
     "일곡동",
     "임동",
     "중앙동",
@@ -157,7 +159,6 @@ const dongData = {
     "화정동",
   ],
 };
-
 // 카테고리 데이터
 const categories = [
   "운동",
@@ -178,6 +179,7 @@ const categories = [
 
 // 메인 앱 컴포넌트
 const App = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
@@ -451,7 +453,10 @@ const App = () => {
             </div>
             <button
               className="btn-submit"
-              onClick={() => alert("회원가입 완료!")}
+              onClick={() => {
+                alert("회원가입이 완료되었습니다!");
+                navigate("/"); // 로그인 페이지로 이동
+              }}
               disabled={!isStep3Valid}
             >
               회원가입하기
@@ -465,7 +470,7 @@ const App = () => {
   };
 
   return (
-    <div className="wrap">
+    <div className="signup-page">
       <div className="card">
         <div className="logo-section">
           <HcbcLogo />
