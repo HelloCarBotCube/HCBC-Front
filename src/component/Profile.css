@@ -1,48 +1,48 @@
-body {
+.p-container {
   background-color: #f8f8f8;
   margin: 0;
   font-family: "Pretendard", sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  max-height: 100vh;
-  
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  height: 100vh;
+  width: 100vw;
 }
 
-.p-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 .p-back {
-  align-self: flex-start;
-  margin: 64px 0 0 64px;
-  font-size: 20px;
+  grid-column: 1 / 2;
+  justify-self: start;
+  align-self: start;
+  margin-left: 32px;
+  margin-top: 32px;
+  font-size: 14px;
   color: #404040;
   cursor: pointer;
+  border: none; 
+  background-color: #f8f8f8;
+  padding: 0;
 }
 
 .p-wrap {
-  width: 100%;
+  grid-column: 2 / 3;
+  justify-self: center;
+  align-self: center; /* 수정: start → center */
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; /* flex-start → center */
 }
 
 .p-card {
-  width: 512px;
-  height: 992px;
+  width: 362px;
+  height: 702px;
   background: linear-gradient(#ff6b9f 0%, #ffffff 30%);
-  border-radius: 20px;
+  border-radius: 14px;
   text-align: center;
-  
 }
 
 .p-icon {
-  width: 150px;
-  height: 150px;
-  margin: 200px 0 66px 16px;
+  width: 106px;
+  height: 106px;
+  margin: 142px 0 32px 10px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -58,17 +58,17 @@ body {
   align-items: center;
   background: #FFFFFF;
   border: 1px solid #D6D6D7;
-  border-radius: 30px;  
-  padding: 16px 20px;
-  margin: 20px auto;
+  border-radius: 220px;  
+  padding: 12px 14px;
+  margin: 14px auto;
   transition: border 0.6s;
-  width: 392px;
-  height: 24px;
+  width: 282px;
+  height: 16px;
 }
 
 .p-field span {
   color: #858486;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -82,16 +82,17 @@ body {
   outline: none;
   background: transparent;
   color: #858486;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 500;
   font-family: 'pretendard', sans-serif;
+  padding: 0;
 }
 
 .p-edit,
 .p-apply {
   border: none;
   background: none;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: bold;
   color: #ff6b9f;
   cursor: pointer;
@@ -102,9 +103,4 @@ body {
 .p-edit :focus,
 .p-apply :focus {
   outline: none;
-}
-
-
-.p-back{
-  border: none;
 }

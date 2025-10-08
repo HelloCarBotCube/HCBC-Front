@@ -82,7 +82,7 @@ const Profile = () => {
   return (
     <div className="p-container">
       <button type="button" className="p-back" onClick={goHome}>
-        ← 홈으로 가기
+        &lt; 홈으로 가기
       </button>
 
       <div className="p-wrap">
