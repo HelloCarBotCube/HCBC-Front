@@ -1,0 +1,110 @@
+body {
+  background-color: #f8f8f8;
+  margin: 0;
+  font-family: "Pretendard", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-height: 100vh;
+  
+}
+
+.p-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.p-back {
+  align-self: flex-start;
+  margin: 64px 0 0 64px;
+  font-size: 20px;
+  color: #404040;
+  cursor: pointer;
+}
+
+.p-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.p-card {
+  width: 512px;
+  height: 992px;
+  background: linear-gradient(#ff6b9f 0%, #ffffff 30%);
+  border-radius: 20px;
+  text-align: center;
+  
+}
+
+.p-icon {
+  width: 150px;
+  height: 150px;
+  margin: 200px 0 66px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.p-icon img {
+  width: 100%;
+  height: 100%;
+}
+
+.p-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid #D6D6D7;
+  border-radius: 30px;  
+  padding: 16px 20px;
+  margin: 20px auto;
+  transition: border 0.6s;
+  width: 392px;
+  height: 24px;
+}
+
+.p-field span {
+  color: #858486;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.p-field:focus-within {
+  border: 1px solid #ff6b9f;
+}
+
+.p-field input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #858486;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: 'pretendard', sans-serif;
+}
+
+.p-edit,
+.p-apply {
+  border: none;
+  background: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff6b9f;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+}
+
+.p-edit :focus,
+.p-apply :focus {
+  outline: none;
+}
+
+
+.p-back{
+  border: none;
+}
