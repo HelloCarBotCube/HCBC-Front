@@ -149,7 +149,7 @@ function App() {
       <div id="message">
         <span className="message">{message} </span>
       </div>
-      <button type="submit" onClick={handleLogin}>
+      <button className="login-button" type="submit" onClick={handleLogin}>
         로그인
       </button>
       <div className="footer">
