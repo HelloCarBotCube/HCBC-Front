@@ -9,12 +9,24 @@ function App() {
   const [message, setMessage] = useState("");
   const [showPw, setshowPw] = useState(false);
   const handleLogin = () => {
-    // 서버 없이 프론트에서 직접 검사
-    if (id === "test" && pw === "1234") {
-      // 로그인 성공 시 메인 페이지로 이동
-      navigate("/main");
-    } else {
-      setMessage("등록된 회원을 찾을 수 없습니다");
+    setMessage("");
+    try {
+      const raw = localStorage.getItem("hcbc_users");
+      const users = raw ? JSON.parse(raw) : [];
+      if (!users || users.length === 0) {
+        setMessage("등록된 회원이 없습니다. 먼저 회원가입 해주세요.");
+        return;
+      }
+      const matched = users.find((u) => u.id === id && u.password === pw);
+      if (matched) {
+        // 로그인 성공
+        navigate("/main");
+      } else {
+        setMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
+      }
+    } catch (e) {
+      console.error("login error", e);
+      setMessage("로그인 중 오류가 발생했습니다.");
     }
   };
   return (
@@ -149,7 +161,7 @@ function App() {
       <div id="message">
         <span className="message">{message} </span>
       </div>
-      <button type="submit" onClick={handleLogin}>
+      <button className="login-button" type="submit" onClick={handleLogin}>
         로그인
       </button>
       <div className="footer">

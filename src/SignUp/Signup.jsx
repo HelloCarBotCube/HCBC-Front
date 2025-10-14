@@ -454,6 +454,50 @@ const App = () => {
             <button
               className="btn-submit"
               onClick={() => {
+                // 간단한 유효성 최종 검사
+                if (!isStep1Valid || !isStep2Valid || !isStep3Valid) {
+                  alert("입력값을 확인해주세요.");
+                  return;
+                }
+
+                const newUser = {
+                  name: formData.name,
+                  age: formData.age,
+                  gender: formData.gender,
+                  district: formData.district,
+                  dong: formData.dong,
+                  id: formData.id,
+                  // 보안: 실제 서비스에서는 평문 비밀번호를 localStorage에 저장하면 안됩니다.
+                  password: formData.password,
+                  categories: Array.from(formData.selectedCategories),
+                };
+
+                // 로컬 저장 예시: 'hcbc_users' 키로 배열에 저장
+                try {
+                  const raw = localStorage.getItem("hcbc_users");
+                  const users = raw ? JSON.parse(raw) : [];
+                  users.push(newUser);
+                  localStorage.setItem("hcbc_users", JSON.stringify(users));
+                } catch (e) {
+                  console.error("localStorage error", e);
+                  alert("로컬 저장에 실패했습니다.");
+                  return;
+                }
+
+                // 서버 전송 예시 (주석 처리됨) - 실제 서버가 있다면 아래 fetch를 사용
+                /*
+                fetch('https://example.com/api/signup', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(newUser),
+                })
+                  .then(res => res.json())
+                  .then(data => {
+                    console.log('server response', data);
+                  })
+                  .catch(err => console.error('server error', err));
+                */
+
                 alert("회원가입이 완료되었습니다!");
                 navigate("/"); // 로그인 페이지로 이동
               }}

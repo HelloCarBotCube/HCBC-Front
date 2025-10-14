@@ -213,6 +213,10 @@ input::placeholder {
   height: 60px;
 }
 
+.btn-submit:hover {
+  background-color: #ff4f8d;
+}
+
 .btn-submit:disabled {
   background-color: #d6d6d7;
   cursor: not-allowed;
@@ -221,7 +225,7 @@ input::placeholder {
 
 .link-login {
   font-size: 16px;
-  color: #888;
+  color: #5c5c5c;
   margin-top: 24px;
   font-weight: 500;
   margin-bottom: 4px;
@@ -231,10 +235,6 @@ input::placeholder {
   color: #ff6b9f;
   text-decoration: none;
   font-weight: 700;
-}
-
-.link-login a:hover {
-  text-decoration: underline;
 }
 
 .category-wrap {
