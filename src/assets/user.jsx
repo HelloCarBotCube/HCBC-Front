@@ -1,12 +1,6 @@
 export default function User() {
   return (
-    <svg
-      width="57"
-      height="55"
-      viewBox="0 0 57 55"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="57" height="55" viewBox="0 0 57 55" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M0 14.4737C0 6.48009 6.54353 0 14.6154 0H42.3846C50.4565 0 57 6.48009 57 14.4737V40.5263C57 48.5199 50.4565 55 42.3846 55H14.6154C6.54353 55 0 48.5199 0 40.5263V14.4737Z"
         fill="white"

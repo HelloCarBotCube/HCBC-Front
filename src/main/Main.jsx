@@ -1,7 +1,7 @@
-import List from "../component/List";
-import Random from "../component/Random";
-import User from "../component/User";
-import "./index.css";
+import List from '../component/List';
+import Random from '../component/Random';
+import User from '../component/User';
+import './index.css';
 
 export default function Main() {
   return (

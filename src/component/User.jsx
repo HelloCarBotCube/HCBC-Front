@@ -1,12 +1,12 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import "./User.css";
-import profileImg from "../assets/profile-h.svg";
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import './User.css';
+import profileImg from '../assets/profile-h.svg';
 
 const DEFAULT_USER = {
-  name: "한국",
-  handle: "@h4.zx7",
-  tags: ["🔞", "영화", "음악", "남자", "16살", "광산구 평동"],
+  name: '한국',
+  handle: '@h4.zx7',
+  tags: ['🔞', '영화', '음악', '남자', '16살', '광산구 평동'],
 };
 
 export default function User() {
@@ -16,7 +16,7 @@ export default function User() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("hcbc_user");
+      const raw = localStorage.getItem('hcbc_user');
       if (!raw) return;
       const u = JSON.parse(raw);
       setUser({
@@ -27,8 +27,7 @@ export default function User() {
             ? u.categories
             : DEFAULT_USER.tags,
       });
-    } catch {
-    }
+    } catch {}
   }, []);
   const PER_ROW = 3;
   const tags1 = (user.tags || []).slice(0, PER_ROW);
@@ -48,21 +47,25 @@ export default function User() {
           <div className="user-tag-card">
             <div className="user-tags user-tags1">
               {tags1.map((t, i) => (
-                <span key={`t1-${i}`} className="user-tag">{t}</span>
+                <span key={`t1-${i}`} className="user-tag">
+                  {t}
+                </span>
               ))}
             </div>
             {tags2.length > 0 && (
               <div className="user-tags user-tags2">
                 {tags2.map((t, i) => (
-                  <span key={`t2-${i}`} className="user-tag">{t}</span>
+                  <span key={`t2-${i}`} className="user-tag">
+                    {t}
+                  </span>
                 ))}
               </div>
             )}
           </div>
 
-          <button type="button" className="user-button" onClick={() =>
-            navigate("/Profile")
-          }>프로필</button>
+          <button type="button" className="user-button" onClick={() => navigate('/Profile')}>
+            프로필
+          </button>
         </div>
       </aside>
     </div>

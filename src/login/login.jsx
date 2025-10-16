@@ -1,37 +1,37 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./index.css";
-import EyeHide from "../assets/eyeHide";
-import EyeShow from "../assets/eyeShow";
-import PwIcon from "../assets/pwIcon";
-import IdIcon from "../assets/idIcon";
-import Logo from "../assets/logo";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './index.css';
+import EyeHide from '../assets/eyeHide';
+import EyeShow from '../assets/eyeShow';
+import PwIcon from '../assets/pwIcon';
+import IdIcon from '../assets/idIcon';
+import Logo from '../assets/logo';
 
 function App() {
   const navigate = useNavigate();
-  const [id, setId] = useState("");
-  const [pw, setPw] = useState("");
-  const [message, setMessage] = useState("");
+  const [id, setId] = useState('');
+  const [pw, setPw] = useState('');
+  const [message, setMessage] = useState('');
   const [showPw, setshowPw] = useState(false);
   const handleLogin = () => {
-    setMessage("");
+    setMessage('');
     try {
-      const raw = localStorage.getItem("hcbc_users");
+      const raw = localStorage.getItem('hcbc_users');
       const users = raw ? JSON.parse(raw) : [];
       if (!users || users.length === 0) {
-        setMessage("등록된 회원이 없습니다. 먼저 회원가입 해주세요.");
+        setMessage('등록된 회원이 없습니다. 먼저 회원가입 해주세요.');
         return;
       }
       const matched = users.find((u) => u.id === id && u.password === pw);
       if (matched) {
         // 로그인 성공
-        navigate("/main");
+        navigate('/main');
       } else {
-        setMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
+        setMessage('아이디 또는 비밀번호가 일치하지 않습니다.');
       }
     } catch (e) {
-      console.error("login error", e);
-      setMessage("로그인 중 오류가 발생했습니다.");
+      console.error('login error', e);
+      setMessage('로그인 중 오류가 발생했습니다.');
     }
   };
   return (
@@ -57,7 +57,7 @@ function App() {
             <PwIcon></PwIcon>
           </span>
           <input
-            type={showPw ? "text" : "password"}
+            type={showPw ? 'text' : 'password'}
             required
             placeholder="비밀번호"
             value={pw}
