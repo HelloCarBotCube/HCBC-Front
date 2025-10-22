@@ -2,6 +2,7 @@ import styles from './Random.module.css';
 
 export default function Random() {
   return (
+    <div className={styles.mainContainer}>
     <div className={styles.all}>
       <svg
         className={styles.logo}
@@ -35,9 +36,10 @@ export default function Random() {
       </svg>
       <div className={styles.queto}>오늘은 어떤 사람을 만나게 될까요?</div>
       <div className={styles.longQueto}>
-        어떤 인연이 기다리고 있을지 지금 확인해 보세요. 대화는 우연처럼 찾아옵니다.
+        어떤 인연이 기다리고 있을지 지금 확인해 보세요.<br></br> 대화는 우연처럼 찾아옵니다.
       </div>
       <button className={styles.randomButton}>랜덤매칭</button>
+    </div>
     </div>
   );
 }
