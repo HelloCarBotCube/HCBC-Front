@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './List.css';
 import User from '../assets/user';
 
-function Main() {
+export default function Main() {
   const navigate = useNavigate();
   const [chatList, setChatList] = useState([
     {
@@ -45,6 +45,9 @@ function Main() {
 
   const handleChatClick = (id) => console.log('Clicked:', id);
 
+  
+
+
   return (
     <div className="main-container">
       <div className="chat-box">
@@ -72,5 +75,3 @@ function Main() {
     </div>
   );
 }
-
-export default Main;
