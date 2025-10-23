@@ -43,21 +43,6 @@ function Main() {
     },
   ]);
 
-  const handleRandomMatch = () => {
-    const randomNames = ['한의준', '양은준', '한국', '박하민', '문강현'];
-    const randomMsgs = ['뭐하냐', '신나지마라', '공부하라고', '야르', '안녕하시게'];
-
-    const newChat = {
-      id: Date.now(),
-      username: randomNames[Math.floor(Math.random() * randomNames.length)],
-      userId: '@user' + Math.floor(Math.random() * 10000),
-      lastMessage: randomMsgs[Math.floor(Math.random() * randomMsgs.length)],
-      unread: true,
-    };
-
-    setChatList((prev) => [newChat, ...prev]);
-  };
-
   const handleChatClick = (id) => console.log('Clicked:', id);
 
   return (
