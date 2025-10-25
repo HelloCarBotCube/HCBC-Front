@@ -120,8 +120,6 @@ const App = () => {
   const [idCheckMessage, setIdCheckMessage] = useState('');
   const [isIdAvailable, setIsIdAvailable] = useState(false);
 
-  // axios 인스턴스: 서버 기본 주소(절대 URL)로 설정
-  // 개발환경에서 Vite proxy를 사용하지 않고 직접 백엔드로 요청을 보냅니다.
   const API = axios.create({
     baseURL: 'http://gsmsv-1.yujun.kr:27919/api/auth',
     headers: { 'Content-Type': 'application/json' },
@@ -129,8 +127,6 @@ const App = () => {
     timeout: 5000,
   });
 
-  // 성별 매핑: 프론트의 한글값을 서버의 GENDER enum 값으로 변환
-  // 서버의 실제 enum 값과 다를 경우 아래 맵을 수정하세요.
   const genderMap = {
     남자: 'MALE',
     여자: 'FEMALE',
@@ -169,8 +165,6 @@ const App = () => {
     }
 
     try {
-      // 서버가 login_id 필드를 기대할 가능성이 있어 login_id로 전송합니다.
-      // 엔드포인트는 '/check-id'로 호출합니다.
       const response = await API.post('/signup', { login_id: id });
 
       // 서버 응답 포맷에 맞춰 처리 (예: { available: true })
@@ -423,12 +417,11 @@ const App = () => {
                   district: formData.district,
                   dong: formData.dong,
                   id: formData.id,
-                  // 보안: 실제 서비스에서는 평문 비밀번호를 localStorage에 저장하면 안됩니다.
                   password: formData.password,
                   categories: Array.from(formData.selectedCategories),
                 };
 
-                // 1) 로컬 저장 예시: 'hcbc_users' 키로 배열에 저장 (개발/테스트용)
+                // local 저장
                 try {
                   const raw = localStorage.getItem('hcbc_users');
                   const users = raw ? JSON.parse(raw) : [];
@@ -436,23 +429,16 @@ const App = () => {
                   localStorage.setItem('hcbc_users', JSON.stringify(users));
                 } catch (e) {
                   console.error('localStorage error', e);
-                  // 로컬 저장 실패해도 서버 전송은 시도
                 }
 
-                // 2) 서버 전송 (API 인스턴스 사용)
-                // 서버가 기대하는 필드명/포맷으로 변환
+                // 서버 전송
                 const serverPayload = {
                   name: newUser.name,
-                  // 숫자 타입으로 전달
                   age: Number(newUser.age) || 0,
-                  // 프론트의 한글 성별 값을 서버 enum으로 변환
                   gender: genderMap[newUser.gender] || 'OTHER',
-                  // 서버가 기대하는 필드 이름: login_id
                   login_id: newUser.id,
                   password: newUser.password,
-                  // 카테고리는 배열로 전달합니다. (서버 요구사항에 따라 변경 가능)
                   category: newUser.categories,
-                  // address는 구 + 동 조합으로 전달
                   address: `${newUser.district} ${newUser.dong}`.trim(),
                 };
 
