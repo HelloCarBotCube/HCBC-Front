@@ -43,10 +43,9 @@ export default function Main() {
     },
   ]);
 
-  const handleChatClick = (id) => console.log('Clicked:', id);
-
-  
-
+  const handleChatClick = (id) => {
+    navigate('chat');
+  };
 
   return (
     <div className="main-container">
