@@ -125,6 +125,17 @@ input::placeholder {
   margin-bottom: 12px;
 }
 
+.msg {
+  font-size: 0.75rem;
+  text-align: left;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.msg.success {
+  color: #2e7d32;
+}
+
 .select-wrap {
   position: relative;
   width: 376px;

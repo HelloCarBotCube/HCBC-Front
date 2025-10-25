@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.css';
+import axios from 'axios';
 import EyeHide from '../assets/eyeHide';
 import EyeShow from '../assets/eyeShow';
 import Logo from '../assets/logo';
@@ -116,6 +117,25 @@ const App = () => {
   const [showDongOptions, setShowDongOptions] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [idCheckMessage, setIdCheckMessage] = useState('');
+  const [isIdAvailable, setIsIdAvailable] = useState(false);
+
+  // axios 인스턴스: 서버 기본 주소(절대 URL)로 설정
+  // 개발환경에서 Vite proxy를 사용하지 않고 직접 백엔드로 요청을 보냅니다.
+  const API = axios.create({
+    baseURL: 'http://gsmsv-1.yujun.kr:27919/api/auth',
+    headers: { 'Content-Type': 'application/json' },
+    withCredentials: true,
+    timeout: 5000,
+  });
+
+  // 성별 매핑: 프론트의 한글값을 서버의 GENDER enum 값으로 변환
+  // 서버의 실제 enum 값과 다를 경우 아래 맵을 수정하세요.
+  const genderMap = {
+    남자: 'MALE',
+    여자: 'FEMALE',
+    기타: 'OTHER',
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -135,6 +155,44 @@ const App = () => {
     setFormData((prevData) => ({ ...prevData, district, dong: '' }));
     setShowDistrictOptions(false);
     setShowDongOptions(false);
+  };
+
+  // 아이디 중복 검사
+  const handleCheckId = async () => {
+    const id = formData.id && formData.id.trim();
+    setIdCheckMessage('');
+    setIsIdAvailable(false);
+
+    if (!id) {
+      setIdCheckMessage('아이디를 입력해주세요.');
+      return;
+    }
+
+    try {
+      // 서버가 login_id 필드를 기대할 가능성이 있어 login_id로 전송합니다.
+      // 엔드포인트는 '/check-id'로 호출합니다.
+      const response = await API.post('/signup', { login_id: id });
+
+      // 서버 응답 포맷에 맞춰 처리 (예: { available: true })
+      if (response && response.data && response.data.available) {
+        setIdCheckMessage('사용 가능한 아이디입니다.');
+        setIsIdAvailable(true);
+      } else {
+        setIdCheckMessage('이미 사용 중인 아이디입니다.');
+        setIsIdAvailable(false);
+      }
+    } catch (error) {
+      console.error('ID 중복 검사 중 오류 발생:', error);
+      // 서버에서 반환한 메시지가 있으면 보여주고, 없으면 일반 메시지
+      if (error.response && error.response.data && error.response.data.message) {
+        setIdCheckMessage(error.response.data.message);
+      } else if (error.response && error.response.status) {
+        setIdCheckMessage(`서버 오류: ${error.response.status}`);
+      } else {
+        setIdCheckMessage('ID 중복 검사 중 네트워크 오류가 발생했습니다.');
+      }
+      setIsIdAvailable(false);
+    }
   };
 
   const handleDongSelect = (dong) => {
@@ -278,8 +336,19 @@ const App = () => {
                 value={formData.id}
                 onChange={handleChange}
               />
-              <button className="btn-check">중복 검사</button>
+              <button
+                className="btn-check"
+                type="button"
+                onClick={handleCheckId}
+                disabled={!formData.id || formData.id.trim() === ''}
+              >
+                중복 검사
+              </button>
             </div>
+            {/* 아이디 중복 검사 메시지 */}
+            {idCheckMessage && (
+              <p className={`msg ${isIdAvailable ? 'success' : 'error'}`}>{idCheckMessage}</p>
+            )}
             <div className="input-field pw-field">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -340,7 +409,7 @@ const App = () => {
             </div>
             <button
               className="btn-submit"
-              onClick={() => {
+              onClick={async () => {
                 // 간단한 유효성 최종 검사
                 if (!isStep1Valid || !isStep2Valid || !isStep3Valid) {
                   alert('입력값을 확인해주세요.');
@@ -359,7 +428,7 @@ const App = () => {
                   categories: Array.from(formData.selectedCategories),
                 };
 
-                // 로컬 저장 예시: 'hcbc_users' 키로 배열에 저장
+                // 1) 로컬 저장 예시: 'hcbc_users' 키로 배열에 저장 (개발/테스트용)
                 try {
                   const raw = localStorage.getItem('hcbc_users');
                   const users = raw ? JSON.parse(raw) : [];
@@ -367,25 +436,38 @@ const App = () => {
                   localStorage.setItem('hcbc_users', JSON.stringify(users));
                 } catch (e) {
                   console.error('localStorage error', e);
-                  alert('로컬 저장에 실패했습니다.');
-                  return;
+                  // 로컬 저장 실패해도 서버 전송은 시도
                 }
 
-                // 서버 전송 예시 (주석 처리됨) - 실제 서버가 있다면 아래 fetch를 사용
-                /*
-                fetch('https://example.com/api/signup', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(newUser),
-                })
-                  .then(res => res.json())
-                  .then(data => {
-                    console.log('server response', data);
-                  })
-                  .catch(err => console.error('server error', err));
-                */
+                // 2) 서버 전송 (API 인스턴스 사용)
+                // 서버가 기대하는 필드명/포맷으로 변환
+                const serverPayload = {
+                  name: newUser.name,
+                  // 숫자 타입으로 전달
+                  age: Number(newUser.age) || 0,
+                  // 프론트의 한글 성별 값을 서버 enum으로 변환
+                  gender: genderMap[newUser.gender] || 'OTHER',
+                  // 서버가 기대하는 필드 이름: login_id
+                  login_id: newUser.id,
+                  password: newUser.password,
+                  // 카테고리는 배열로 전달합니다. (서버 요구사항에 따라 변경 가능)
+                  category: newUser.categories,
+                  // address는 구 + 동 조합으로 전달
+                  address: `${newUser.district} ${newUser.dong}`.trim(),
+                };
 
-                alert('회원가입이 완료되었습니다!');
+                try {
+                  const res = await API.post('/signup', serverPayload);
+                  console.log('server response', res.data);
+                } catch (err) {
+                  console.error('server error', err);
+                  if (err.response && err.response.data && err.response.data.message) {
+                    alert(`서버 오류: ${err.response.data.message}`);
+                  } else {
+                    alert('서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
+                  }
+                }
+
                 navigate('/'); // 로그인 페이지로 이동
               }}
               disabled={!isStep3Valid}
