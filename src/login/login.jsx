@@ -14,14 +14,6 @@ function Login() {
   const handleLogin = async () => {
     const loginId = id.trim();
     const password = pw.trim();
-
-    if (loginId === "test" && password === "1234") {
-      setMessage("로그인되었습니다");
-      window.location.href = "/main";
-      return;
-    }
-
-
     if (!loginId || !password) {
       setMessage("아이디와 비밀번호를 모두 입력하세요");
       return;
@@ -34,7 +26,7 @@ function Login() {
       const res = await axios.post(
         "http://gsmsv-1.yujun.kr:27919/api/auth/signin",
         {
-          login_id: loginId,
+          loginId: loginId,
           password: password
         },
         {
@@ -58,7 +50,10 @@ function Login() {
       localStorage.setItem("accessTokenExpiresIn", accessTokenExpiresIn);
       localStorage.setItem("refreshTokenExpiresIn", refreshTokenExpiresIn);
 
-      setMessage("로그인에 성공했습니다.");
+
+      window.location.href = "/main";
+
+
     } catch (err) {
       const status = err?.response?.status;
       const serverMsg = err?.response?.data?.message;
