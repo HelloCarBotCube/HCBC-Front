@@ -59,11 +59,11 @@ function Login() {
       const serverMsg = err?.response?.data?.message;
 
       if (status === 401) {
-        setMessage(serverMsg || "아이디 또는 비밀번호가 일치하지 않음");
+        setMessage("아이디 또는 비밀번호가 일치하지 않음");
       } else if (status === 500) {
-        setMessage(serverMsg || "서버 에러");
+        setMessage("서버 에러");
       } else {
-        setMessage(serverMsg || "네트워크 오루");
+        setMessage("네트워크 오류");
       }
       console.debug("[signin:error]", status, err?.response?.data);
     } finally {
@@ -203,9 +203,8 @@ function Login() {
           </span>
         </div>
       </div>
-
       <div id="message">
-        <span className="message">{loading ? "로그인 중..." : message}</span>
+        <span className="message">{message}</span>
       </div>
 
       <button type="submit" onClick={handleLogin} disabled={loading}>
