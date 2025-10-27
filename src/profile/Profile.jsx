@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 import HIcon from '../assets/profile-h.svg';
@@ -15,6 +15,7 @@ const Profile = () => {
 
   const [editingField, setEditingField] = useState(null);
   const [tempValue, setTempValue] = useState('');
+  const editingRef = useRef(null);
 
   const navigate = useNavigate();
   const goHome = () => navigate('/main');
@@ -29,12 +30,33 @@ const Profile = () => {
     setEditingField(null);
   };
 
+  const handleCancel = () => {
+    setEditingField(null);
+    setTempValue('');
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (editingField !== null && editingRef.current && !editingRef.current.contains(event.target)) {
+        handleCancel();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [editingField]);
+
   const renderField = (fieldKey, buttonLabel) => (
     <div
       className="p-field"
       key={fieldKey}
+      ref={editingField === fieldKey ? editingRef : null}
       onClick={() => {
-        if (editingField !== fieldKey) handleEdit(fieldKey);
+        if (editingField !== fieldKey) {
+          handleEdit(fieldKey);
+        }
       }}
     >
       {editingField === fieldKey ? (
@@ -48,6 +70,9 @@ const Profile = () => {
               if (e.key === 'Enter') {
                 e.stopPropagation();
                 handleApply(fieldKey);
+              } else if (e.key === 'Escape') {
+                e.stopPropagation();
+                handleCancel();
               }
             }}
             autoFocus
