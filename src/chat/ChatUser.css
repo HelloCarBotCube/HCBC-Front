@@ -1,0 +1,100 @@
+.user-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 720px;
+  box-sizing: border-box;
+}
+
+.user-card {
+  background: linear-gradient(#ff6b9f 0%, #ffffff 30%);
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 370px;
+  height: 720px;
+  position: relative;
+}
+.user-wrap {
+  margin-top: 146px;
+  padding-left: 11px;
+  height: 108px;
+}
+
+.icon {
+  width: 108px;
+  height: 108px;
+}
+
+.user-body {
+  padding: 25px 11px 11px;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 18px;
+  margin-left: 8px;
+  color: #5c5c5c;
+}
+
+.user-id {
+  color: #8e8e8e;
+  font-size: 18px;
+  margin-top: 2px;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+.user-tag-card {
+  margin-top: 30px;
+  border: 1px solid #d6d6d7;
+  border-radius: 30px;
+  padding: 14px;
+  min-height: 159px;
+}
+
+.user-tags {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+.user-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 2px 13px;
+  border-radius: 999px;
+  background: #ff6b9f;
+  color: #ffffff;
+  font-weight: 400;
+  font-size: 12px;
+}
+.user-tag-card .user-tags + .user-tags {
+  margin-top: 8px; /* 줄 간격 살짝만 */
+}
+
+.user-button {
+  width: 274px;
+  height: 44px;
+  margin-top: 18px;
+  border: 1px solid #d6d6d7;
+  background: #ffffff;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #5c5c5c;
+  font-size: 14px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 30px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-button:hover {
+  background: #fafafa;
+}

@@ -1,0 +1,164 @@
+.chat-page {
+  display: flex;
+  background-color: #f8f8f8;
+}
+
+/* 중앙 채팅창 */
+.chat-window {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.chat-date {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #8e8e8e;
+}
+
+.chat-text,
+.chat-info-text {
+  text-align: center;
+  color: #8e8e8e;
+  margin-bottom: 1rem;
+}
+
+.messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+}
+
+.message {
+  max-width: 60%;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  position: relative;
+}
+
+.other-message {
+  background-color: #fff;
+  align-self: flex-start;
+}
+
+.my-message {
+  background-color: #f9c6dc;
+  align-self: flex-end;
+}
+
+.message span {
+  font-size: 0.75rem;
+  color: #8e8e8e;
+  margin-left: 8px;
+}
+
+/* 입력창 */
+.message-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+}
+
+.message-input button {
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  background-color: #ff6b9f;
+  position: absolute;
+}
+
+/* 오른쪽 프로필 */
+.profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-header svg {
+  width: 60px;
+  height: 60px;
+}
+
+.profile-info h3 {
+  margin: 10px 0 5px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.tags span {
+  background: #f68cb1;
+  color: white;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+}
+
+/* 채팅 나가기 버튼 */
+.exit-chat {
+  background: #ffffff;
+  border: 1px solid #d6d6d7;
+  color: #ff3232;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* 모달 */
+.exit {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.exit-modal {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  text-align: center;
+  width: 350px;
+}
+
+.exit-modal .modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.confirm {
+  color: #f44474;
+  border: none;
+  background: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cancel {
+  border: none;
+  background: none;
+  color: #8e8e8e;
+  cursor: pointer;
+}
