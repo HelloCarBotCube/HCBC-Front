@@ -44,7 +44,7 @@ export default function Main() {
   ]);
 
   const handleChatClick = (id) => {
-    navigate('chat');
+    navigate('/chat');
   };
 
   return (
