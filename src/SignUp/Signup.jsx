@@ -6,79 +6,6 @@ import EyeHide from '../assets/eyeHide';
 import EyeShow from '../assets/eyeShow';
 import Logo from '../assets/logo';
 
-// '구'에 따른 '동' 데이터
-const dongData = {
-  광산구: [
-    '도산동',
-    '동곡동',
-    '본량동',
-    '비아동',
-    '삼도동',
-    '송정동',
-    '수완동',
-    '신가동',
-    '신창동',
-    '신흥동',
-    '어룡동',
-    '우산동',
-    '운남동',
-    '월곡동',
-    '임곡동',
-    '첨단동',
-    '평동',
-    '하남동',
-  ],
-  남구: [
-    '대촌동',
-    '방림동',
-    '백운동',
-    '봉선동',
-    '사직동',
-    '송암동',
-    '양림동',
-    '월산동',
-    '일산동',
-    '주월동',
-    '진월동',
-    '효덕동',
-  ],
-  동구: ['계림동', '동명동', '산수동', '서남동', '지산동', '지원동', '충장동', '학운동', '학동'],
-  북구: [
-    '건국동',
-    '동림동',
-    '두암동',
-    '매곡동',
-    '문화동',
-    '문흥동',
-    '삼각동',
-    '석곡동',
-    '신안동',
-    '신용동',
-    '양상동',
-    '오치동',
-    '용봉동',
-    '우산동',
-    '운암동',
-    '일곡동',
-    '임동',
-    '중앙동',
-    '중흥동',
-    '풍향동',
-  ],
-  서구: [
-    '광천동',
-    '금호동',
-    '농성동',
-    '동천동',
-    '상무동',
-    '서창동',
-    '양동',
-    '유덕동',
-    '치평동',
-    '풍암동',
-    '화정동',
-  ],
-};
 // 카테고리 데이터
 const categories = [
   '운동',
@@ -105,33 +32,26 @@ const App = () => {
     name: '',
     age: '',
     gender: '',
-    district: '',
-    dong: '',
+    address: '',
     id: '',
     password: '',
     confirmPassword: '',
     selectedCategories: new Set(),
   });
   const [showGenderOptions, setShowGenderOptions] = useState(false);
-  const [showDistrictOptions, setShowDistrictOptions] = useState(false);
-  const [showDongOptions, setShowDongOptions] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [idCheckMessage, setIdCheckMessage] = useState('');
-  const [isIdAvailable, setIsIdAvailable] = useState(false);
 
-  const API = axios.create({
-    baseURL: 'http://gsmsv-1.yujun.kr:27919/api/auth',
-    headers: { 'Content-Type': 'application/json' },
-    withCredentials: true,
-    timeout: 5000,
-  });
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    script.async = true;
+    document.body.appendChild(script);
 
-  const genderMap = {
-    남자: 'MALE',
-    여자: 'FEMALE',
-    기타: 'OTHER',
-  };
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -139,59 +59,23 @@ const App = () => {
   };
 
   const toggleGenderOptions = () => setShowGenderOptions(!showGenderOptions);
-  const toggleDistrictOptions = () => setShowDistrictOptions(!showDistrictOptions);
-  const toggleDongOptions = () => setShowDongOptions(!showDongOptions);
 
   const handleGenderSelect = (gender) => {
     setFormData((prevData) => ({ ...prevData, gender }));
     setShowGenderOptions(false);
   };
 
-  const handleDistrictSelect = (district) => {
-    setFormData((prevData) => ({ ...prevData, district, dong: '' }));
-    setShowDistrictOptions(false);
-    setShowDongOptions(false);
-  };
+  const execDaumPostcode = () => {
+    new window.daum.Postcode({
+      oncomplete: function (data) {
+        const fullAddress = `${data.sido} ${data.sigungu} ${data.bname}`;
 
-  // 아이디 중복 검사
-  const handleCheckId = async () => {
-    const id = formData.id && formData.id.trim();
-    setIdCheckMessage('');
-    setIsIdAvailable(false);
-
-    if (!id) {
-      setIdCheckMessage('아이디를 입력해주세요.');
-      return;
-    }
-
-    try {
-      const response = await API.post('/signup', { login_id: id });
-
-      // 서버 응답 포맷에 맞춰 처리 (예: { available: true })
-      if (response && response.data && response.data.available) {
-        setIdCheckMessage('사용 가능한 아이디입니다.');
-        setIsIdAvailable(true);
-      } else {
-        setIdCheckMessage('이미 사용 중인 아이디입니다.');
-        setIsIdAvailable(false);
-      }
-    } catch (error) {
-      console.error('ID 중복 검사 중 오류 발생:', error);
-      // 서버에서 반환한 메시지가 있으면 보여주고, 없으면 일반 메시지
-      if (error.response && error.response.data && error.response.data.message) {
-        setIdCheckMessage(error.response.data.message);
-      } else if (error.response && error.response.status) {
-        setIdCheckMessage(`서버 오류: ${error.response.status}`);
-      } else {
-        setIdCheckMessage('ID 중복 검사 중 네트워크 오류가 발생했습니다.');
-      }
-      setIsIdAvailable(false);
-    }
-  };
-
-  const handleDongSelect = (dong) => {
-    setFormData((prevData) => ({ ...prevData, dong }));
-    setShowDongOptions(false);
+        setFormData((prevData) => ({
+          ...prevData,
+          address: fullAddress,
+        }));
+      },
+    }).open();
   };
 
   const handleCategorySelect = (category) => {
@@ -212,8 +96,7 @@ const App = () => {
     formData.name.trim() !== '' &&
     formData.age.trim() !== '' &&
     formData.gender !== '' &&
-    formData.district !== '' &&
-    formData.dong !== '';
+    formData.address !== '';
 
   const isPasswordMatch = formData.password === formData.confirmPassword;
   const isPasswordValid = formData.password.length >= 8;
@@ -225,8 +108,6 @@ const App = () => {
   const renderFormStep = () => {
     switch (step) {
       case 1: {
-        const districts = Object.keys(dongData);
-        const currentDongs = formData.district ? dongData[formData.district] : [];
         return (
           <>
             <div className="input-field">
@@ -266,49 +147,17 @@ const App = () => {
                 </div>
               )}
             </div>
-            <div className="select-wrap two-col">
-              <div className="select-group">
-                <div className="select-box" onClick={toggleDistrictOptions}>
-                  {formData.district || '구'}
-                  <span className="arrow">{showDistrictOptions ? '▲' : '▼'}</span>
-                </div>
-                {showDistrictOptions && (
-                  <div className="options-list">
-                    {districts.map((dist) => (
-                      <div
-                        key={dist}
-                        className="option-item"
-                        onClick={() => handleDistrictSelect(dist)}
-                      >
-                        {dist}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div className="select-group">
-                <div className="select-box" onClick={toggleDongOptions}>
-                  {formData.dong || '동'}
-                  <span className="arrow">{showDongOptions ? '▲' : '▼'}</span>
-                </div>
-                {showDongOptions && (
-                  <div className="options-list">
-                    {currentDongs.length > 0 ? (
-                      currentDongs.map((dong) => (
-                        <div
-                          key={dong}
-                          className="option-item"
-                          onClick={() => handleDongSelect(dong)}
-                        >
-                          {dong}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="option-item disabled">구를 먼저 선택해주세요.</div>
-                    )}
-                  </div>
-                )}
-              </div>
+            <div className="input-field id-field">
+              <input
+                type="text"
+                name="address"
+                placeholder="주소"
+                value={formData.address}
+                readOnly
+              />
+              <button className="btn-check" onClick={execDaumPostcode}>
+                주소 찾기
+              </button>
             </div>
             <button className="btn-submit" onClick={() => setStep(2)} disabled={!isStep1Valid}>
               다음으로
