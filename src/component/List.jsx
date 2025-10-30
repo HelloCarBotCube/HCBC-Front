@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './List.css';
+import styles from './List.module.css';
 import User from '../assets/user';
 
 export default function Main() {
@@ -48,25 +48,29 @@ export default function Main() {
   };
 
   return (
-    <div className="main-container">
-      <div className="chat-box">
-        <div className="chat-header">현재 채팅</div>
+    <div className={styles['main-container']}>
+      <div className={styles['chat-box']}>
+        <div className={styles['chat-header']}>현재 채팅</div>
 
-        <div className="chat-list">
+        <div className={styles['chat-list']}>
           {chatList.map((chat) => (
-            <div key={chat.id} className="chat-item" onClick={() => handleChatClick(chat.id)}>
-              <div className="profile">
-                <div className="avatar">
+            <div
+              key={chat.id}
+              className={styles['chat-item']}
+              onClick={() => handleChatClick(chat.id)}
+            >
+              <div className={styles.profile}>
+                <div className={styles.avatar}>
                   <User />
                 </div>
               </div>
-              <div className="chat-info">
-                <div className="chat-username">
+              <div className={styles['chat-info']}>
+                <div className={styles['chat-username']}>
                   {chat.username} <span>{chat.userId}</span>
                 </div>
-                <div className="chat-message">{chat.lastMessage}</div>
+                <div className={styles['chat-message']}>{chat.lastMessage}</div>
               </div>
-              {chat.unread && <div className="unread-dot"></div>}
+              {chat.unread && <div className={styles['unread-dot']}></div>}
             </div>
           ))}
         </div>
