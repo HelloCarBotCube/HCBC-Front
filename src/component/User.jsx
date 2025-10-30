@@ -7,7 +7,7 @@ const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
 
 const DEFAULT_USER = {
   name: '한국',
-  handle: '@h4.zx7',
+  handle: '@안떰',
   tags: ['🔞', '영화', '음악', '남자', '16살', '광산구 평동'],
 };
 
@@ -57,7 +57,7 @@ export default function User() {
       const response = await fetch(`${API_BASE_URL}/api/user/myprofile`, {
         method: 'GET',
         headers: {
-          'accessToken': accessToken,
+          'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       });
@@ -76,11 +76,19 @@ export default function User() {
         return;
       }
 
+      if (response.status === 500) {
+        console.error('토큰 없음/만료/무효');
+        loadFromLocalStorage();
+        setLoading(false);
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(`프로필 조회 실패: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('API 응답 데이터:', data); 
       
       const tags = [];
       
@@ -138,7 +146,7 @@ export default function User() {
   if (loading) {
     return (
       <div className="user-container">
-        <div>로딩 중...</div>
+        <div>로딩 중</div>
       </div>
     );
   }
