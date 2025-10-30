@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ChatList.css';
+import styles from './ChatList.module.css';
 import User from '../assets/user';
 import Arrow from '../assets/arrow';
 
@@ -49,28 +49,35 @@ export default function Main() {
   };
 
   return (
-    <div className="main-container">
-      <div className="chat-box">
-        <div className="chat-header" onClick={() => navigate('/main')}>
-          <Arrow />
-          홈으로 가기
+    <div className={styles['main-container']}>
+      <div className={styles['chat-box']}>
+        <div className={styles['chat-header']}>
+          <p onClick={() => navigate('/main')}>
+            <Arrow />
+            홈으로 가기
+          </p>
         </div>
 
-        <div className="chat-list">
+        <div className={styles['chat-list']}>
           {chatList.map((chat) => (
-            <div key={chat.id} className="chat-item" onClick={() => handleChatClick(chat.id)}>
-              <div className="profile">
-                <div className="avatar">
+            <div
+              key={chat.id}
+              className={styles['chat-item']}
+              onClick={() => handleChatClick(chat.id)}
+            >
+              <div className={styles['profile']}>
+                <div className={styles['avatar']}>
                   <User />
                 </div>
               </div>
-              <div className="chat-info">
-                <div className="chat-username">
-                  {chat.username} <span>{chat.userId}</span>
+              <div className={styles['chat-info']}>
+                <div className={styles['chat-username']}>
+                  {chat.username}{' '}
+                  <span className={styles['chat-username-span']}>{chat.userId}</span>
                 </div>
-                <div className="chat-message">{chat.lastMessage}</div>
+                <div className={styles['chat-message']}>{chat.lastMessage}</div>
               </div>
-              {chat.unread && <div className="unread-dot"></div>}
+              {chat.unread && <div className={styles['unread-dot']}></div>}
             </div>
           ))}
         </div>

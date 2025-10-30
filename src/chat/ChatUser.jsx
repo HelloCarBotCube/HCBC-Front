@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import './ChatUser.css';
+import styles from './ChatUser.module.css';
 import profileImg from '../assets/profile-h.svg';
 
 const DEFAULT_USER = {
@@ -43,28 +43,28 @@ export default function User() {
   const tags2 = (user.tags || []).slice(PER_ROW, PER_ROW * 2);
 
   return (
-    <div className="user-container">
-      <aside className="user-card">
-        <div className="user-wrap">
-          <img src={profileImg} alt="아이콘" className="icon" />
+    <div className={styles['user-container']}>
+      <aside className={styles['user-card']}>
+        <div className={styles['user-wrap']}>
+          <img src={profileImg} alt="아이콘" className={styles.icon} />
         </div>
 
-        <div className="user-body">
-          <div className="user-name">{user.name}</div>
-          <div className="user-id">{user.handle}</div>
+        <div className={styles['user-body']}>
+          <div className={styles['user-name']}>{user.name}</div>
+          <div className={styles['user-id']}>{user.handle}</div>
 
-          <div className="user-tag-card">
-            <div className="user-tags user-tags1">
+          <div className={styles['user-tag-card']}>
+            <div className={styles['user-tags']}>
               {tags1.map((t, i) => (
-                <span key={`t1-${i}`} className="user-tag">
+                <span key={`t1-${i}`} className={styles['user-tag']}>
                   {t}
                 </span>
               ))}
             </div>
             {tags2.length > 0 && (
-              <div className="user-tags user-tags2">
+              <div className={`${styles['user-tags']} ${styles['user-tags2']}`}>
                 {tags2.map((t, i) => (
-                  <span key={`t2-${i}`} className="user-tag">
+                  <span key={`t2-${i}`} className={styles['user-tag']}>
                     {t}
                   </span>
                 ))}
@@ -72,25 +72,25 @@ export default function User() {
             )}
           </div>
         </div>
-        <button className="exit-chat" onClick={handleExitChat}>
-          !채팅 나가기!
+        <button className={styles['user-button']} onClick={handleExitChat}>
+          채팅 나가기
         </button>
       </aside>
 
       {showExitModal && (
-        <div className="modal-overlay">
-          <div className="exit-modal">
+        <div className={styles['exit']}>
+          <div className={styles['exit-modal']}>
             <h3>대화를 끝내시겠어요?</h3>
             <p>
               채팅을 종료하면 이 대화는 더 이상 볼 수 없어요.
               <br />
               계속 진행할까요?
             </p>
-            <div className="modal-actions">
-              <button className="confirm" onClick={handleConfirmExit}>
+            <div className={styles['modal-actions']}>
+              <button className={styles.confirm} onClick={handleConfirmExit}>
                 채팅 종료
               </button>
-              <button className="cancel" onClick={() => setShowExitModal(false)}>
+              <button className={styles.cancel} onClick={() => setShowExitModal(false)}>
                 취소
               </button>
             </div>
