@@ -137,16 +137,13 @@ body {
   padding: 0;
 }
 .p-apply {
-  width: 300px;
-  background: #ff6b9f;
-  border: none;
-  border-radius: 220px;
-  padding: 12px;
-  font-size: 14px;
+  background: none;
+  font-size: 12px;
   font-weight: bold;
-  color: #ffffff;
+  color: #ff6b9f;
   cursor: pointer;
-  transition: background 0.3s;
+  outline: none;
+  border: none;
 }
 
 .p-edit:focus,
