@@ -1,3 +1,65 @@
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Thin.woff2') format('woff2');
+    font-weight: 100;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraLight.woff2') format('woff2');
+    font-weight: 200;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Black.woff2') format('woff2');
+    font-weight: 900;
+    font-display: swap;
+}
 body {
   margin: 0;
   display: flex;
@@ -7,8 +69,8 @@ body {
   background-color: #f8f8f8;
 }
 
-.login-page {
-  font-family: pretendard;
+.all {
+  font-family: 'pretendard';
 
   width: 512px;
   height: 560px;
@@ -65,7 +127,7 @@ input:focus {
   left: 5px;
 }
 
-.login-button {
+button {
   width: 376px;
   height: 60px;
   border-radius: 16px;
@@ -77,11 +139,11 @@ input:focus {
   color: #ffffff;
 }
 
-.login-button:hover {
+button:hover {
   background-color: #ff4f8d;
 }
 
-.link {
+.footer a {
   text-decoration: none;
   color: #ff6b9f;
   font-weight: 700;
@@ -171,12 +233,6 @@ svg {
   width: 16px;
   height: 20px;
   transform: translateY(-10px);
-}
-
-/* ensure SVG icons render as block so width/height CSS apply reliably */
-.inputIcon svg,
-.pwIcon {
-  display: block;
 }
 
 .show {
