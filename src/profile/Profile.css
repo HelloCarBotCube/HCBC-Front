@@ -1,6 +1,5 @@
-body{
+body {
   margin: 0;
-
 }
 
 .p-container {
@@ -12,7 +11,12 @@ body{
   height: 100vh;
   width: 100vw;
 }
-
+.p-content {
+  padding-top: 50px;
+}
+.p-conTent {
+  padding-top: 30px;
+}
 .p-back {
   grid-column: 1 / 2;
   justify-self: start;
@@ -22,7 +26,7 @@ body{
   font-size: 14px;
   color: #404040;
   cursor: pointer;
-  border: none; 
+  border: none;
   background-color: #f8f8f8;
   padding: 0;
 }
@@ -30,44 +34,73 @@ body{
 .p-wrap {
   grid-column: 2 / 3;
   justify-self: center;
-  align-self: center; /* 수정: start → center */
+  align-self: center;
   display: flex;
   justify-content: center;
-  align-items: center; /* flex-start → center */
+  align-items: center;
 }
 
 .p-card {
-  width: 362px;
-  height: 702px;
-  background: linear-gradient(#ff6b9f 0%, #ffffff 30%);
-  border-radius: 14px;
+  width: 390px;
+  min-height: 702px;
+  background: linear-gradient(180deg, #ff6b9f 0%, #ffb3d0 18%, #ffffff 32%);
+  border-radius: 24px;
   text-align: center;
+
+  overflow-y: auto;
 }
 
 .p-icon {
   width: 106px;
   height: 106px;
-  margin: 142px 0 32px 10px;
+  margin-top: 105px;
+  margin-left: 10px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
 }
+
 .p-icon img {
   width: 100%;
   height: 100%;
 }
 
+/* 이름/ID 영역 */
+.p-profile-info {
+  margin-bottom: 24px;
+}
+
+.p-name-id {
+  text-align: left;
+  padding-left: 15px;
+  padding-top: 20px;
+}
+
+.p-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #404040;
+  margin-bottom: 4px;
+}
+
+.p-id {
+  font-size: 18px;
+  font-weight: 500;
+  color: #858486;
+}
+
+/* 입력 필드 */
 .p-field {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #FFFFFF;
-  border: 1px solid #D6D6D7;
-  border-radius: 220px;  
+  background: #ffffff;
+  border: 1px solid #d6d6d7;
+  border-radius: 220px;
   padding: 12px 14px;
-  margin: 14px auto;
+  margin: 12px auto;
   transition: border 0.6s;
-  width: 282px;
+  width: 330px;
   height: 16px;
 }
 
@@ -89,12 +122,11 @@ body{
   color: #858486;
   font-size: 14px;
   font-weight: 500;
-  font-family: 'pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   padding: 0;
 }
 
-.p-edit,
-.p-apply {
+.p-edit {
   border: none;
   background: none;
   font-size: 12px;
@@ -104,8 +136,91 @@ body{
   outline: none;
   padding: 0;
 }
+.p-apply {
+  width: 300px;
+  background: #ff6b9f;
+  border: none;
+  border-radius: 220px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
 
-.p-edit :focus,
-.p-apply :focus {
+.p-edit:focus,
+.p-apply:focus {
   outline: none;
+}
+
+/* 카테고리 섹션 */
+/* .p-category-section {
+  margin: 15px 10px 10px 12px;
+  width: 310px;
+} */
+
+.p-category-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  padding-left: 16px;
+}
+
+.p-category-btn {
+  background: #ffffff;
+  border: 1px solid #d6d6d7;
+  border-radius: 20px;
+  padding: 8px 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #858486;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.p-category-btn:hover {
+  background: #ff99b8;
+}
+
+.p-category-btn.active {
+  background: #ff6b9f;
+  border-color: #ff6b9f;
+  color: #ffffff;
+}
+
+.p-category-apply {
+  width: 100%;
+  background: #ff6b9f;
+  border: none;
+  border-radius: 220px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 16px;
+}
+
+.p-category-apply:hover {
+  background: #ff5a8f;
+}
+
+.p-cancel {
+  border: 1px solid #d6d6d7;
+  border-radius: 20px;
+  padding: 0px 12px 0px 12px;
+  margin-left: 16px;
+  background: none;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ff6b9f;
+  cursor: pointer;
+  outline: none;
+}
+
+.p-cancel:hover {
+  background: #6c6b6d;
 }
