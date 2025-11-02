@@ -43,6 +43,7 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+
 input {
   width: 100%;
   padding: 0px 20px;
@@ -64,7 +65,7 @@ input::placeholder {
   align-items: center;
   gap: 8px;
   width: 100%;
-  margin-bottom: 24px;
+  margin: 0px;
 }
 
 .id-field input {
@@ -98,6 +99,7 @@ input::placeholder {
 .pw-field {
   display: flex;
   align-items: center;
+  margin: 0px;
 }
 
 .pw-field input {
@@ -118,18 +120,27 @@ input::placeholder {
 }
 
 .msg-error {
+  display: block;
+  min-height: 18px; /* 항상 같은 공간 확보 */
   font-size: 0.75rem;
   color: #ff6b9f;
   text-align: left;
-  margin-top: -8px;
-  margin-bottom: 12px;
+  margin: 4px;
+  line-height: 1.2;
+}
+
+.msg-error:empty {
+  visibility: hidden;
 }
 
 .msg {
+  display: block;
+  min-height: 18px; /* 공간 고정 */
   font-size: 0.75rem;
+  margin: 4px;
   text-align: left;
-  margin-top: 8px;
-  margin-bottom: 12px;
+  line-height: 1.2;
+  color: #ff6b9f;
 }
 
 .msg.success {
