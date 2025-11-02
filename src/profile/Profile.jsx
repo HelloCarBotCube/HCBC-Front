@@ -135,6 +135,11 @@ const Profile = () => {
       console.log("tempValue:", tempValue);
       console.log("현재 profile:", profile);
 
+      // 현재 카테고리를 영어로 변환 (모든 요청에서 사용)
+      const categoriesInEnglish = profile.categories.map(
+        (cat) => categoryMap[cat] || cat
+      );
+
       let payload = {};
       let newProfileState = {};
 
@@ -149,7 +154,7 @@ const Profile = () => {
           gender: profile.gender,
           age: newAge,
           address: profile.location,
-          categories: profile.categories,
+          categories: categoriesInEnglish,
         };
         newProfileState = { age: newAge };
       } else if (field === "location") {
@@ -158,23 +163,23 @@ const Profile = () => {
           gender: profile.gender,
           age: parseInt(profile.age, 10) || 0,
           address: tempValue,
-          categories: profile.categories,
+          categories: categoriesInEnglish,
         };
         newProfileState = { location: tempValue };
       } else if (field === "categories") {
         // 카테고리 업데이트 로직 - 한글을 영어로 변환해서 전송
-        const categoriesInEnglish = tempValue.map(
+        const newCategoriesInEnglish = tempValue.map(
           (cat) => categoryMap[cat] || cat
         );
         console.log("한글 카테고리:", tempValue);
-        console.log("영어로 변환:", categoriesInEnglish);
+        console.log("영어로 변환:", newCategoriesInEnglish);
 
         payload = {
           name: profile.name,
           gender: profile.gender,
           age: parseInt(profile.age, 10) || 0,
           address: profile.location,
-          categories: categoriesInEnglish,
+          categories: newCategoriesInEnglish,
         };
         newProfileState = { categories: tempValue }; // 화면에는 한글로 표시
       }

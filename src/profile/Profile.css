@@ -161,14 +161,15 @@ body {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 8px;
-  padding-left: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .p-category-btn {
   background: #ffffff;
   border: 1px solid #d6d6d7;
   border-radius: 20px;
-  padding: 8px 4px;
+  padding: 8px 12px;
   font-size: 12px;
   font-weight: 500;
   color: #858486;
@@ -208,7 +209,7 @@ body {
 .p-cancel {
   border: 1px solid #d6d6d7;
   border-radius: 20px;
-  padding: 0px 12px 0px 12px;
+  padding: 10px 12px 10px 12px;
   margin-left: 16px;
   background: none;
   font-size: 12px;
@@ -219,5 +220,5 @@ body {
 }
 
 .p-cancel:hover {
-  background: #6c6b6d;
+  background: #ff99b8;
 }
