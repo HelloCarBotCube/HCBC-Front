@@ -309,7 +309,7 @@ const Signup = () => {
               다음으로
             </button>
             <p className="link-login">
-              이미 회원이라면? <a href="/">로그인하기</a>
+              이미 회원이라면? <a href="#">로그인하기</a>
             </p>
           </>
         );
