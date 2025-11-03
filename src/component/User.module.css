@@ -71,7 +71,7 @@
   font-size: 12px;
 }
 .user-tag-card .user-tags + .user-tags {
-  margin-top: 8px; /* 줄 간격 살짝만 */
+  margin-top: 8px;
 }
 
 .user-button {
