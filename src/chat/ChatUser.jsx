@@ -18,10 +18,9 @@ export default function User() {
 
   const handleConfirmExit = () => {
     setShowExitModal(false);
-    navigate('/main'); // 홈으로 이동
+    navigate('/main');
   };
 
-  // handleConfirmExit 삭제 (부모에서 처리)
   useEffect(() => {
     try {
       const raw = localStorage.getItem('hcbc_user');

@@ -8,7 +8,6 @@ import styles from './Chat.module.css';
 export default function Chat() {
   const navigate = useNavigate();
 
-  // 현재 시간 상태 추가
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const [chatList] = useState([
@@ -33,7 +32,6 @@ export default function Chat() {
     { id: 2, sender: '나', text: '저리가 ! 문강현 !', time: '13:24' },
   ]);
 
-  // 1초마다 시간 업데이트
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -42,14 +40,12 @@ export default function Chat() {
     return () => clearInterval(timer);
   }, []);
 
-  // 시간을 HH:MM 형식으로 변환하는 함수
   const formatTime = (date) => {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
   };
 
-  // 날짜를 "YYYY년 M월 D일" 형식으로 변환하는 함수
   const formatDate = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
@@ -62,7 +58,6 @@ export default function Chat() {
     const text = e.target.message.value.trim();
     if (!text) return;
 
-    // 현재 시간으로 메시지 전송
     setMessages((prev) => [
       ...prev,
       {
@@ -77,16 +72,13 @@ export default function Chat() {
 
   return (
     <div className={styles['chat-page']}>
-      {/* 왼쪽 사이드 채팅 목록 */}
       <div className={styles['chat-list-panel']}>
         <div className={styles['chat-list']}>
           <ChatList></ChatList>
         </div>
       </div>
 
-      {/* 중앙 채팅 내용 */}
       <div className={styles['chat-window']}>
-        {/* 현재 날짜로 변경 */}
         <div className={styles['chat-date']}>{formatDate(currentTime)}</div>
         <div className={styles['chat-info-text']}>문강현 님이 채팅을 보냈습니다</div>
 
@@ -112,7 +104,6 @@ export default function Chat() {
         </form>
       </div>
 
-      {/* 오른쪽 상대 프로필 */}
       <div className={styles['profile-panel']}>
         <div className={styles['profile-card']}>
           <ChatUser></ChatUser>

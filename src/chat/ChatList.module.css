@@ -1,4 +1,3 @@
-/* 전체 중앙 정렬 */
 .main-container {
   background-color: #f8f9fa;
   display: flex;
@@ -7,7 +6,6 @@
   font-family: 'pretendard', sans-serif;
 }
 
-/* 흰색 카드 */
 .chat-box {
   width: 380px;
   height: 720px;
@@ -16,7 +14,6 @@
   overflow: hidden;
 }
 
-/* 상단 제목 */
 .chat-header {
   font-size: 15px;
   padding: 14px 18px;
@@ -34,13 +31,11 @@
   padding-right: 4px;
 }
 
-/* 목록 영역 */
 .chat-list {
   max-height: 720px;
   overflow-y: auto;
 }
 
-/* 채팅 아이템 */
 .chat-item {
   display: flex;
   align-items: center;
@@ -54,7 +49,6 @@
   background-color: #f9fafb;
 }
 
-/* 프로필 */
 .avatar {
   width: 40px;
   height: 40px;
@@ -62,7 +56,7 @@
   align-items: center;
   justify-content: center;
 }
-/* 사용자 정보 */
+
 .chat-info {
   flex: 1;
   margin-left: 10px;
@@ -92,7 +86,6 @@
   max-width: 200px;
 }
 
-/* 안 읽은 메시지 표시 */
 .unread-dot {
   width: 8px;
   height: 8px;
