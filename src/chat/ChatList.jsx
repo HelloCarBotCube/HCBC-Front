@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './List.module.css';
+import styles from './ChatList.module.css';
 import User from '../assets/user';
+import Arrow from '../assets/arrow';
 
 export default function Main() {
   const navigate = useNavigate();
@@ -50,7 +51,12 @@ export default function Main() {
   return (
     <div className={styles['main-container']}>
       <div className={styles['chat-box']}>
-        <div className={styles['chat-header']}>현재 채팅</div>
+        <div className={styles['chat-header']}>
+          <p onClick={() => navigate('/main')}>
+            <Arrow />
+            홈으로 가기
+          </p>
+        </div>
 
         <div className={styles['chat-list']}>
           {chatList.map((chat) => (
@@ -59,14 +65,15 @@ export default function Main() {
               className={styles['chat-item']}
               onClick={() => handleChatClick(chat.id)}
             >
-              <div className={styles.profile}>
-                <div className={styles.avatar}>
+              <div className={styles['profile']}>
+                <div className={styles['avatar']}>
                   <User />
                 </div>
               </div>
               <div className={styles['chat-info']}>
                 <div className={styles['chat-username']}>
-                  {chat.username} <span>{chat.userId}</span>
+                  {chat.username}{' '}
+                  <span className={styles['chat-username-span']}>{chat.userId}</span>
                 </div>
                 <div className={styles['chat-message']}>{chat.lastMessage}</div>
               </div>
