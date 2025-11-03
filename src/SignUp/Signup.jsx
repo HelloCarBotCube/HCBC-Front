@@ -22,7 +22,6 @@ const genderMap = {
   기타: 'OTHER',
 };
 
-// 카테고리 데이터
 const categories = [
   '운동',
   '맛집',
@@ -40,7 +39,6 @@ const categories = [
   '애니메이션',
 ];
 
-// 카테고리 한글 -> 영문 매핑
 const categoryMap = {
   운동: 'EXERCISE',
   맛집: 'RESTAURANT',
@@ -79,7 +77,6 @@ const Signup = () => {
   const [isIdChecked, setIsIdChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 다음 주소 API 로드
   useEffect(() => {
     const script = document.createElement('script');
     script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
@@ -181,7 +178,6 @@ const Signup = () => {
     });
   };
 
-  // 유효성 검사
   const isStep1Valid = formData.name && formData.age && formData.gender && formData.address;
   const isPasswordMatch = formData.password === formData.confirmPassword;
   const isPasswordValid = formData.password.length >= 8;
@@ -198,7 +194,6 @@ const Signup = () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
-    //카테고리 영문 변환
     const mappedCategories = Array.from(formData.selectedCategories).map(
       (cat) => categoryMap[cat] || 'OTHER'
     );
