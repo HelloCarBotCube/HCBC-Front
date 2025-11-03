@@ -1,4 +1,0 @@
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functionFailoverRegions": ["iad1", "sfo1"]
-}
