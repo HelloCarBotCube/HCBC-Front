@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styles from './Random.module.css';
 
 const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
@@ -26,30 +27,23 @@ export default function Random() {
       setStatus('waiting');
       setDotCount(1);
 
-      const response = await fetch(`${API_BASE_URL}/api/chat/start`, {
-        method: 'POST',
+      await axios.post(`${API_BASE_URL}/api/chat/start`, {}, {
         headers: {
           'Authorization': `Bearer ${accessTokenRef.current}`,
           'Content-Type': 'application/json',
         },
       });
 
-      if (!response.ok) {
-        throw new Error('매칭 요청 실패');
-      }
+      console.log('매칭 요청 완료');
 
-      const data = await response.json();
-      console.log('매칭 요청 완료:', data);
-
-      const chatListResponse = await fetch(`${API_BASE_URL}/api/chat`, {
-        method: 'GET',
+      const chatListResponse = await axios.get(`${API_BASE_URL}/api/chat`, {
         headers: {
           'Authorization': `Bearer ${accessTokenRef.current}`,
           'Content-Type': 'application/json',
         },
       });
-      const chatListData = await chatListResponse.json();
-      initialChatCountRef.current = chatListData?.length || 0;
+      
+      initialChatCountRef.current = chatListResponse.data?.length || 0;
 
       dotRef.current = setInterval(() => {
         setDotCount((prev) => (prev === 3 ? 1 : prev + 1));
@@ -66,23 +60,17 @@ export default function Random() {
   const pollForMatch = () => {
     pollingRef.current = setInterval(async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/chat`, {
-          method: 'GET',
+        const response = await axios.get(`${API_BASE_URL}/api/chat`, {
           headers: {
             'Authorization': `Bearer ${accessTokenRef.current}`,
             'Content-Type': 'application/json',
           },
         });
 
-        if (!response.ok) {
-          return;
-        }
+        console.log('채팅 목록 확인:', response.data?.length);
 
-        const data = await response.json();
-        console.log('채팅 목록 확인:', data?.length);
-
-        if (data && data.length > initialChatCountRef.current) {
-          clearInterval(pollingRef);
+        if (response.data && response.data.length > initialChatCountRef.current) {
+          clearInterval(pollingRef.current);
           if (dotRef.current) clearInterval(dotRef.current);
           setStatus('matched');
           console.log('매칭 완료!');
