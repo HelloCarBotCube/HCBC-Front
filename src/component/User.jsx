@@ -7,7 +7,7 @@ const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
 
 const DEFAULT_USER = {
   name: '한국',
-  handle: '@안떰',
+  handle: '@h4.zx7',
   tags: ['🔞', '영화', '음악', '남자', '16살', '광산구 평동'],
 };
 
@@ -46,14 +46,14 @@ export default function User() {
   const fetchMyProfile = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      
+
       if (!accessToken) {
         console.error('토큰이 없습니다');
         loadFromLocalStorage();
         setLoading(false);
         return;
       }
-      
+
       const response = await fetch(`${API_BASE_URL}/api/user/myprofile`, {
         method: 'GET',
         headers: {
@@ -88,26 +88,27 @@ export default function User() {
       }
 
       const data = await response.json();
-      console.log('API 응답 데이터:', data); 
-      
+      console.log('API 응답 데이터:', data);
+
       const tags = [];
-      
+
       if (data.gender) {
         tags.push(GENDER_LABELS[data.gender] || data.gender);
       }
-      
+
       if (data.age) {
         tags.push(`${data.age}살`);
       }
-      
+
+      if (data.address) {
+        tags.push(data.address);
+      }
+
+
       if (Array.isArray(data.categories)) {
         data.categories.forEach(cat => {
           tags.push(CATEGORY_LABELS[cat] || cat);
         });
-      }
-      
-      if (data.address) {
-        tags.push(data.address);
       }
 
       setUser({

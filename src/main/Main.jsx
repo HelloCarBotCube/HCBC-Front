@@ -12,7 +12,7 @@ export default function Main() {
       <div className="random-match-section">
         <Random />
       </div>
-      <div classNmae="profile-section">
+      <div className="profile-section">
         <User />
       </div>
     </div>
