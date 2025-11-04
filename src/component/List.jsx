@@ -19,8 +19,6 @@ export default function Main() {
   const fetchChatList = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      
-      // 테스트 데이터 (accessToken이 없어도 표시)
       const testChats = [
         {
           id: 1,
