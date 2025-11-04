@@ -1,84 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.css';
+import axios from 'axios';
 import EyeHide from '../assets/eyeHide';
 import EyeShow from '../assets/eyeShow';
 import Logo from '../assets/logo';
 
-// '구'에 따른 '동' 데이터
-const dongData = {
-  광산구: [
-    '도산동',
-    '동곡동',
-    '본량동',
-    '비아동',
-    '삼도동',
-    '송정동',
-    '수완동',
-    '신가동',
-    '신창동',
-    '신흥동',
-    '어룡동',
-    '우산동',
-    '운남동',
-    '월곡동',
-    '임곡동',
-    '첨단동',
-    '평동',
-    '하남동',
-  ],
-  남구: [
-    '대촌동',
-    '방림동',
-    '백운동',
-    '봉선동',
-    '사직동',
-    '송암동',
-    '양림동',
-    '월산동',
-    '일산동',
-    '주월동',
-    '진월동',
-    '효덕동',
-  ],
-  동구: ['계림동', '동명동', '산수동', '서남동', '지산동', '지원동', '충장동', '학운동', '학동'],
-  북구: [
-    '건국동',
-    '동림동',
-    '두암동',
-    '매곡동',
-    '문화동',
-    '문흥동',
-    '삼각동',
-    '석곡동',
-    '신안동',
-    '신용동',
-    '양상동',
-    '오치동',
-    '용봉동',
-    '우산동',
-    '운암동',
-    '일곡동',
-    '임동',
-    '중앙동',
-    '중흥동',
-    '풍향동',
-  ],
-  서구: [
-    '광천동',
-    '금호동',
-    '농성동',
-    '동천동',
-    '상무동',
-    '서창동',
-    '양동',
-    '유덕동',
-    '치평동',
-    '풍암동',
-    '화정동',
-  ],
+// BaseURL
+const API = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://gsmsv-1.yujun.kr:27919',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// 성별
+const genderMap = {
+  남자: 'MALE',
+  여자: 'FEMALE',
+  기타: 'OTHER',
 };
-// 카테고리 데이터
+
 const categories = [
   '운동',
   '맛집',
@@ -96,85 +39,220 @@ const categories = [
   '애니메이션',
 ];
 
-// 메인 앱 컴포넌트
-const App = () => {
+const categoryMap = {
+  운동: 'EXERCISE',
+  맛집: 'RESTAURANT',
+  동물: 'ANIMAL',
+  여행: 'TRIP',
+  영화: 'MOVIE',
+  게임: 'GAME',
+  독서: 'LEADING',
+  공부: 'STUDY',
+  음악: 'MUSIC',
+  '🔞': 'SEXUAL_PLEASURE',
+  웹툰: 'WEBTOON',
+  외향형: 'EXTROVERT',
+  내향형: 'INTROVERT',
+  애니메이션: 'ANIMATION',
+};
+
+const Signup = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
     age: '',
     gender: '',
-    district: '',
-    dong: '',
+    address: '',
     id: '',
     password: '',
     confirmPassword: '',
     selectedCategories: new Set(),
   });
   const [showGenderOptions, setShowGenderOptions] = useState(false);
-  const [showDistrictOptions, setShowDistrictOptions] = useState(false);
-  const [showDongOptions, setShowDongOptions] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [idCheckMessage, setIdCheckMessage] = useState('');
+  const [isIdAvailable, setIsIdAvailable] = useState(false);
+  const [isIdChecked, setIsIdChecked] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === 'id') {
+      setIsIdChecked(false);
+      setIsIdAvailable(false);
+      setIdCheckMessage('');
+    }
   };
 
-  const toggleGenderOptions = () => setShowGenderOptions(!showGenderOptions);
-  const toggleDistrictOptions = () => setShowDistrictOptions(!showDistrictOptions);
-  const toggleDongOptions = () => setShowDongOptions(!showDongOptions);
+  const toggleGenderOptions = () => setShowGenderOptions((prev) => !prev);
 
   const handleGenderSelect = (gender) => {
-    setFormData((prevData) => ({ ...prevData, gender }));
+    setFormData((prev) => ({ ...prev, gender }));
     setShowGenderOptions(false);
   };
 
-  const handleDistrictSelect = (district) => {
-    setFormData((prevData) => ({ ...prevData, district, dong: '' }));
-    setShowDistrictOptions(false);
-    setShowDongOptions(false);
+  const execDaumPostcode = () => {
+    if (window.daum && window.daum.Postcode) {
+      new window.daum.Postcode({
+        oncomplete: (data) => {
+          const fullAddress = `${data.sido} ${data.sigungu} ${data.bname}`;
+          setFormData((prev) => ({ ...prev, address: fullAddress }));
+        },
+      }).open();
+    } else {
+      alert('주소 검색 기능을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+    }
   };
 
-  const handleDongSelect = (dong) => {
-    setFormData((prevData) => ({ ...prevData, dong }));
-    setShowDongOptions(false);
+  // 아이디 중복 검사
+  const handleCheckId = async () => {
+    if (!formData.id.trim()) {
+      setIdCheckMessage('아이디를 입력해주세요.');
+      setIsIdAvailable(false);
+      setIsIdChecked(false);
+      return;
+    }
+
+    try {
+      const res = await API.get('/api/auth/check-id', {
+        params: { loginId: formData.id },
+      });
+
+      if (res.data.available === true) {
+        setIdCheckMessage('사용 가능한 아이디입니다.');
+        setIsIdAvailable(true);
+        setIsIdChecked(true);
+      } else if (res.data.available === false) {
+        setIdCheckMessage('이미 사용 중인 아이디입니다.');
+        setIsIdAvailable(false);
+        setIsIdChecked(true);
+      } else {
+        setIdCheckMessage('서버 응답 형식이 올바르지 않습니다.');
+        setIsIdAvailable(false);
+        setIsIdChecked(false);
+      }
+    } catch (err) {
+      if (err.response?.status === 409) {
+        setIdCheckMessage('이미 사용 중인 아이디입니다.');
+        setIsIdAvailable(false);
+        setIsIdChecked(true);
+      } else if (err.response?.status === 400) {
+        setIdCheckMessage('아이디 형식이 올바르지 않습니다.');
+        setIsIdAvailable(false);
+        setIsIdChecked(false);
+      } else if (err.response?.status === 500) {
+        setIdCheckMessage('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        setIsIdAvailable(false);
+        setIsIdChecked(false);
+      } else {
+        setIdCheckMessage('서버와 연결할 수 없습니다. 네트워크를 확인해주세요.');
+        setIsIdAvailable(false);
+        setIsIdChecked(false);
+      }
+    }
   };
 
   const handleCategorySelect = (category) => {
-    setFormData((prevData) => {
-      const newCategories = new Set(prevData.selectedCategories);
-      if (newCategories.has(category)) {
-        newCategories.delete(category);
-      } else {
-        if (newCategories.size < 3) {
-          newCategories.add(category);
-        }
-      }
-      return { ...prevData, selectedCategories: newCategories };
+    setFormData((prev) => {
+      const newSet = new Set(prev.selectedCategories);
+      if (newSet.has(category)) newSet.delete(category);
+      else if (newSet.size < 3) newSet.add(category);
+      return { ...prev, selectedCategories: newSet };
     });
   };
 
-  const isStep1Valid =
-    formData.name.trim() !== '' &&
-    formData.age.trim() !== '' &&
-    formData.gender !== '' &&
-    formData.district !== '' &&
-    formData.dong !== '';
-
+  const isStep1Valid = formData.name && formData.age && formData.gender && formData.address;
   const isPasswordMatch = formData.password === formData.confirmPassword;
   const isPasswordValid = formData.password.length >= 8;
-
-  const isStep2Valid = formData.id.trim() !== '' && isPasswordValid && isPasswordMatch;
-
+  const isStep2Valid =
+    formData.id && isPasswordValid && isPasswordMatch && isIdChecked && isIdAvailable;
   const isStep3Valid = formData.selectedCategories.size === 3;
+
+  const handleSubmit = async () => {
+    if (!isStep1Valid || !isStep2Valid || !isStep3Valid) {
+      alert('입력값을 다시 확인해주세요.');
+      return;
+    }
+
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    const mappedCategories = Array.from(formData.selectedCategories).map(
+      (cat) => categoryMap[cat] || 'OTHER'
+    );
+
+    const payload = {
+      name: formData.name,
+      age: Number(formData.age) || 0,
+      gender: genderMap[formData.gender] || 'OTHER',
+      loginId: formData.id,
+      password: formData.password,
+      categories: mappedCategories,
+      address: formData.address,
+    };
+
+    try {
+      const res = await API.post('/api/auth/signup', payload);
+
+      if (res.status === 201 || res.status === 200) {
+        alert('회원가입이 완료되었습니다!');
+        navigate('/');
+      }
+    } catch (err) {
+      if (err.response) {
+        switch (err.response.status) {
+          case 201:
+          case 200:
+            alert('회원가입이 완료되었습니다!');
+            navigate('/');
+            break;
+          case 400:
+            alert('입력값이 올바르지 않습니다.');
+            setIsSubmitting(false);
+            break;
+          case 409:
+            alert('이미 사용 중인 아이디입니다.\n다른 아이디로 다시 시도해주세요.');
+            setIdCheckMessage('이미 사용 중인 아이디입니다.');
+            setIsIdAvailable(false);
+            setIsIdChecked(false);
+            setStep(2);
+            setIsSubmitting(false);
+            break;
+          case 500:
+            alert('서버 오류가 발생했습니다. 관리자에게 문의해주세요.');
+            setIsSubmitting(false);
+            break;
+          default:
+            alert('회원가입 중 오류가 발생했습니다.');
+            setIsSubmitting(false);
+        }
+      } else {
+        alert('네트워크 오류가 발생했습니다. 연결 상태를 확인해주세요.');
+        setIsSubmitting(false);
+      }
+    }
+  };
 
   const renderFormStep = () => {
     switch (step) {
-      case 1: {
-        const districts = Object.keys(dongData);
-        const currentDongs = formData.district ? dongData[formData.district] : [];
+      case 1:
         return (
           <>
             <div className="input-field">
@@ -202,61 +280,25 @@ const App = () => {
               </div>
               {showGenderOptions && (
                 <div className="options-list">
-                  <div className="option-item" onClick={() => handleGenderSelect('남자')}>
-                    남자
-                  </div>
-                  <div className="option-item" onClick={() => handleGenderSelect('여자')}>
-                    여자
-                  </div>
-                  <div className="option-item" onClick={() => handleGenderSelect('기타')}>
-                    기타
-                  </div>
+                  {['남자', '여자', '기타'].map((g) => (
+                    <div key={g} className="option-item" onClick={() => handleGenderSelect(g)}>
+                      {g}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-            <div className="select-wrap two-col">
-              <div className="select-group">
-                <div className="select-box" onClick={toggleDistrictOptions}>
-                  {formData.district || '구'}
-                  <span className="arrow">{showDistrictOptions ? '▲' : '▼'}</span>
-                </div>
-                {showDistrictOptions && (
-                  <div className="options-list">
-                    {districts.map((dist) => (
-                      <div
-                        key={dist}
-                        className="option-item"
-                        onClick={() => handleDistrictSelect(dist)}
-                      >
-                        {dist}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div className="select-group">
-                <div className="select-box" onClick={toggleDongOptions}>
-                  {formData.dong || '동'}
-                  <span className="arrow">{showDongOptions ? '▲' : '▼'}</span>
-                </div>
-                {showDongOptions && (
-                  <div className="options-list">
-                    {currentDongs.length > 0 ? (
-                      currentDongs.map((dong) => (
-                        <div
-                          key={dong}
-                          className="option-item"
-                          onClick={() => handleDongSelect(dong)}
-                        >
-                          {dong}
-                        </div>
-                      ))
-                    ) : (
-                      <div className="option-item disabled">구를 먼저 선택해주세요.</div>
-                    )}
-                  </div>
-                )}
-              </div>
+            <div className="input-field id-field">
+              <input
+                type="text"
+                name="address"
+                placeholder="주소"
+                value={formData.address}
+                readOnly
+              />
+              <button className="btn-check" onClick={execDaumPostcode}>
+                주소 찾기
+              </button>
             </div>
             <button className="btn-submit" onClick={() => setStep(2)} disabled={!isStep1Valid}>
               다음으로
@@ -266,8 +308,8 @@ const App = () => {
             </p>
           </>
         );
-      }
-      case 2: {
+
+      case 2:
         return (
           <>
             <div className="input-field id-field">
@@ -278,8 +320,17 @@ const App = () => {
                 value={formData.id}
                 onChange={handleChange}
               />
-              <button className="btn-check">중복 검사</button>
+              <button
+                className="btn-check"
+                type="button"
+                onClick={handleCheckId}
+                disabled={!formData.id.trim()}
+              >
+                중복 검사
+              </button>
             </div>
+            <p className={`msg ${isIdAvailable ? 'success' : 'error'}`}>{idCheckMessage}</p>
+
             <div className="input-field pw-field">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -292,9 +343,10 @@ const App = () => {
                 {showPassword ? <EyeShow /> : <EyeHide />}
               </span>
             </div>
-            {!isPasswordValid && formData.password.length > 0 && (
-              <p className="msg-error">비밀번호는 영문과 숫자를 포함하여 8자 이상이어야 합니다.</p>
-            )}
+            <p className="msg-error">
+              {!isPasswordValid && formData.password ? '비밀번호는 8자 이상이어야 합니다.' : ''}
+            </p>
+
             <div className="input-field pw-field">
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
@@ -310,16 +362,17 @@ const App = () => {
                 {showConfirmPassword ? <EyeShow /> : <EyeHide />}
               </span>
             </div>
-            {formData.confirmPassword.length > 0 && !isPasswordMatch && (
-              <p className="msg-error">비밀번호가 일치하지 않습니다.</p>
-            )}
+            <p className="msg-error">
+              {formData.confirmPassword && !isPasswordMatch ? '비밀번호가 일치하지 않습니다.' : ''}
+            </p>
+
             <button className="btn-submit" onClick={() => setStep(3)} disabled={!isStep2Valid}>
               다음으로
             </button>
           </>
         );
-      }
-      case 3: {
+
+      case 3:
         return (
           <>
             <div className="category-wrap">
@@ -340,77 +393,28 @@ const App = () => {
             </div>
             <button
               className="btn-submit"
-              onClick={() => {
-                // 간단한 유효성 최종 검사
-                if (!isStep1Valid || !isStep2Valid || !isStep3Valid) {
-                  alert('입력값을 확인해주세요.');
-                  return;
-                }
-
-                const newUser = {
-                  name: formData.name,
-                  age: formData.age,
-                  gender: formData.gender,
-                  district: formData.district,
-                  dong: formData.dong,
-                  id: formData.id,
-                  // 보안: 실제 서비스에서는 평문 비밀번호를 localStorage에 저장하면 안됩니다.
-                  password: formData.password,
-                  categories: Array.from(formData.selectedCategories),
-                };
-
-                // 로컬 저장 예시: 'hcbc_users' 키로 배열에 저장
-                try {
-                  const raw = localStorage.getItem('hcbc_users');
-                  const users = raw ? JSON.parse(raw) : [];
-                  users.push(newUser);
-                  localStorage.setItem('hcbc_users', JSON.stringify(users));
-                } catch (e) {
-                  console.error('localStorage error', e);
-                  alert('로컬 저장에 실패했습니다.');
-                  return;
-                }
-
-                // 서버 전송 예시 (주석 처리됨) - 실제 서버가 있다면 아래 fetch를 사용
-                /*
-                fetch('https://example.com/api/signup', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(newUser),
-                })
-                  .then(res => res.json())
-                  .then(data => {
-                    console.log('server response', data);
-                  })
-                  .catch(err => console.error('server error', err));
-                */
-
-                alert('회원가입이 완료되었습니다!');
-                navigate('/'); // 로그인 페이지로 이동
-              }}
-              disabled={!isStep3Valid}
+              onClick={handleSubmit}
+              disabled={!isStep3Valid || isSubmitting}
             >
-              회원가입하기
+              {isSubmitting ? '가입 중...' : '회원가입하기'}
             </button>
           </>
         );
-      }
+
       default:
         return null;
     }
   };
 
   return (
-    <div className="signup-page">
+    <div className="wrap">
       <div className="card">
-        <div className="logo-section">
-          <Logo></Logo>
-          <p className="logo-text">HCBC</p>
-        </div>
+        <Logo />
+        <p className="logo-text">HCBC</p>
         {renderFormStep()}
       </div>
     </div>
   );
 };
 
-export default App;
+export default Signup;

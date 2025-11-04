@@ -3,12 +3,34 @@ import "./index.css";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
+import { useState } from "react";
+import "./index.css";
+import { Link } from "react-router-dom";
+
+import axios from "axios";
 
 function Login() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [message, setMessage] = useState("");
+function Login() {
+  const [id, setId] = useState("");
+  const [pw, setPw] = useState("");
+  const [message, setMessage] = useState("");
   const [showPw, setshowPw] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    const loginId = id.trim();
+    const password = pw.trim();
+    if (!loginId || !password) {
+      setMessage("아이디와 비밀번호를 모두 입력하세요");
+      return;
+    }
+
+    setLoading(true);
+    setMessage("");
+
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -62,14 +84,58 @@ function Login() {
         setMessage("아이디 또는 비밀번호가 일치하지 않음");
       } else if (status === 500) {
         setMessage("서버 에러");
+      const res = await axios.post(
+        "http://gsmsv-1.yujun.kr:27919/api/auth/signin",
+        {
+          loginId: loginId,
+          password: password
+        },
+        {
+          headers:
+          {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          }
+        }
+      );
+
+      const {
+        accessToken,
+        refreshToken,
+        accessTokenExpiresIn,
+        refreshTokenExpiresIn,
+      } = res.data || {};
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("accessTokenExpiresIn", accessTokenExpiresIn);
+      localStorage.setItem("refreshTokenExpiresIn", refreshTokenExpiresIn);
+
+
+      window.location.href = "/main";
+
+
+    } catch (err) {
+      const status = err?.response?.status;
+      const serverMsg = err?.response?.data?.message;
+
+      if (status === 401) {
+        setMessage("아이디 또는 비밀번호가 일치하지 않음");
+      } else if (status === 500) {
+        setMessage("서버 에러");
       } else {
+        setMessage("네트워크 오류");
         setMessage("네트워크 오류");
       }
       console.debug("[signin:error]", status, err?.response?.data);
     } finally {
       setLoading(false);
+      console.debug("[signin:error]", status, err?.response?.data);
+    } finally {
+      setLoading(false);
     }
   };
+
 
   return (
     <div className="all">
@@ -105,11 +171,64 @@ function Login() {
         </defs>
       </svg>
 
+    <div className="all">
+      <svg
+        viewBox="0 0 1092 1092"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          x="129"
+          y="129"
+          width="834"
+          height="834"
+          rx="135"
+          fill="url(#paint0_linear_11_6)"
+        />
+        <path
+          d="M356 790C339.431 790 326 776.569 326 760V332C326 315.431 339.431 302 356 302H428.381C444.949 302 458.381 315.431 458.381 332V462.625C458.381 479.194 471.812 492.625 488.381 492.625H603.619C620.188 492.625 633.619 479.194 633.619 462.625V332C633.619 315.431 647.051 302 663.619 302H736C752.569 302 766 315.431 766 332V760C766 776.569 752.569 790 736 790H663.619C647.051 790 633.619 776.569 633.619 760V629.375C633.619 612.806 620.188 599.375 603.619 599.375H488.381C471.812 599.375 458.381 612.806 458.381 629.375V760C458.381 776.569 444.949 790 428.381 790H356Z"
+          fill="white"
+        />
+        <defs>
+          <linearGradient
+            id="paint0_linear_11_6"
+            x1="546"
+            y1="129"
+            x2="546"
+            y2="963"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#FF649B" />
+            <stop offset="1" stopColor="#FF9CB9" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <span className="name">HCBC</span>
+
 
       <div className="input">
         <div className="inputBox">
           <span className="inputIcon">
+            <svg
+              className="idIcon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 10C14.2091 10 16 8.20914 16 6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6C8 8.20914 9.79086 10 12 10Z"
+                stroke="#D6D6D7"
+                strokeWidth="1.5"
+              />
+              <path
+                d="M20 17.5C20 19.985 20 22 12 22C4 22 4 19.985 4 17.5C4 15.015 7.582 13 12 13C16.418 13 20 15.015 20 17.5Z"
+                stroke="#D6D6D7"
+                strokeWidth="1.5"
+              />
+            </svg>
             <svg
               className="idIcon"
               width="24"
@@ -138,7 +257,9 @@ function Login() {
             value={id}
             onChange={(e) => setId(e.target.value)}
           />
+          />
         </div>
+
 
         <div className="inputBox">
           <span className="inputIcon">
@@ -158,15 +279,66 @@ function Login() {
                 strokeLinejoin="round"
               />
             </svg>
+            <svg
+              className="pwIcon"
+              width="18"
+              height="21"
+              viewBox="0 0 18 21"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 13.1389V15.25M4 8.41929C4.47142 8.38889 5.05259 8.38889 5.8 8.38889H12.2C12.9474 8.38889 13.5286 8.38889 14 8.41929M4 8.41929C3.41168 8.45718 2.99429 8.54247 2.63803 8.73406C2.07354 9.03763 1.6146 9.52203 1.32698 10.1179C1 10.7953 1 11.682 1 13.4556V14.9333C1 16.7069 1 17.5935 1.32698 18.271C1.6146 18.8669 2.07354 19.3513 2.63803 19.6548C3.27976 20 4.11984 20 5.8 20H12.2C13.8802 20 14.7202 20 15.362 19.6548C15.9265 19.3513 16.3854 18.8669 16.673 18.271C17 17.5935 17 16.7069 17 14.9333V13.4556C17 11.682 17 10.7953 16.673 10.1179C16.3854 9.52203 15.9265 9.03763 15.362 8.73406C15.0057 8.54247 14.5883 8.45718 14 8.41929M4 8.41929V6.27778C4 3.36295 6.23858 1 9 1C11.7614 1 14 3.36295 14 6.27778V8.41929"
+                stroke="#D6D6D7"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </span>
           <input
+            type={showPw ? "text" : "password"}
             type={showPw ? "text" : "password"}
             required
             placeholder="비밀번호"
             value={pw}
             onChange={(e) => setPw(e.target.value)}
           />
+          />
           <span className="pwToggle" onClick={() => setshowPw(!showPw)}>
+            {showPw ? (
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  className="show"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M20 25.8C24.034 25.8 27.686 23.55 29.648 20C27.686 16.45 24.034 14.2 20 14.2C15.966 14.2 12.314 16.45 10.352 20C12.314 23.55 15.966 25.8 20 25.8ZM20 13C24.808 13 28.972 15.848 31 20C28.972 24.152 24.808 27 20 27C15.192 27 11.028 24.152 9 20C11.028 15.848 15.192 13 20 13ZM20 22.8C20.7426 22.8 21.4548 22.505 21.9799 21.9799C22.505 21.4548 22.8 20.7426 22.8 20C22.8 19.2574 22.505 18.5452 21.9799 18.0201C21.4548 17.495 20.7426 17.2 20 17.2C19.2574 17.2 18.5452 17.495 18.0201 18.0201C17.495 18.5452 17.2 19.2574 17.2 20C17.2 20.7426 17.495 21.4548 18.0201 21.9799C18.5452 22.505 19.2574 22.8 20 22.8ZM20 24C18.9391 24 17.9217 23.5786 17.1716 22.8284C16.4214 22.0783 16 21.0609 16 20C16 18.9391 16.4214 17.9217 17.1716 17.1716C17.9217 16.4214 18.9391 16 20 16C21.0609 16 22.0783 16.4214 22.8284 17.1716C23.5786 17.9217 24 18.9391 24 20C24 21.0609 23.5786 22.0783 22.8284 22.8284C22.0783 23.5786 21.0609 24 20 24Z"
+                  fill="#858486"
+                />
+              </svg>
+            ) : (
+              <svg
+                width="80"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  className="notShow"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M26.67 24.9762L29.425 27.7318L28.576 28.58L11.85 11.8502L12.697 11L15.552 13.8556C16.932 13.3035 18.432 13.0005 20 13.0005C24.808 13.0005 28.972 15.8491 31 20.002C30.0217 22.0138 28.5276 23.7302 26.67 24.9762ZM16.486 14.7909L18.15 16.4552C18.9049 16.0605 19.7662 15.9171 20.6082 16.046C21.4503 16.1749 22.2292 16.5693 22.8316 17.1718C23.434 17.7743 23.8283 18.5534 23.9572 19.3957C24.086 20.2379 23.9427 21.0994 23.548 21.8545L25.803 24.11C27.377 23.1098 28.707 21.7064 29.648 20.003C27.686 16.4512 24.034 14.2007 20 14.2007C18.8041 14.2015 17.6166 14.4009 16.486 14.7909ZM22.638 20.9443C22.8164 20.4449 22.8495 19.905 22.7332 19.3876C22.6169 18.8702 22.3562 18.3964 21.9812 18.0214C21.6063 17.6464 21.1326 17.3855 20.6153 17.2692C20.098 17.1529 19.5583 17.186 19.059 17.3644L22.638 20.9443ZM24.448 26.1494C23.068 26.7016 21.568 27.0046 20 27.0046C15.192 27.0046 11.028 24.156 9 20.003C9.97832 17.9913 11.4724 16.2749 13.33 15.0289L14.197 15.8961C12.5915 16.9207 11.2693 18.3327 10.352 20.002C12.314 23.5529 15.966 25.8034 20 25.8034C21.1959 25.8026 22.3834 25.6032 23.514 25.2132L24.448 26.1494ZM16.453 18.1516L17.362 19.0618C17.1836 19.5612 17.1505 20.1011 17.2668 20.6185C17.3831 21.1359 17.6438 21.6097 18.0188 21.9847C18.3937 22.3597 18.8674 22.6206 19.3847 22.7369C19.902 22.8532 20.4417 22.8201 20.941 22.6416L21.851 23.5499C21.0961 23.9446 20.2348 24.088 19.3928 23.9591C18.5507 23.8302 17.7718 23.4358 17.1694 22.8333C16.567 22.2308 16.1727 21.4517 16.0438 20.6094C15.915 19.7671 16.0583 18.9067 16.453 18.1516Z"
+                  fill="#858486"
+                />
+              </svg>
+            )}
             {showPw ? (
               <svg
                 width="40"
@@ -205,14 +377,19 @@ function Login() {
       </div>
       <div id="message">
         <span className="message">{message}</span>
+        <span className="message">{message}</span>
       </div>
+
+      <button type="submit" onClick={handleLogin} disabled={loading}>
 
       <button type="submit" onClick={handleLogin} disabled={loading}>
         로그인
       </button>
 
+
       <div className="footer">
         <span className="not">아직 회원이 아니라면?</span>
+        <Link to="/signup"> 회원가입하기</Link>
         <Link to="/signup"> 회원가입하기</Link>
       </div>
     </div>

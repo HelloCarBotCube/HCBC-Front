@@ -8,6 +8,7 @@ import Nochat from '../assets/nochat';
 const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
 
 export default function Main() {
+export default function Main() {
   const navigate = useNavigate();
   const [chatList, setChatList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,9 +85,9 @@ export default function Main() {
   };
 
   return (
-    <div className="main-container">
-      <div className="chat-box">
-        <div className="chat-header">현재 채팅</div>
+    <div className={styles['main-container']}>
+      <div className={styles['chat-box']}>
+        <div className={styles['chat-header']}>현재 채팅</div>
 
         {loading ? (
           <div className="loading">로딩 중...</div>

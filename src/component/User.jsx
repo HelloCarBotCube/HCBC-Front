@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import './User.css';
+import styles from './User.module.css';
 import profileImg from '../assets/profile-h.svg';
 
 const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
@@ -153,28 +153,28 @@ export default function User() {
   }
 
   return (
-    <div className="user-container">
-      <aside className="user-card">
-        <div className="user-wrap">
+    <div className={styles['user-container']}>
+      <aside className={styles['user-card']}>
+        <div className={styles['user-wrap']}>
           <img src={profileImg} alt="아이콘" className="icon" />
         </div>
 
-        <div className="user-body">
-          <div className="user-name">{user.name}</div>
-          <div className="user-id">{user.handle}</div>
+        <div className={styles['user-body']}>
+          <div className={styles['user-name']}>{user.name}</div>
+          <div className={styles['user-id']}>{user.handle}</div>
 
-          <div className="user-tag-card">
-            <div className="user-tags user-tags1">
+          <div className={styles['user-tag-card']}>
+            <div className={`${styles['user-tags']} ${styles['user-tags1']}`}>
               {tags1.map((t, i) => (
-                <span key={`t1-${i}`} className="user-tag">
+                <span key={`t1-${i}`} className={styles['user-tag']}>
                   {t}
                 </span>
               ))}
             </div>
             {tags2.length > 0 && (
-              <div className="user-tags user-tags2">
+              <div className={`${styles['user-tags']} ${styles['user-tags2']}`}>
                 {tags2.map((t, i) => (
-                  <span key={`t2-${i}`} className="user-tag">
+                  <span key={`t2-${i}`} className={styles['user-tag']}>
                     {t}
                   </span>
                 ))}
@@ -182,7 +182,11 @@ export default function User() {
             )}
           </div>
 
-          <button type="button" className="user-button" onClick={() => navigate('/Profile')}>
+          <button
+            type="button"
+            className={styles['user-button']}
+            onClick={() => navigate('/Profile')}
+          >
             프로필
           </button>
         </div>
