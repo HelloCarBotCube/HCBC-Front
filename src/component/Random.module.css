@@ -19,7 +19,8 @@
   padding: 60px 0;
   box-sizing: border-box;
 }
-.logo {
+
+.all svg {
   width: 150px;
   height: 150px;
   padding-top: 75px;
