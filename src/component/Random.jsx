@@ -8,6 +8,7 @@ export default function Random() {
   const [status, setStatus] = useState('idle');
   const [dotCount, setDotCount] = useState(1);
   const dotRef = useRef(null);
+  const pollingRef = useRef(null);
   const accessTokenRef = useRef(null);
   const initialChatCountRef = useRef(0);
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function Random() {
     accessTokenRef.current = localStorage.getItem('accessToken');
     return () => {
       if (dotRef.current) clearInterval(dotRef.current);
+      if (pollingRef.current) clearInterval(pollingRef.current);
     };
   }, []);
 
@@ -62,7 +64,7 @@ export default function Random() {
   };
 
   const pollForMatch = () => {
-    const pollingRef = setInterval(async () => {
+    pollingRef.current = setInterval(async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/chat`, {
           method: 'GET',
@@ -97,6 +99,7 @@ export default function Random() {
 
   const cancelMatching = () => {
     if (dotRef.current) clearInterval(dotRef.current);
+    if (pollingRef.current) clearInterval(pollingRef.current);
 
     setStatus('idle');
     setDotCount(1);
@@ -104,6 +107,7 @@ export default function Random() {
 
   const handleReset = () => {
     if (dotRef.current) clearInterval(dotRef.current);
+    if (pollingRef.current) clearInterval(pollingRef.current);
 
     setStatus('idle');
     setDotCount(1);
