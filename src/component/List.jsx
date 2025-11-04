@@ -8,7 +8,6 @@ import Nochat from '../assets/nochat';
 const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
 
 export default function Main() {
-export default function Main() {
   const navigate = useNavigate();
   const [chatList, setChatList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +67,6 @@ export default function Main() {
         userId: `@${chat.opponentLoginId}` || '@unknown',
         lastMessage: chat.lastMessage || '메시지 없음',
         unread: false,
-        avatar: '👤',
       }));
 
       setChatList(mappedData.length > 0 ? mappedData : testChats);
