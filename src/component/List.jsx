@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './List.css';
+import styles from './List.module.css';
 import User from '../assets/user';
 import Nochat from '../assets/nochat';
 
@@ -21,24 +21,7 @@ export default function Main() {
   const fetchChatList = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      const testChats = [
-        // {
-        //   id: 1,
-        //   username: '봉봉지',
-        //   userId: '@bong_11111',
-        //   lastMessage: 'ㅎㅇ염',
-        //   unread: false,
-        // },
-        // {
-        //   id: 1,
-        //   username: '문깜',
-        //   userId: '@nigger123',
-        //   lastMessage: '깜둥이',
-        //   unread: true,
-        // },
-
-        
-      ];
+      const testChats = [];
       
       if (!accessToken) {
         setChatList(testChats);
@@ -61,13 +44,15 @@ export default function Main() {
         }
       });
       
-      const mappedData = Object.values(uniqueChats).map((chat) => ({
-        id: chat.roomId,
-        username: chat.opponentName || '알 수 없는 사용자',
-        userId: `@${chat.opponentLoginId}` || '@unknown',
-        lastMessage: chat.lastMessage || '메시지 없음',
-        unread: false,
-      }));
+      const mappedData = Object.values(uniqueChats)
+        .sort((a, b) => new Date(b.lastActiveAt) - new Date(a.lastActiveAt))
+        .map((chat) => ({
+          id: chat.roomId,
+          username: chat.opponentName || '알 수 없는 사용자',
+          userId: `@${chat.opponentLoginId}` || '@unknown',
+          lastMessage: chat.lastMessage || '메시지 없음',
+          unread: false,
+        }));
 
       setChatList(mappedData.length > 0 ? mappedData : testChats);
     } catch (error) {
@@ -88,13 +73,13 @@ export default function Main() {
         <div className={styles['chat-header']}>현재 채팅</div>
 
         {loading ? (
-          <div className="loading">로딩 중...</div>
+          <div className={styles.loading}>로딩 중...</div>
         ) : (
-          <div className="chat-list">
+          <div className={styles['chat-list']}>
             {chatList.length === 0 ? (
-              <div className="empty-state">
+              <div className={styles['empty-state']}>
                 <Nochat />
-                <div className="empty-title">
+                <div className={styles['empty-title']}>
                   아직 대화가 없어요.
                   <br />
                   랜덤 매칭으로 첫 대화를 시작해보세요!
@@ -104,19 +89,19 @@ export default function Main() {
               chatList.map((chat) => (
                 <div
                   key={chat.id}
-                  className="chat-item"
+                  className={styles['chat-item']}
                   onClick={() => handleChatClick(chat.id)}
                 >
-                  <div className="avatar">
+                  <div className={styles.avatar}>
                     <User />
                   </div>
-                  <div className="chat-info">
-                    <div className="chat-username">
+                  <div className={styles['chat-info']}>
+                    <div className={styles['chat-username']}>
                       {chat.username} <span>{chat.userId}</span>
                     </div>
-                    <div className="chat-message">{chat.lastMessage}</div>
+                    <div className={styles['chat-message']}>{chat.lastMessage}</div>
                   </div>
-                  {chat.unread && <div className="unread-dot"></div>}
+                  {chat.unread && <div className={styles['unread-dot']}></div>}
                 </div>
               ))
             )}
