@@ -2,11 +2,12 @@ import { useState } from "react";
 import "./index.css";
 import { Link } from "react-router-dom";
 import Logo from "../assets/Logo";
-import IdIcon from "../assets/IdIcon";
-import PwIcon from "../assets/PwIcon";
-import EyeShow from "../assets/EyeShow";
-import EyeHide from "../assets/EyeHide";
+import IdIcon from "../assets/IdIcon.jsx";
+import PwIcon from "../assets/PwIcon.jsx";
+import EyeShow from "../assets/EyeShow.jsx";
+import EyeHide from "../assets/EyeHide.jsx";
 import axios from "axios";
+
 
 const axiosInstance = axios.create({
   baseURL: "http://gsmsv-1.yujun.kr:27919/api",
