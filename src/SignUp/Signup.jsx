@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.css';
 import axios from 'axios';
-import EyeHide from '../assets/eyeHide';
-import EyeShow from '../assets/eyeShow';
-import Logo from '../assets/logo';
+import EyeHide from '../assets/EyeHide';
+import EyeShow from '../assets/EyeShow';
+import Logo from '../assets/Logo';
 
 // BaseURL
 const API = axios.create({
