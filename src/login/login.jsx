@@ -4,6 +4,14 @@ import { Link } from "react-router-dom";
 
 import axios from "axios";
 
+const axiosInstance = axios.create({
+  baseURL: "http://gsmsv-1.yujun.kr:27919/api",
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+});
+
 function Login() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
@@ -23,20 +31,10 @@ function Login() {
     setMessage("");
 
     try {
-      const res = await axios.post(
-        "http://gsmsv-1.yujun.kr:27919/api/auth/signin",
-        {
-          loginId: loginId,
-          password: password
-        },
-        {
-          headers:
-          {
-            "Content-Type": "application/json",
-            Accept: "application/json"
-          }
-        }
-      );
+      const res = await axiosInstance.post("/auth/signin", {
+        loginId: loginId,
+        password: password
+      });
 
       const {
         accessToken,
