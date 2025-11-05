@@ -97,7 +97,7 @@ export default function Chat() {
         </div>
 
         <form className={styles['message-input']} onSubmit={handleSendMessage}>
-          <input type="text" name="message" placeholder="메시지 보내기" />
+          <input type="text" name="message" autocomplete="off" placeholder="메시지 보내기" />
           <button type="submit">
             <Message></Message>
           </button>
