@@ -77,7 +77,7 @@ export default function Random() {
           console.log('매칭 완료!');
           
           setTimeout(() => {
-            navigate('/list');
+            navigate('/chat');
           }, 2000);
         }
       } catch (error) {
