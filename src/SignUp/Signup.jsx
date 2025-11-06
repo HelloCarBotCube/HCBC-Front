@@ -4,9 +4,8 @@ import './index.css';
 import axios from 'axios';
 import EyeHide from '../assets/EyeHide';
 import EyeShow from '../assets/EyeShow';
-import Logo from '../assets/Logo';
+import Logo from '../assets/logo';
 
-// BaseURL
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://gsmsv-1.yujun.kr:27919',
   timeout: 10000,
@@ -15,7 +14,6 @@ const API = axios.create({
   },
 });
 
-// 성별
 const genderMap = {
   남자: 'MALE',
   여자: 'FEMALE',
