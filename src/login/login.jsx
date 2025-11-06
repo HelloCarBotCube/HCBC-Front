@@ -118,7 +118,7 @@ function Login() {
         <span className="message">{message}</span>
       </div>
 
-      <button type="submit" onClick={handleLogin} disabled={loading}>
+      <button className="l-btn" type="submit" onClick={handleLogin} disabled={loading}>
         로그인
       </button>
 
