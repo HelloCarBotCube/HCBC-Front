@@ -57,7 +57,7 @@ export default function User() {
       const response = await fetch(`${API_BASE_URL}/api/user/myprofile`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       });
@@ -104,9 +104,8 @@ export default function User() {
         tags.push(data.address);
       }
 
-
       if (Array.isArray(data.categories)) {
-        data.categories.forEach(cat => {
+        data.categories.forEach((cat) => {
           tags.push(CATEGORY_LABELS[cat] || cat);
         });
       }
