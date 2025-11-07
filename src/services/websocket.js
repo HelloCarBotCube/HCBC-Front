@@ -15,7 +15,6 @@ class WebSocketService {
 
   connect(token, onConnected, onError) {
     if (this.connected && this.client?.connected) {
-      console.log('이미 WebSocket 연결됨');
       if (onConnected) onConnected();
       return;
     }
@@ -27,8 +26,6 @@ class WebSocketService {
       if (onError) onError(new Error('No token provided'));
       return;
     }
-
-    console.log('WebSocket 연결 시작');
 
     const socket = new SockJS(`${WS_BASE_URL}/ws-stomp`);
 
@@ -43,7 +40,6 @@ class WebSocketService {
       heartbeatOutgoing: 4000,
       onConnect: () => {
         this.connected = true;
-        console.log('WebSocket 연결 성공');
         if (onConnected) onConnected();
       },
       onStompError: (frame) => {
@@ -53,7 +49,6 @@ class WebSocketService {
       },
       onWebSocketClose: () => {
         this.connected = false;
-        console.warn('WebSocket 연결 종료');
       },
     });
 
@@ -74,18 +69,17 @@ class WebSocketService {
       return;
     }
 
-    if (!this.connected) {
-      console.log('WebSocket 연결 대기 중');
+    if (!this.client.connected) {
       let attempts = 0;
       const maxAttempts = 50;
       const checkConnection = setInterval(() => {
         attempts++;
-        if (this.connected) {
+        if (this.client.connected) {
           clearInterval(checkConnection);
           this.subscribeToRoom(roomId, onMessageReceived);
         } else if (attempts >= maxAttempts) {
           clearInterval(checkConnection);
-          console.error('WebSocket 연결 타임아웃 - 구독 실패');
+          console.error('STOMP 연결 타임아웃');
         }
       }, 100);
       return;
@@ -104,7 +98,6 @@ class WebSocketService {
       });
 
       this.currentRoomId = roomId;
-      console.log('채팅방 구독 완료:', roomId);
     } catch (error) {
       console.error('채팅방 구독 실패:', error);
     }
@@ -119,11 +112,9 @@ class WebSocketService {
 
   sendMessage(roomId, content) {
     if (!this.connected || !this.client) {
-      console.error('WebSocket 연결 안 됨 - 메시지 전송 불가');
+      console.error('WebSocket 연결 안 됨');
       return;
     }
-
-    console.log('메시지 전송:', { roomId, content });
 
     const messageKey = `${roomId}-${content}-${Date.now()}`;
     this.sentMessages.add(messageKey);
@@ -140,7 +131,6 @@ class WebSocketService {
           content,
         }),
       });
-      console.log('메시지 전송 완료');
     } catch (error) {
       console.error('메시지 전송 실패:', error);
     }
