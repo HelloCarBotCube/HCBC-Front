@@ -1,0 +1,160 @@
+.chat-page {
+  display: flex;
+  background-color: #f8f8f8;
+}
+
+.chat-window {
+  width: 550px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 35px;
+  padding-right: 35px;
+}
+
+.chat-date {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #8e8e8e;
+}
+
+.chat-text,
+.chat-info-text {
+  text-align: center;
+  color: #8e8e8e;
+  margin-bottom: 1rem;
+}
+
+.messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 176px);
+}
+
+.messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.message {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 60%;
+}
+
+.message p {
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.message span {
+  font-size: 0.75rem;
+  color: #8e8e8e;
+  white-space: nowrap;
+  padding-bottom: 2px;
+}
+
+.other-message {
+  align-self: flex-start;
+  flex-direction: row;
+}
+
+.other-message p {
+  background-color: #fff;
+  color: #000;
+}
+
+.my-message {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.my-message p {
+  background-color: #ff6b9f;
+  color: #ffffff;
+}
+
+.message-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  position: relative;
+}
+
+.message-input input {
+  flex: 1;
+  padding: 14px 70px 14px 20px;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  outline: none;
+  border: none;
+}
+
+.message-input input:focus {
+  border-color: #ff6b9f;
+}
+
+.message-input button {
+  position: absolute;
+  right: 16px;
+  border: none;
+  color: #fff;
+  border-radius: 100px;
+  width: 60px;
+  height: 40px;
+  cursor: pointer;
+  background-color: #ff6b9f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0px;
+}
+
+.message-input button:hover {
+  background-color: #ff5a8e;
+}
+
+.message-input button svg {
+  width: 33px;
+  height: 33px;
+}
+
+.profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-header svg {
+  width: 60px;
+  height: 60px;
+}
+
+.profile-info h3 {
+  margin: 10px 0 5px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.tags span {
+  background: #f68cb1;
+  color: white;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+}
