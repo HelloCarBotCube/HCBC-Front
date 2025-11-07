@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import './index.css';
 import { Link } from 'react-router-dom';
-import Logo from '../assets/Logo';
+import { setAccessToken, setRefreshToken, clearTokens } from '../utils/cookies';
+import Logo from '../assets/logo';
 import IdIcon from '../assets/IdIcon';
 import PwIcon from '../assets/pwIcon';
 import EyeShow from '../assets/EyeShow';
@@ -34,19 +35,22 @@ function Login() {
     setLoading(true);
     setMessage('');
 
+    clearTokens();
+
     try {
       const res = await axiosInstance.post('/auth/signin', {
         loginId: loginId,
         password: password,
       });
 
+      console.log('로그인 API 응답:', res.data);
+
       const { accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn } =
         res.data || {};
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
 
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('accessTokenExpiresIn', accessTokenExpiresIn);
-      localStorage.setItem('refreshTokenExpiresIn', refreshTokenExpiresIn);
+      console.log('로그인 성공 (토큰을 쿠키에 저장)');
 
       window.location.href = '/main';
     } catch (err) {
