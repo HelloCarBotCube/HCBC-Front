@@ -1,4 +1,3 @@
-// src/App.jsx
 import { Routes, Route } from 'react-router-dom';
 import Login from './login/login.jsx';
 import Signup from './SignUp/Signup.jsx';
