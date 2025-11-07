@@ -4,7 +4,7 @@ import './index.css';
 import axios from 'axios';
 import EyeHide from '../assets/EyeHide';
 import EyeShow from '../assets/EyeShow';
-import Logo from '../assets/logo';
+import Logo from '../assets/Logo';
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://gsmsv-1.yujun.kr:27919',
@@ -255,6 +255,7 @@ const Signup = () => {
           <>
             <div className="input-field">
               <input
+                className="s-input"
                 type="text"
                 name="name"
                 placeholder="이름"
@@ -264,6 +265,7 @@ const Signup = () => {
             </div>
             <div className="input-field">
               <input
+                className="s-input"
                 type="number"
                 name="age"
                 placeholder="나이"
@@ -288,6 +290,7 @@ const Signup = () => {
             </div>
             <div className="input-field id-field">
               <input
+                className="s-input"
                 type="text"
                 name="address"
                 placeholder="주소"
@@ -312,6 +315,7 @@ const Signup = () => {
           <>
             <div className="input-field id-field">
               <input
+                className="s-input"
                 type="text"
                 name="id"
                 placeholder="아이디"
@@ -331,6 +335,7 @@ const Signup = () => {
 
             <div className="input-field pw-field">
               <input
+                className="s-input"
                 type={showPassword ? 'text' : 'password'}
                 name="password"
                 placeholder="비밀번호"
@@ -347,6 +352,7 @@ const Signup = () => {
 
             <div className="input-field pw-field">
               <input
+                className="s-input"
                 type={showConfirmPassword ? 'text' : 'password'}
                 name="confirmPassword"
                 placeholder="비밀번호 확인"
@@ -405,11 +411,13 @@ const Signup = () => {
   };
 
   return (
-    <div className="wrap">
-      <div className="card">
-        <Logo />
-        <p className="logo-text">HCBC</p>
-        {renderFormStep()}
+    <div className="s-body">
+      <div className="wrap">
+        <div className="card">
+          <Logo />
+          <p className="logo-text">HCBC</p>
+          {renderFormStep()}
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-body {
+.s-body {
   font-family: 'Pretendard';
   background-color: #f8f8f8;
   margin: 0;
@@ -44,8 +44,9 @@ body {
   margin-right: auto;
 }
 
-input {
-  width: 100%;
+.s-input {
+  width: 376px;
+  height: 56px;
   padding: 0px 20px;
   border: 1px solid #d6d6d7;
   border-radius: 16px;
@@ -55,7 +56,7 @@ input {
   outline: none;
 }
 
-input::placeholder {
+.s-input::placeholder {
   color: #858486;
   font-weight: 400;
 }
@@ -68,7 +69,7 @@ input::placeholder {
   margin: 0px;
 }
 
-.id-field input {
+.id-field .s-input {
   flex-grow: 1;
 }
 
@@ -102,7 +103,7 @@ input::placeholder {
   margin: 0px;
 }
 
-.pw-field input {
+.pw-field .s-input {
   flex-grow: 1;
   padding-right: 40px;
 }
