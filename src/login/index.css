@@ -183,10 +183,8 @@ svg {
   border-radius: 16px;
   border: solid 1px #d6d6d7;
   padding: 0 20px 0 56px;
-  padding: 0 20px 0 56px;
   font-size: 16px;
   font-weight: 400;
-  box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -217,7 +215,6 @@ svg {
 .inputIcon {
   position: absolute;
   left: 20px;
-  top: 50%;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
