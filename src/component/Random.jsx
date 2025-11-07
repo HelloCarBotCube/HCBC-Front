@@ -29,7 +29,7 @@ export default function Random() {
       setStatus('waiting');
       setDotCount(1);
 
-      await axios.post(
+      const response = await axios.post(
         `${API_BASE_URL}/api/chat/start`,
         {},
         {
