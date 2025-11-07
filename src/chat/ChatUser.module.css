@@ -46,6 +46,18 @@
   font-weight: 500;
 }
 
+.user-info {
+  margin-top: 15px;
+  margin-left: 8px;
+  font-size: 14px;
+  color: #5c5c5c;
+}
+
+.user-info-item {
+  margin: 5px 0;
+  font-weight: 400;
+}
+
 .user-tag-card {
   margin-top: 30px;
   border: 1px solid #d6d6d7;

@@ -1,5 +1,5 @@
 .main-container {
-  background-color: #f8f9fa;
+  background-color: #f8f8f8;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -8,7 +8,7 @@
 }
 
 .chat-box {
-  width: 380px;
+  width: 370px;
   height: 720px;
   background: #fff;
   border-radius: 20px;

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { getAccessToken } from '../utils/cookies';
 import styles from './User.module.css';
 import profileImg from '../assets/profile-h.svg';
 
@@ -45,7 +46,7 @@ export default function User() {
 
   const fetchMyProfile = async () => {
     try {
-      const accessToken = localStorage.getItem('accessToken');
+      const accessToken = getAccessToken();
 
       if (!accessToken) {
         console.error('토큰이 없습니다');
@@ -57,7 +58,7 @@ export default function User() {
       const response = await fetch(`${API_BASE_URL}/api/user/myprofile`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       });
@@ -104,9 +105,8 @@ export default function User() {
         tags.push(data.address);
       }
 
-
       if (Array.isArray(data.categories)) {
-        data.categories.forEach(cat => {
+        data.categories.forEach((cat) => {
           tags.push(CATEGORY_LABELS[cat] || cat);
         });
       }
