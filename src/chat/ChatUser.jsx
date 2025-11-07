@@ -1,41 +1,133 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import useChatStore from '../store/useChatStore';
+import websocketService from '../services/websocket';
+import { deleteRoom, getUserProfile } from '../services/chatApi';
 import styles from './ChatUser.module.css';
 import profileImg from '../assets/profile-h.svg';
 
+const CATEGORY_LABELS = {
+  EXERCISE: '운동',
+  RESTAURANT: '맛집',
+  ANIMAL: '동물',
+  TRIP: '여행',
+  GAME: '게임',
+  LEADING: '리딩',
+  SEXUAL_PLEASURE: '🔞',
+  MUSIC: '음악',
+  MOVIE: '영화',
+  ANIMATION: '애니메이션',
+  WEBTOON: '웹툰',
+  EXTROVERT: '외향적',
+  INTROVERT: '내향적',
+  STUDY: '공부',
+};
+
+const GENDER_LABELS = {
+  MALE: '남자',
+  FEMALE: '여자',
+  OTHER: '기타',
+};
+
 const DEFAULT_USER = {
-  name: '한국',
-  handle: '@h4.zx7',
-  tags: ['🔞', '영화', '음악', '남자', '16살', '광산구 평동'],
+  name: '상대방',
+  handle: '@unknown',
+  tags: ['채팅 중'],
+  age: null,
+  address: null,
+  gender: null,
 };
 
 export default function User() {
+  const { currentRoom, leaveRoom, removeRoom } = useChatStore();
   const [user, setUser] = useState(DEFAULT_USER);
   const [showExitModal, setShowExitModal] = useState(false);
 
   const navigate = useNavigate();
-  const handleExitChat = () => setShowExitModal(true);
 
-  const handleConfirmExit = () => {
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      if (!currentRoom) {
+        setUser(DEFAULT_USER);
+        return;
+      }
+
+      // 기본 정보 먼저 표시
+      const basicInfo = {
+        name: currentRoom.otherUserName || '상대방',
+        handle: currentRoom.opponentId ? `@${currentRoom.opponentId}` : '@unknown',
+        tags: ['채팅 중'],
+        age: null,
+        address: null,
+        gender: null,
+      };
+      setUser(basicInfo);
+
+      // API로 상세 정보 불러오기
+      if (currentRoom.opponentUserId) {
+        try {
+          const profile = await getUserProfile(currentRoom.opponentUserId);
+
+          // 태그 생성
+          const tags = [];
+          if (profile.gender) {
+            tags.push(GENDER_LABELS[profile.gender] || profile.gender);
+          }
+          if (profile.age) {
+            tags.push(`${profile.age}살`);
+          }
+          if (profile.address) {
+            tags.push(profile.address);
+          }
+          if (Array.isArray(profile.categories)) {
+            profile.categories.forEach((cat) => {
+              tags.push(CATEGORY_LABELS[cat] || cat);
+            });
+          }
+
+          setUser({
+            name: profile.name || currentRoom.otherUserName || '상대방',
+            handle: profile.loginId ? `@${profile.loginId}` : basicInfo.handle,
+            tags: tags.length > 0 ? tags : ['채팅 중'],
+            age: profile.age,
+            address: profile.address,
+            gender: profile.gender,
+          });
+        } catch (error) {
+          console.error('상대방 프로필 불러오기 실패:', error);
+        }
+      }
+    };
+
+    loadUserProfile();
+  }, [currentRoom]);
+
+  const handleExitChat = () => {
+    if (!currentRoom) {
+      navigate('/main');
+      return;
+    }
+    setShowExitModal(true);
+  };
+
+  const handleConfirmExit = async () => {
+    if (currentRoom?.roomId) {
+      try {
+        await deleteRoom(currentRoom.roomId);
+        websocketService.leaveRoom(currentRoom.roomId);
+        removeRoom(currentRoom.roomId);
+        leaveRoom();
+      } catch (error) {
+        console.error('채팅방 삭제 실패:', error);
+        websocketService.leaveRoom(currentRoom.roomId);
+        removeRoom(currentRoom.roomId);
+        leaveRoom();
+      }
+    }
+
     setShowExitModal(false);
     navigate('/main');
   };
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem('hcbc_user');
-      if (!raw) return;
-      const u = JSON.parse(raw);
-      setUser({
-        name: u?.name?.trim() || DEFAULT_USER.name,
-        handle: u?.id ? `@${u.id}` : DEFAULT_USER.handle,
-        tags:
-          Array.isArray(u?.categories) && u.categories.length > 0
-            ? u.categories
-            : DEFAULT_USER.tags,
-      });
-    } catch {}
-  }, []);
 
   const PER_ROW = 3;
   const tags1 = (user.tags || []).slice(0, PER_ROW);
