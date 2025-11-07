@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './Random.module.css';
-import Logo from '../assets/logo';
+import Logo from '../assets/Logo';
 
 const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
 
@@ -28,22 +28,26 @@ export default function Random() {
       setStatus('waiting');
       setDotCount(1);
 
-      await axios.post(`${API_BASE_URL}/api/chat/start`, {}, {
-        headers: {
-          'Authorization': `Bearer ${accessTokenRef.current}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      await axios.post(
+        `${API_BASE_URL}/api/chat/start`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessTokenRef.current}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
       console.log('매칭 요청 완료');
 
       const chatListResponse = await axios.get(`${API_BASE_URL}/api/chat`, {
         headers: {
-          'Authorization': `Bearer ${accessTokenRef.current}`,
+          Authorization: `Bearer ${accessTokenRef.current}`,
           'Content-Type': 'application/json',
         },
       });
-      
+
       initialChatCountRef.current = chatListResponse.data?.length || 0;
 
       dotRef.current = setInterval(() => {
@@ -63,7 +67,7 @@ export default function Random() {
       try {
         const response = await axios.get(`${API_BASE_URL}/api/chat`, {
           headers: {
-            'Authorization': `Bearer ${accessTokenRef.current}`,
+            Authorization: `Bearer ${accessTokenRef.current}`,
             'Content-Type': 'application/json',
           },
         });
@@ -75,7 +79,7 @@ export default function Random() {
           if (dotRef.current) clearInterval(dotRef.current);
           setStatus('matched');
           console.log('매칭 완료!');
-          
+
           setTimeout(() => {
             navigate('/chat');
           }, 2000);
@@ -105,7 +109,7 @@ export default function Random() {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.all}>
-        <Logo/>
+        <Logo />
 
         {status === 'idle' && (
           <>
@@ -123,10 +127,8 @@ export default function Random() {
 
         {status === 'waiting' && (
           <>
-            <div className={styles.queto}>매칭 중{'.' .repeat(dotCount)}</div>
-            <div className={styles.longQueto}>
-              잠시만 기다려주세요
-            </div>
+            <div className={styles.queto}>매칭 중{'.'.repeat(dotCount)}</div>
+            <div className={styles.longQueto}>잠시만 기다려주세요</div>
             <button className={styles.cancelButton} onClick={cancelMatching}>
               매칭 취소
             </button>
