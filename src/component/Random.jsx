@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getAccessToken } from '../utils/cookies';
 import axios from 'axios';
 import styles from './Random.module.css';
-import Logo from '../assets/Logo';
+import Logo from '../assets/logo';
 
 const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
 
@@ -16,7 +17,7 @@ export default function Random() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    accessTokenRef.current = localStorage.getItem('accessToken');
+    accessTokenRef.current = getAccessToken();
     return () => {
       if (dotRef.current) clearInterval(dotRef.current);
       if (pollingRef.current) clearInterval(pollingRef.current);
@@ -39,7 +40,7 @@ export default function Random() {
         }
       );
 
-      console.log('매칭 요청 완료');
+      console.log('대기열 등록 완료:', response.data);
 
       const chatListResponse = await axios.get(`${API_BASE_URL}/api/chat`, {
         headers: {
