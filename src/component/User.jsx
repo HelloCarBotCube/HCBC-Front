@@ -1,38 +1,38 @@
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { getAccessToken } from '../utils/cookies';
-import styles from './User.module.css';
-import profileImg from '../assets/profile-h.svg';
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAccessToken } from "../utils/cookies";
+import styles from "./User.module.css";
+import profileImg from "../assets/profile-h.svg";
 
-const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
+const API_BASE_URL = "http://gsmsv-1.yujun.kr:27919";
 
 const DEFAULT_USER = {
-  name: '한국',
-  handle: '@h4.zx7',
-  tags: ['🔞', '영화', '음악', '남자', '16살', '광산구 평동'],
+  name: "한국",
+  handle: "@h4.zx7",
+  tags: ["🔞", "영화", "음악", "남자", "16살", "광산구 평동"],
 };
 
 const CATEGORY_LABELS = {
-  EXERCISE: '운동',
-  RESTAURANT: '맛집',
-  ANIMAL: '동물',
-  TRIP: '여행',
-  GAME: '게임',
-  LEADING: '리딩',
-  SEXUAL_PLEASURE: '🔞',
-  MUSIC: '음악',
-  MOVIE: '영화',
-  ANIMATION: '애니메이션',
-  WEBTOON: '웹툰',
-  EXTROVERT: '외향적',
-  INTROVERT: '내향적',
-  STUDY: '공부',
+  EXERCISE: "운동",
+  RESTAURANT: "맛집",
+  ANIMAL: "동물",
+  TRIP: "여행",
+  GAME: "게임",
+  LEADING: "리딩",
+  SEXUAL_PLEASURE: "🔞",
+  MUSIC: "음악",
+  MOVIE: "영화",
+  ANIMATION: "애니메이션",
+  WEBTOON: "웹툰",
+  EXTROVERT: "외향적",
+  INTROVERT: "내향적",
+  STUDY: "공부",
 };
 
 const GENDER_LABELS = {
-  MALE: '남자',
-  FEMALE: '여자',
-  OTHER: '기타',
+  MALE: "남자",
+  FEMALE: "여자",
+  OTHER: "기타",
 };
 
 export default function User() {
@@ -49,36 +49,36 @@ export default function User() {
       const accessToken = getAccessToken();
 
       if (!accessToken) {
-        console.error('토큰이 없습니다');
+        console.error("토큰이 없습니다");
         loadFromLocalStorage();
         setLoading(false);
         return;
       }
 
       const response = await fetch(`${API_BASE_URL}/api/user/myprofile`, {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
       if (response.status === 401) {
-        console.error('토큰 없음/만료/무효');
+        console.error("토큰 없음/만료/무효");
         loadFromLocalStorage();
         setLoading(false);
         return;
       }
 
       if (response.status === 404) {
-        console.error('내 프로필 없음');
+        console.error("내 프로필 없음");
         loadFromLocalStorage();
         setLoading(false);
         return;
       }
 
       if (response.status === 500) {
-        console.error('토큰 없음/만료/무효');
+        console.error("토큰 없음/만료/무효");
         loadFromLocalStorage();
         setLoading(false);
         return;
@@ -89,7 +89,7 @@ export default function User() {
       }
 
       const data = await response.json();
-      console.log('API 응답 데이터:', data);
+      console.log("API 응답 데이터:", data);
 
       const tags = [];
 
@@ -117,7 +117,7 @@ export default function User() {
         tags: tags.length > 0 ? tags : DEFAULT_USER.tags,
       });
     } catch (error) {
-      console.error('프로필 조회 오류:', error);
+      console.error("프로필 조회 오류:", error);
       loadFromLocalStorage();
     } finally {
       setLoading(false);
@@ -126,7 +126,7 @@ export default function User() {
 
   const loadFromLocalStorage = () => {
     try {
-      const raw = localStorage.getItem('hcbc_user');
+      const raw = localStorage.getItem("hcbc_user");
       if (!raw) return;
       const u = JSON.parse(raw);
       setUser({
@@ -153,28 +153,28 @@ export default function User() {
   }
 
   return (
-    <div className={styles['user-container']}>
-      <aside className={styles['user-card']}>
-        <div className={styles['user-wrap']}>
-          <img src={profileImg} alt="아이콘" className="icon" />
+    <div className={styles["user-container"]}>
+      <aside className={styles["user-card"]}>
+        <div className={styles["user-wrap"]}>
+          <img src={profileImg} alt="아이콘" className={styles.icon} />
         </div>
 
-        <div className={styles['user-body']}>
-          <div className={styles['user-name']}>{user.name}</div>
-          <div className={styles['user-id']}>{user.handle}</div>
+        <div className={styles["user-body"]}>
+          <div className={styles["user-name"]}>{user.name}</div>
+          <div className={styles["user-id"]}>{user.handle}</div>
 
-          <div className={styles['user-tag-card']}>
-            <div className={`${styles['user-tags']} ${styles['user-tags1']}`}>
+          <div className={styles["user-tag-card"]}>
+            <div className={`${styles["user-tags"]} ${styles["user-tags1"]}`}>
               {tags1.map((t, i) => (
-                <span key={`t1-${i}`} className={styles['user-tag']}>
+                <span key={`t1-${i}`} className={styles["user-tag"]}>
                   {t}
                 </span>
               ))}
             </div>
             {tags2.length > 0 && (
-              <div className={`${styles['user-tags']} ${styles['user-tags2']}`}>
+              <div className={`${styles["user-tags"]} ${styles["user-tags2"]}`}>
                 {tags2.map((t, i) => (
-                  <span key={`t2-${i}`} className={styles['user-tag']}>
+                  <span key={`t2-${i}`} className={styles["user-tag"]}>
                     {t}
                   </span>
                 ))}
@@ -184,8 +184,8 @@ export default function User() {
 
           <button
             type="button"
-            className={styles['user-button']}
-            onClick={() => navigate('/Profile')}
+            className={styles["user-button"]}
+            onClick={() => navigate("/Profile")}
           >
             프로필
           </button>
