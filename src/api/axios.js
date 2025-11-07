@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getAccessToken } from '../utils/cookies';
 
 const instance = axios.create({
   baseURL: 'http://gsmsv-1.yujun.kr:27919',
@@ -10,7 +11,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
