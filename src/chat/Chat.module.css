@@ -29,7 +29,13 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 176px);
+}
+
+.messages::-webkit-scrollbar {
+  width: 8px;
 }
 
 .message {
@@ -85,11 +91,11 @@
 
 .message-input input {
   flex: 1;
-  padding: 12px 70px 12px 20px;
+  padding: 14px 70px 14px 20px;
   border-radius: 25px;
-  border: 1px solid #ddd;
   font-size: 0.95rem;
   outline: none;
+  border: none;
 }
 
 .message-input input:focus {
@@ -98,12 +104,12 @@
 
 .message-input button {
   position: absolute;
-  right: 20px;
+  right: 16px;
   border: none;
   color: #fff;
   border-radius: 100px;
-  width: 66px;
-  height: 44px;
+  width: 60px;
+  height: 40px;
   cursor: pointer;
   background-color: #ff6b9f;
   display: flex;
