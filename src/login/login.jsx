@@ -96,7 +96,7 @@ function Login() {
             <PwIcon />
           </span>
           <input
-            type={showPw ? 'text' : 'password'}
+            type={showPw ? "text" : "password"}
             required
             placeholder="비밀번호"
             value={pw}
