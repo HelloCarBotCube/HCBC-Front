@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { getAccessToken } from '../utils/cookies';
 import styles from './User.module.css';
 import profileImg from '../assets/profile-h.svg';
 
@@ -45,7 +46,7 @@ export default function User() {
 
   const fetchMyProfile = async () => {
     try {
-      const accessToken = localStorage.getItem('accessToken');
+      const accessToken = getAccessToken();
 
       if (!accessToken) {
         console.error('토큰이 없습니다');
