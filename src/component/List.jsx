@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getAccessToken } from '../utils/cookies';
 import axios from 'axios';
 import styles from './List.module.css';
 import User from '../assets/user';
@@ -20,9 +21,9 @@ export default function Main() {
 
   const fetchChatList = async () => {
     try {
-      const accessToken = localStorage.getItem('accessToken');
+      const accessToken = getAccessToken();
       const testChats = [];
-      
+
       if (!accessToken) {
         setChatList(testChats);
         setLoading(false);
@@ -31,7 +32,7 @@ export default function Main() {
 
       const response = await axios.get(`${API_BASE_URL}/api/chat`, {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       });
@@ -39,11 +40,14 @@ export default function Main() {
       const uniqueChats = {};
       (Array.isArray(response.data) ? response.data : []).forEach((chat) => {
         const key = chat.opponentUserId;
-        if (!uniqueChats[key] || new Date(chat.lastActiveAt) > new Date(uniqueChats[key].lastActiveAt)) {
+        if (
+          !uniqueChats[key] ||
+          new Date(chat.lastActiveAt) > new Date(uniqueChats[key].lastActiveAt)
+        ) {
           uniqueChats[key] = chat;
         }
       });
-      
+
       const mappedData = Object.values(uniqueChats)
         .sort((a, b) => new Date(b.lastActiveAt) - new Date(a.lastActiveAt))
         .map((chat) => ({
