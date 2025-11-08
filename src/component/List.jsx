@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAccessToken } from '../utils/cookies';
+import useChatStore from '../store/useChatStore';
 import axios from 'axios';
 import styles from './List.module.css';
 import User from '../assets/user';
@@ -10,6 +11,7 @@ const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
 
 export default function Main() {
   const navigate = useNavigate();
+  const { setCurrentRoom } = useChatStore();
   const [chatList, setChatList] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -51,7 +53,9 @@ export default function Main() {
       const mappedData = Object.values(uniqueChats)
         .sort((a, b) => new Date(b.lastActiveAt) - new Date(a.lastActiveAt))
         .map((chat) => ({
-          id: chat.roomId,
+          roomId: chat.roomId,
+          opponentId: chat.opponentLoginId,
+          opponentUserId: chat.opponentUserId,
           username: chat.opponentName || '알 수 없는 사용자',
           userId: `@${chat.opponentLoginId}` || '@unknown',
           lastMessage: chat.lastMessage || '메시지 없음',
@@ -67,8 +71,18 @@ export default function Main() {
     }
   };
 
-  const handleChatClick = (id) => {
-    navigate('/chat', { state: { chatId: id } });
+  const handleChatClick = (chat) => {
+    setCurrentRoom({
+      roomId: chat.roomId,
+      opponentId: chat.opponentId,
+      opponentUserId: chat.opponentUserId,
+      otherUserName: chat.username,
+      tags: [],
+      age: null,
+      address: null,
+      gender: null,
+    });
+    navigate('/chat');
   };
 
   return (
@@ -92,9 +106,9 @@ export default function Main() {
             ) : (
               chatList.map((chat) => (
                 <div
-                  key={chat.id}
+                  key={chat.roomId}
                   className={styles['chat-item']}
-                  onClick={() => handleChatClick(chat.id)}
+                  onClick={() => handleChatClick(chat)}
                 >
                   <div className={styles.avatar}>
                     <User />

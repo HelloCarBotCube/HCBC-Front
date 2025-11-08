@@ -180,6 +180,26 @@ export default function Chat() {
     return `${year}년 ${month}월 ${day}일`;
   };
 
+  const formatMessageText = (text) => {
+    const maxLength = 18;
+    const lines = [];
+    let currentLine = '';
+
+    for (let i = 0; i < text.length; i++) {
+      currentLine += text[i];
+      if (currentLine.length === maxLength) {
+        lines.push(currentLine);
+        currentLine = '';
+      }
+    }
+
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+
+    return lines.join('\n');
+  };
+
   const handleSendMessage = (e) => {
     e.preventDefault();
     const text = e.target.message.value.trim();
@@ -232,7 +252,7 @@ export default function Chat() {
                 msg.sender === '나' ? styles['my-message'] : styles['other-message']
               }`}
             >
-              <p>{msg.text}</p>
+              <p style={{ whiteSpace: 'pre-wrap' }}>{formatMessageText(msg.text)}</p>
               <span className={styles['msg-time']}>{msg.time}</span>
             </div>
           ))}

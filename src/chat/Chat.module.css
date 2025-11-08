@@ -51,6 +51,7 @@
   font-size: 0.95rem;
   margin: 0;
   word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .message span {
@@ -89,17 +90,34 @@
   position: relative;
 }
 
-.message-input input {
+.message-input input,
+.message-input textarea {
   flex: 1;
   padding: 14px 70px 14px 20px;
   border-radius: 25px;
   font-size: 0.95rem;
   outline: none;
   border: none;
+  font-family: 'pretendard', sans-serif;
+  line-height: 1.4;
+  overflow-y: auto;
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
-.message-input input:focus {
+.message-input input:focus,
+.message-input textarea:focus {
   border-color: #ff6b9f;
+}
+
+.message-input textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.message-input textarea::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
 }
 
 .message-input button {

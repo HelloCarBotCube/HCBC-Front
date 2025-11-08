@@ -27,21 +27,23 @@ export default function Main() {
           }
         });
 
-        const mappedRooms = Object.values(uniqueChats).map((chat) => {
-          return {
-            roomId: chat.roomId,
-            opponentId: chat.opponentLoginId,
-            opponentUserId: chat.opponentUserId,
-            otherUserName: chat.opponentName || "알 수 없는 사용자",
-            lastMessage: chat.lastMessage || "메시지 없음",
-            lastActiveAt: chat.lastActiveAt,
-            tags: [],
-            age: null,
-            address: null,
-            gender: null,
-            unread: false,
-          };
-        });
+        const mappedRooms = Object.values(uniqueChats)
+          .sort((a, b) => new Date(b.lastActiveAt) - new Date(a.lastActiveAt))
+          .map((chat) => {
+            return {
+              roomId: chat.roomId,
+              opponentId: chat.opponentLoginId,
+              opponentUserId: chat.opponentUserId,
+              otherUserName: chat.opponentName || "알 수 없는 사용자",
+              lastMessage: chat.lastMessage || "메시지 없음",
+              lastActiveAt: chat.lastActiveAt,
+              tags: [],
+              age: null,
+              address: null,
+              gender: null,
+              unread: false,
+            };
+          });
 
         setRooms(mappedRooms);
       } catch (error) {
@@ -80,16 +82,12 @@ export default function Main() {
 
         <div className={styles["chat-list"]}>
           {rooms.length === 0 ? (
-            <div
-              style={{
-                padding: "40px 20px",
-                textAlign: "center",
-                color: "#999",
-              }}
-            >
-              아직 채팅방이 없습니다.
-              <br />
-              랜덤 매칭을 시작해보세요!
+            <div className={styles["empty-state"]}>
+              <div className={styles["empty-title"]}>
+                아직 채팅방이 없습니다.
+                <br />
+                랜덤 매칭을 시작해보세요!
+              </div>
             </div>
           ) : (
             rooms.map((room) => (
@@ -98,17 +96,12 @@ export default function Main() {
                 className={styles["chat-item"]}
                 onClick={() => handleChatClick(room)}
               >
-                <div className={styles["profile"]}>
-                  <div className={styles["avatar"]}>
-                    <User />
-                  </div>
+                <div className={styles["avatar"]}>
+                  <User />
                 </div>
                 <div className={styles["chat-info"]}>
                   <div className={styles["chat-username"]}>
-                    {room.otherUserName || `유저 ${room.opponentId}`}
-                    <span className={styles["chat-username-span"]}>
-                      @{room.opponentId}
-                    </span>
+                    {room.otherUserName || `유저 ${room.opponentId}`} <span>@{room.opponentId}</span>
                   </div>
                   <div className={styles["chat-message"]}>
                     {room.lastMessage || "메시지를 보내보세요"}
