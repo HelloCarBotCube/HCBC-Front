@@ -8,8 +8,6 @@ const useChatStore = create(
       currentRoom: null,
       roomMessages: {},
       messages: [],
-      isConnected: false,
-      isMatching: false,
 
       setRooms: (rooms) => set({ rooms }),
 
@@ -49,8 +47,6 @@ const useChatStore = create(
           };
         }),
 
-      setConnected: (isConnected) => set({ isConnected }),
-      setMatching: (isMatching) => set({ isMatching }),
       leaveRoom: () => set({ currentRoom: null, messages: [] }),
 
       removeRoom: (roomId) =>
