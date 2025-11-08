@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 const useChatStore = create(
   persist(
@@ -65,10 +65,11 @@ const useChatStore = create(
         }),
     }),
     {
-      name: 'chat-storage',
+      name: "chat-storage",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         roomMessages: state.roomMessages,
+        currentRoom: state.currentRoom,
       }),
     }
   )
