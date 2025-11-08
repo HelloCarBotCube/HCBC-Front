@@ -38,8 +38,7 @@ export default function Chat() {
     const token = getAccessToken();
 
     if (!token) {
-      alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-      navigate('/login');
+      navigate('/', { replace: true });
       return;
     }
 

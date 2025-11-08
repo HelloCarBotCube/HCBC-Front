@@ -185,7 +185,7 @@ export default function User() {
           <button
             type="button"
             className={styles["user-button"]}
-            onClick={() => navigate("/Profile")}
+            onClick={() => navigate("/profile")}
           >
             프로필
           </button>

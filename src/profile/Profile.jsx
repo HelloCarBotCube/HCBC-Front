@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import HIcon from "../assets/profile-h.svg";
 import { getMyProfile, updateMyProfile } from "../api/profile";
+import { getAccessToken } from "../utils/cookies";
 
 const Profile = () => {
   const [profile, setProfile] = useState({
@@ -22,6 +23,14 @@ const Profile = () => {
 
   const navigate = useNavigate();
   const goHome = () => navigate("/main");
+
+  // 토큰 검증
+  useEffect(() => {
+    const token = getAccessToken();
+    if (!token) {
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const script = document.createElement('script');

@@ -33,9 +33,8 @@ chatApi.interceptors.response.use(
     if (error.response?.status === 401) {
       clearTokens();
 
-      if (window.location.pathname !== '/login') {
-        alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-        window.location.href = '/login';
+      if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
+        window.location.href = '/';
       }
     }
     return Promise.reject(error);
