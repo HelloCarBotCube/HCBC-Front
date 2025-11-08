@@ -98,9 +98,30 @@ export default function Chat() {
               text: msg.content,
               time: formatTime(new Date(msg.timestamp || msg.createdAt || Date.now())),
               senderId: msg.senderId,
+              timestamp: msg.timestamp || msg.createdAt,
             };
           });
-          setMessages(formattedMessages);
+
+          // 기존 localStorage의 메시지와 병합
+          const existingMessages = messages || [];
+          const mergedMessages = [...formattedMessages];
+
+          // API에 없는 새로운 메시지만 추가
+          existingMessages.forEach(existingMsg => {
+            const isDuplicate = formattedMessages.some(apiMsg =>
+              apiMsg.text === existingMsg.text &&
+              apiMsg.senderId === existingMsg.senderId &&
+              Math.abs((apiMsg.timestamp || 0) - (existingMsg.timestamp || 0)) < 1000
+            );
+            if (!isDuplicate && existingMsg.timestamp) {
+              mergedMessages.push(existingMsg);
+            }
+          });
+
+          // 타임스탬프로 정렬
+          mergedMessages.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+          setMessages(mergedMessages);
         }
       } catch (error) {
         if (error.response?.status === 500) {
@@ -127,6 +148,7 @@ export default function Chat() {
         text: data.content,
         time: formatTime(new Date(data.timestamp || Date.now())),
         senderId: data.senderId,
+        timestamp: data.timestamp || Date.now(),
       });
     };
 
