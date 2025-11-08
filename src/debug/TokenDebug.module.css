@@ -1,0 +1,114 @@
+.container {
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  color: #ff6b9f;
+  margin-bottom: 30px;
+}
+
+.infoBox {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.tokenDisplay {
+  word-break: break-all;
+}
+
+.codeBlock {
+  background: #fff;
+  padding: 10px;
+  display: block;
+  margin-top: 10px;
+  border-radius: 6px;
+  font-family: monospace;
+}
+
+.refreshButton {
+  padding: 10px 20px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.refreshButton:hover {
+  background: #218838;
+}
+
+.inputBox {
+  background: #fff3cd;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.tokenInput {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-family: monospace;
+  box-sizing: border-box;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.saveButton {
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.saveButton:hover {
+  background: #0056b3;
+}
+
+.clearButton {
+  padding: 10px 20px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.clearButton:hover {
+  background: #c82333;
+}
+
+.loginLink {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.loginButton {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #ff6b9f;
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.loginButton:hover {
+  background: #ff4d8a;
+}
