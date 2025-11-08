@@ -8,7 +8,7 @@ import Arrow from "../assets/arrow";
 
 export default function Main() {
   const navigate = useNavigate();
-  const { rooms, setRooms, setCurrentRoom } = useChatStore();
+  const { rooms, setRooms, setCurrentRoom, currentRoom } = useChatStore();
 
   useEffect(() => {
     const loadChatRooms = async () => {
@@ -44,6 +44,16 @@ export default function Main() {
         });
 
         setRooms(mappedRooms);
+
+        // localStorage에 저장된 currentRoom으로 복원
+        if (currentRoom?.roomId) {
+          const restoredRoom = mappedRooms.find(
+            (room) => room.roomId === currentRoom.roomId
+          );
+          if (restoredRoom) {
+            setCurrentRoom(restoredRoom);
+          }
+        }
       } catch (error) {
         if (error.response?.status !== 401) {
           console.error("채팅방 목록 불러오기 실패:", error.message);
@@ -52,7 +62,7 @@ export default function Main() {
     };
 
     loadChatRooms();
-  }, [setRooms]);
+  }, [setRooms, setCurrentRoom, currentRoom?.roomId]);
 
   const handleChatClick = (room) => {
     setCurrentRoom({
@@ -65,7 +75,6 @@ export default function Main() {
       address: room.address,
       gender: room.gender,
     });
-    navigate("/chat");
   };
 
   return (
