@@ -359,9 +359,9 @@ const Profile = () => {
         <>
           <div className="p-category-grid">
             {categoryOptions.map((category) => (
-              <button
+              <div
                 key={category}
-                className={`p-category-btn ${
+                className={`p-category-item ${
                   (Array.isArray(tempValue) ? tempValue : []).includes(category)
                     ? "active"
                     : ""
@@ -369,10 +369,10 @@ const Profile = () => {
                 onClick={() => handleCategoryClick(category)}
               >
                 {category}
-              </button>
+              </div>
             ))}
           </div>
-          <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+          <div style={{ marginTop: "20px", display: "flex", gap: "10px", justifyContent: "center" }}>
             <button
               className="p-cancel"
               onClick={(e) => {
@@ -408,14 +408,13 @@ const Profile = () => {
           <div className="p-category-grid" style={{ marginTop: "10px" }}>
             {profile.categories && profile.categories.length > 0 ? (
               profile.categories.map((category) => (
-                <button
+                <div
                   key={category}
-                  className="p-category-btn active"
-                  disabled
+                  className="p-category-item active"
                   style={{ cursor: "default" }}
                 >
                   {category}
-                </button>
+                </div>
               ))
             ) : (
               <span className="p-no-category" style={{ color: "#888" }}>
