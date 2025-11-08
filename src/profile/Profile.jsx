@@ -23,6 +23,17 @@ const Profile = () => {
   const navigate = useNavigate();
   const goHome = () => navigate("/main");
 
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   // 카테고리 옵션들
   const categoryOptions = [
     "운동",
@@ -63,6 +74,20 @@ const Profile = () => {
   const categoryReverseMap = Object.fromEntries(
     Object.entries(categoryMap).map(([ko, en]) => [en, ko])
   );
+
+  // 다음 주소 API 실행 함수
+  const execDaumPostcode = () => {
+    if (window.daum && window.daum.Postcode) {
+      new window.daum.Postcode({
+        oncomplete: (data) => {
+          const fullAddress = `${data.sido} ${data.sigungu} ${data.bname}`;
+          setTempValue(fullAddress);
+        },
+      }).open();
+    } else {
+      alert('주소 검색 기능을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+    }
+  };
 
   // 프로필 조회
   useEffect(() => {
@@ -123,6 +148,13 @@ const Profile = () => {
       setTempValue(categoriesCopy);
     } else if (field === "age") {
       setTempValue(profile.age.toString());
+    } else if (field === "location") {
+      // 주소 필드인 경우 현재 주소를 tempValue에 설정하고 바로 다음 주소 API 실행
+      setTempValue(profile[field] || "");
+      // setTimeout을 사용하여 상태 업데이트 후 API 실행
+      setTimeout(() => {
+        execDaumPostcode();
+      }, 0);
     } else {
       setTempValue(profile[field] || "");
     }
@@ -285,6 +317,7 @@ const Profile = () => {
               }
             }}
             autoFocus
+            readOnly={fieldKey === "location"}
           />
           <button
             className="p-apply"
