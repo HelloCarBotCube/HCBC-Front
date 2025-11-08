@@ -31,7 +31,6 @@ export default function Random() {
       setStatus('waiting');
       setDotCount(1);
 
-      // 먼저 현재 채팅 목록 개수 저장 (매칭 API 호출 전)
       const initialChatResponse = await axios.get(`${API_BASE_URL}/api/chat`, {
         headers: {
           Authorization: `Bearer ${accessTokenRef.current}`,
@@ -41,7 +40,6 @@ export default function Random() {
 
       initialChatCountRef.current = initialChatResponse.data?.length || 0;
 
-      // 매칭 시작 API 호출
       const response = await axios.post(
         `${API_BASE_URL}/api/chat/start`,
         {},
@@ -57,7 +55,6 @@ export default function Random() {
         setDotCount((prev) => (prev === 3 ? 1 : prev + 1));
       }, 1000);
 
-      // 폴링 즉시 시작
       pollForMatch();
     } catch (error) {
       console.error('매칭 시작 오류:', error);
@@ -67,7 +64,6 @@ export default function Random() {
   };
 
   const pollForMatch = () => {
-    // 첫 번째 체크를 즉시 실행
     let checkCount = 0;
 
     const checkMatch = async () => {
@@ -88,7 +84,6 @@ export default function Random() {
 
           setStatus('matched');
 
-          // 새로 생성된 채팅방 정보 가져오기
           try {
             const newChatResponse = await axios.get(`${API_BASE_URL}/api/chat`, {
               headers: {
@@ -97,14 +92,12 @@ export default function Random() {
               },
             });
 
-            // 가장 최근 채팅방 (방금 생성된 채팅방) 찾기
             if (newChatResponse.data && newChatResponse.data.length > 0) {
               const sortedChats = [...newChatResponse.data].sort(
                 (a, b) => new Date(b.lastActiveAt) - new Date(a.lastActiveAt)
               );
               const latestChat = sortedChats[0];
 
-              // currentRoom 설정
               setCurrentRoom({
                 roomId: latestChat.roomId,
                 opponentId: latestChat.opponentLoginId,
@@ -129,10 +122,8 @@ export default function Random() {
       }
     };
 
-    // 즉시 첫 체크 실행
     checkMatch();
 
-    // 이후 2초마다 체크
     pollingRef.current = setInterval(checkMatch, 2000);
   };
 

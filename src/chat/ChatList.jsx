@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import useChatStore from "../store/useChatStore";
-import { getChatRooms } from "../services/chatApi";
-import styles from "./ChatList.module.css";
-import User from "../assets/user";
-import Arrow from "../assets/arrow";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useChatStore from '../store/useChatStore';
+import { getChatRooms } from '../services/chatApi';
+import styles from './ChatList.module.css';
+import User from '../assets/user';
+import Arrow from '../assets/arrow';
 
 export default function Main() {
   const navigate = useNavigate();
@@ -20,8 +20,7 @@ export default function Main() {
           const key = chat.opponentUserId;
           if (
             !uniqueChats[key] ||
-            new Date(chat.lastActiveAt) >
-              new Date(uniqueChats[key].lastActiveAt)
+            new Date(chat.lastActiveAt) > new Date(uniqueChats[key].lastActiveAt)
           ) {
             uniqueChats[key] = chat;
           }
@@ -32,8 +31,8 @@ export default function Main() {
             roomId: chat.roomId,
             opponentId: chat.opponentLoginId,
             opponentUserId: chat.opponentUserId,
-            otherUserName: chat.opponentName || "알 수 없는 사용자",
-            lastMessage: chat.lastMessage || "메시지 없음",
+            otherUserName: chat.opponentName || '알 수 없는 사용자',
+            lastMessage: chat.lastMessage || '메시지 없음',
             lastActiveAt: chat.lastActiveAt,
             tags: [],
             age: null,
@@ -44,19 +43,15 @@ export default function Main() {
         });
 
         setRooms(mappedRooms);
-
-        // localStorage에 저장된 currentRoom으로 복원
         if (currentRoom?.roomId) {
-          const restoredRoom = mappedRooms.find(
-            (room) => room.roomId === currentRoom.roomId
-          );
+          const restoredRoom = mappedRooms.find((room) => room.roomId === currentRoom.roomId);
           if (restoredRoom) {
             setCurrentRoom(restoredRoom);
           }
         }
       } catch (error) {
         if (error.response?.status !== 401) {
-          console.error("채팅방 목록 불러오기 실패:", error.message);
+          console.error('채팅방 목록 불러오기 실패:', error.message);
         }
       }
     };
@@ -78,22 +73,22 @@ export default function Main() {
   };
 
   return (
-    <div className={styles["main-container"]}>
-      <div className={styles["chat-box"]}>
-        <div className={styles["chat-header"]}>
-          <p onClick={() => navigate("/main")}>
+    <div className={styles['main-container']}>
+      <div className={styles['chat-box']}>
+        <div className={styles['chat-header']}>
+          <p onClick={() => navigate('/main')}>
             <Arrow />
             홈으로 가기
           </p>
         </div>
 
-        <div className={styles["chat-list"]}>
+        <div className={styles['chat-list']}>
           {rooms.length === 0 ? (
             <div
               style={{
-                padding: "40px 20px",
-                textAlign: "center",
-                color: "#999",
+                padding: '40px 20px',
+                textAlign: 'center',
+                color: '#999',
               }}
             >
               아직 채팅방이 없습니다.
@@ -104,26 +99,24 @@ export default function Main() {
             rooms.map((room) => (
               <div
                 key={room.roomId}
-                className={styles["chat-item"]}
+                className={styles['chat-item']}
                 onClick={() => handleChatClick(room)}
               >
-                <div className={styles["profile"]}>
-                  <div className={styles["avatar"]}>
+                <div className={styles['profile']}>
+                  <div className={styles['avatar']}>
                     <User />
                   </div>
                 </div>
-                <div className={styles["chat-info"]}>
-                  <div className={styles["chat-username"]}>
+                <div className={styles['chat-info']}>
+                  <div className={styles['chat-username']}>
                     {room.otherUserName || `유저 ${room.opponentId}`}
-                    <span className={styles["chat-username-span"]}>
-                      @{room.opponentId}
-                    </span>
+                    <span className={styles['chat-username-span']}>@{room.opponentId}</span>
                   </div>
-                  <div className={styles["chat-message"]}>
-                    {room.lastMessage || "메시지를 보내보세요"}
+                  <div className={styles['chat-message']}>
+                    {room.lastMessage || '메시지를 보내보세요'}
                   </div>
                 </div>
-                {room.unread && <div className={styles["unread-dot"]}></div>}
+                {room.unread && <div className={styles['unread-dot']}></div>}
               </div>
             ))
           )}

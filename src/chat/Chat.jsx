@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import useChatStore from "../store/useChatStore";
-import websocketService from "../services/websocket";
-import { getChatHistory, getMyInfo } from "../services/chatApi";
-import { getAccessToken } from "../utils/cookies";
-import ChatList from "./ChatList";
-import ChatUser from "./ChatUser";
-import Message from "../assets/sentMessage";
-import styles from "./Chat.module.css";
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useChatStore from '../store/useChatStore';
+import websocketService from '../services/websocket';
+import { getChatHistory, getMyInfo } from '../services/chatApi';
+import { getAccessToken } from '../utils/cookies';
+import ChatList from './ChatList';
+import ChatUser from './ChatUser';
+import Message from '../assets/sentMessage';
+import styles from './Chat.module.css';
 
 export default function Chat() {
   const navigate = useNavigate();
@@ -15,7 +15,6 @@ export default function Chat() {
   const wsCheckIntervalRef = useRef(null);
   const isConnectingRef = useRef(false);
 
-  // 선택적 구독: 필요한 것만 가져오기
   const currentRoom = useChatStore((state) => state.currentRoom);
   const messages = useChatStore((state) => state.messages);
   const addMessage = useChatStore((state) => state.addMessage);
@@ -24,21 +23,18 @@ export default function Chat() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [myUserId, setMyUserId] = useState(null);
-  const [wsConnected, setWsConnected] = useState(
-    websocketService.isConnected()
-  );
+  const [wsConnected, setWsConnected] = useState(websocketService.isConnected());
 
   const getUserIdFromToken = () => {
     const token = getAccessToken();
     if (!token) return null;
 
     try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      const userId =
-        payload.userId || payload.id || payload.sub || payload.user_id;
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userId = payload.userId || payload.id || payload.sub || payload.user_id;
       return userId;
     } catch (error) {
-      console.error("토큰 파싱 오류:", error);
+      console.error('토큰 파싱 오류:', error);
       return null;
     }
   };
@@ -47,8 +43,8 @@ export default function Chat() {
     const token = getAccessToken();
 
     if (!token) {
-      alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-      navigate("/login");
+      alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+      navigate('/login');
       return;
     }
 
@@ -63,15 +59,13 @@ export default function Chat() {
           }
         })
         .catch((error) => {
-          console.error("사용자 정보 조회 실패:", error.response?.status);
+          console.error('사용자 정보 조회 실패:', error.response?.status);
         });
     } else {
       setMyUserId(userId);
     }
 
-    // WebSocket 연결 상태를 지속적으로 확인
     const connectWebSocket = () => {
-      // 이미 연결 시도 중이면 중복 실행 방지
       if (isConnectingRef.current) {
         return;
       }
@@ -85,7 +79,7 @@ export default function Chat() {
             isConnectingRef.current = false;
           },
           (error) => {
-            console.error("WebSocket 연결 실패:", error);
+            console.error('WebSocket 연결 실패:', error);
             setWsConnected(false);
             isConnectingRef.current = false;
           }
@@ -95,10 +89,8 @@ export default function Chat() {
       }
     };
 
-    // 초기 연결 시도
     connectWebSocket();
 
-    // 연결 확인을 위한 interval (3초마다 체크)
     wsCheckIntervalRef.current = setInterval(() => {
       const isConnected = websocketService.isConnected();
 
@@ -106,7 +98,6 @@ export default function Chat() {
         setWsConnected(isConnected);
       }
 
-      // 연결이 끊어졌고 연결 시도 중이 아니면 재연결
       if (!isConnected && !isConnectingRef.current) {
         connectWebSocket();
       }
@@ -131,24 +122,18 @@ export default function Chat() {
 
         if (Array.isArray(history) && history.length > 0) {
           const formattedMessages = history.map((msg) => {
-            const myUserIdNum =
-              typeof myUserId === "string" ? parseInt(myUserId) : myUserId;
+            const myUserIdNum = typeof myUserId === 'string' ? parseInt(myUserId) : myUserId;
             const senderIdNum =
-              typeof msg.senderId === "string"
-                ? parseInt(msg.senderId)
-                : msg.senderId;
-            const isMine =
-              myUserIdNum && senderIdNum && myUserIdNum === senderIdNum;
+              typeof msg.senderId === 'string' ? parseInt(msg.senderId) : msg.senderId;
+            const isMine = myUserIdNum && senderIdNum && myUserIdNum === senderIdNum;
 
             return {
               id: `${msg.timestamp || msg.createdAt || Date.now()}-${
                 msg.senderId
               }-${Math.random()}`,
-              sender: isMine ? "나" : "상대",
+              sender: isMine ? '나' : '상대',
               text: msg.content,
-              time: formatTime(
-                new Date(msg.timestamp || msg.createdAt || Date.now())
-              ),
+              time: formatTime(new Date(msg.timestamp || msg.createdAt || Date.now())),
               senderId: msg.senderId,
             };
           });
@@ -156,7 +141,7 @@ export default function Chat() {
         }
       } catch (error) {
         if (error.response?.status !== 500 && error.response?.status !== 404) {
-          console.error("채팅 기록 불러오기 실패:", error.message);
+          console.error('채팅 기록 불러오기 실패:', error.message);
         }
       } finally {
         setIsLoadingHistory(false);
@@ -166,19 +151,15 @@ export default function Chat() {
     loadChatHistory();
 
     const handleMessage = (data) => {
-      const myUserIdNum =
-        typeof myUserId === "string" ? parseInt(myUserId) : myUserId;
+      const myUserIdNum = typeof myUserId === 'string' ? parseInt(myUserId) : myUserId;
       const senderIdNum =
-        typeof data.senderId === "string"
-          ? parseInt(data.senderId)
-          : data.senderId;
+        typeof data.senderId === 'string' ? parseInt(data.senderId) : data.senderId;
 
-      const isMyMessage =
-        myUserIdNum && senderIdNum && myUserIdNum === senderIdNum;
+      const isMyMessage = myUserIdNum && senderIdNum && myUserIdNum === senderIdNum;
 
       addMessage({
         id: `${data.timestamp || Date.now()}-${data.senderId}-${Math.random()}`,
-        sender: isMyMessage ? "나" : "상대",
+        sender: isMyMessage ? '나' : '상대',
         text: data.content,
         time: formatTime(new Date(data.timestamp || Date.now())),
         senderId: data.senderId,
@@ -193,7 +174,7 @@ export default function Chat() {
   }, [currentRoom, myUserId, wsConnected, addMessage, setMessages]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   useEffect(() => {
@@ -205,8 +186,8 @@ export default function Chat() {
   }, []);
 
   const formatTime = (date) => {
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
   };
 
@@ -223,7 +204,7 @@ export default function Chat() {
     if (!text) return;
 
     if (!currentRoom?.roomId) {
-      alert("채팅방을 먼저 선택해주세요.");
+      alert('채팅방을 먼저 선택해주세요.');
       return;
     }
 
@@ -240,21 +221,21 @@ export default function Chat() {
   };
 
   return (
-    <div className={styles["chat-page"]}>
-      <div className={styles["chat-list-panel"]}>
-        <div className={styles["chat-list"]}>
+    <div className={styles['chat-page']}>
+      <div className={styles['chat-list-panel']}>
+        <div className={styles['chat-list']}>
           <ChatList></ChatList>
         </div>
       </div>
 
-      <div className={styles["chat-window"]}>
-        <div className={styles["chat-date"]}>{formatDate(currentTime)}</div>
+      <div className={styles['chat-window']}>
+        <div className={styles['chat-date']}>{formatDate(currentTime)}</div>
         {currentRoom ? (
-          <div className={styles["chat-info-text"]}>
+          <div className={styles['chat-info-text']}>
             {currentRoom.otherUserName} 님과 채팅 중입니다
           </div>
         ) : (
-          <div className={styles["chat-info-text"]}>
+          <div className={styles['chat-info-text']}>
             오늘은 어떤 사람을 만나게 될까요?
             <br />
             대화는 우연처럼 찾아옵니다.
@@ -266,19 +247,17 @@ export default function Chat() {
             <div
               key={msg.id}
               className={`${styles.message} ${
-                msg.sender === "나"
-                  ? styles["my-message"]
-                  : styles["other-message"]
+                msg.sender === '나' ? styles['my-message'] : styles['other-message']
               }`}
             >
               <p>{msg.text}</p>
-              <span className={styles["msg-time"]}>{msg.time}</span>
+              <span className={styles['msg-time']}>{msg.time}</span>
             </div>
           ))}
           <div ref={messagesEndRef} />
         </div>
 
-        <form className={styles["message-input"]} onSubmit={handleSendMessage}>
+        <form className={styles['message-input']} onSubmit={handleSendMessage}>
           <input
             type="text"
             name="message"
@@ -292,8 +271,8 @@ export default function Chat() {
         </form>
       </div>
 
-      <div className={styles["profile-panel"]}>
-        <div className={styles["profile-card"]}>
+      <div className={styles['profile-panel']}>
+        <div className={styles['profile-card']}>
           <ChatUser></ChatUser>
         </div>
       </div>

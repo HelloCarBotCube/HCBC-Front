@@ -23,7 +23,6 @@ const Profile = () => {
   const navigate = useNavigate();
   const goHome = () => navigate('/main');
 
-  // 카테고리 옵션들
   const categoryOptions = [
     '운동',
     '맛집',
@@ -41,7 +40,6 @@ const Profile = () => {
     '애니메이션',
   ];
 
-  // 카테고리 한글-영어 매핑 (백엔드와 통신용)
   const categoryMap = {
     운동: 'EXERCISE',
     맛집: 'RESTAURANT',
@@ -59,12 +57,10 @@ const Profile = () => {
     애니메이션: 'ANIMATION',
   };
 
-  // 영어-한글 역매핑
   const categoryReverseMap = Object.fromEntries(
     Object.entries(categoryMap).map(([ko, en]) => [en, ko])
   );
 
-  // 프로필 조회
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -73,7 +69,6 @@ const Profile = () => {
         console.log('=== 백엔드 응답 데이터 ===', data);
         console.log('백엔드 categories:', data.categories);
 
-        // 백엔드에서 받은 영어 카테고리를 한글로 변환
         const categoriesInKorean = Array.isArray(data.categories)
           ? data.categories.map((cat) => {
               const korean = categoryReverseMap[cat];
@@ -115,7 +110,6 @@ const Profile = () => {
     setEditingField(field);
 
     if (field === 'categories') {
-      // 배열을 복사해서 설정
       const categoriesCopy = Array.isArray(profile.categories) ? [...profile.categories] : [];
       console.log('편집 시작 - 현재 카테고리:', categoriesCopy);
       setTempValue(categoriesCopy);
@@ -133,7 +127,6 @@ const Profile = () => {
       console.log('tempValue:', tempValue);
       console.log('현재 profile:', profile);
 
-      // 현재 카테고리를 영어로 변환 (모든 요청에서 사용)
       const categoriesInEnglish = profile.categories.map((cat) => categoryMap[cat] || cat);
 
       let payload = {};
@@ -163,7 +156,6 @@ const Profile = () => {
         };
         newProfileState = { location: tempValue };
       } else if (field === 'categories') {
-        // 카테고리 업데이트 로직 - 한글을 영어로 변환해서 전송
         const newCategoriesInEnglish = tempValue.map((cat) => categoryMap[cat] || cat);
         console.log('한글 카테고리:', tempValue);
         console.log('영어로 변환:', newCategoriesInEnglish);
@@ -175,7 +167,7 @@ const Profile = () => {
           address: profile.location,
           categories: newCategoriesInEnglish,
         };
-        newProfileState = { categories: tempValue }; // 화면에는 한글로 표시
+        newProfileState = { categories: tempValue };
       }
 
       console.log('수정 요청 데이터:', payload);
@@ -207,8 +199,6 @@ const Profile = () => {
 
   const handleCategoryClick = (category) => {
     if (editingField !== 'categories') return;
-
-    // tempValue가 배열인지 확인하고, 아니면 빈 배열로 초기화
     const currentCategories = Array.isArray(tempValue) ? tempValue : [];
     console.log('클릭 전 카테고리:', currentCategories);
     console.log('클릭한 카테고리:', category);
@@ -217,12 +207,10 @@ const Profile = () => {
     console.log('선택 여부:', isSelected);
 
     if (isSelected) {
-      // 이미 선택된 카테고리면 제거
       const newCategories = currentCategories.filter((c) => c !== category);
       console.log('제거 후:', newCategories);
       setTempValue(newCategories);
     } else {
-      // 선택되지 않은 카테고리면 추가
       console.log('현재 선택된 개수:', currentCategories.length);
       if (currentCategories.length >= 3) {
         alert('카테고리는 최대 3개까지 선택할 수 있습니다.');
