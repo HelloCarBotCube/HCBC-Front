@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Profile.css";
-import HIcon from "../assets/profile-h.svg";
-import { getMyProfile, updateMyProfile } from "../api/profile";
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Profile.css';
+import HIcon from '../assets/profile-h.svg';
+import { getMyProfile, updateMyProfile } from '../api/profile';
 
 const Profile = () => {
   const [profile, setProfile] = useState({
-    name: "",
-    loginId: "",
-    age: "",
-    gender: "",
-    location: "",
+    name: '',
+    loginId: '',
+    age: '',
+    gender: '',
+    location: '',
     categories: [],
   });
 
@@ -21,42 +21,42 @@ const Profile = () => {
   const editingRef = useRef(null);
 
   const navigate = useNavigate();
-  const goHome = () => navigate("/main");
+  const goHome = () => navigate('/main');
 
   // 카테고리 옵션들
   const categoryOptions = [
-    "운동",
-    "맛집",
-    "동물",
-    "여행",
-    "영화",
-    "게임",
-    "독서",
-    "공부",
-    "음악",
-    "🔞",
-    "웹툰",
-    "내향형",
-    "외향형",
-    "애니메이션",
+    '운동',
+    '맛집',
+    '동물',
+    '여행',
+    '영화',
+    '게임',
+    '독서',
+    '공부',
+    '음악',
+    '🔞',
+    '웹툰',
+    '내향형',
+    '외향형',
+    '애니메이션',
   ];
 
   // 카테고리 한글-영어 매핑 (백엔드와 통신용)
   const categoryMap = {
-    운동: "EXERCISE",
-    맛집: "RESTAURANT",
-    동물: "ANIMAL",
-    여행: "TRIP",
-    영화: "MOVIE",
-    게임: "GAME",
-    독서: "LEADING",
-    공부: "STUDY",
-    음악: "MUSIC",
-    "🔞": "SEXUAL_PLEASURE",
-    웹툰: "WEBTOON",
-    내향형: "INTROVERT",
-    외향형: "EXTROVERT",
-    애니메이션: "ANIMATION",
+    운동: 'EXERCISE',
+    맛집: 'RESTAURANT',
+    동물: 'ANIMAL',
+    여행: 'TRIP',
+    영화: 'MOVIE',
+    게임: 'GAME',
+    독서: 'LEADING',
+    공부: 'STUDY',
+    음악: 'MUSIC',
+    '🔞': 'SEXUAL_PLEASURE',
+    웹툰: 'WEBTOON',
+    내향형: 'INTROVERT',
+    외향형: 'EXTROVERT',
+    애니메이션: 'ANIMATION',
   };
 
   // 영어-한글 역매핑
@@ -70,8 +70,8 @@ const Profile = () => {
       try {
         setLoading(true);
         const data = await getMyProfile();
-        console.log("=== 백엔드 응답 데이터 ===", data);
-        console.log("백엔드 categories:", data.categories);
+        console.log('=== 백엔드 응답 데이터 ===', data);
+        console.log('백엔드 categories:', data.categories);
 
         // 백엔드에서 받은 영어 카테고리를 한글로 변환
         const categoriesInKorean = Array.isArray(data.categories)
@@ -82,23 +82,23 @@ const Profile = () => {
             })
           : [];
 
-        console.log("변환된 한글 카테고리:", categoriesInKorean);
+        console.log('변환된 한글 카테고리:', categoriesInKorean);
 
         const newProfile = {
-          name: data.name || "",
-          loginId: data.loginId || "",
-          age: data.age || "",
-          gender: data.gender || "",
-          location: data.address || "",
+          name: data.name || '',
+          loginId: data.loginId || '',
+          age: data.age || '',
+          gender: data.gender || '',
+          location: data.address || '',
           categories: categoriesInKorean,
         };
 
-        console.log("=== 설정할 프로필 상태 (한글 변환 후) ===", newProfile);
+        console.log('=== 설정할 프로필 상태 (한글 변환 후) ===', newProfile);
         setProfile(newProfile);
         setError(null);
       } catch (err) {
-        console.error("프로필 조회 실패:", err);
-        setError("프로필을 불러오는데 실패했습니다.");
+        console.error('프로필 조회 실패:', err);
+        setError('프로필을 불러오는데 실패했습니다.');
       } finally {
         setLoading(false);
       }
@@ -108,45 +108,41 @@ const Profile = () => {
   }, []);
 
   const handleEdit = (field) => {
-    console.log("=== 편집 모드 시작 ===");
-    console.log("편집할 필드:", field);
-    console.log("현재 profile 상태:", profile);
+    console.log('=== 편집 모드 시작 ===');
+    console.log('편집할 필드:', field);
+    console.log('현재 profile 상태:', profile);
 
     setEditingField(field);
 
-    if (field === "categories") {
+    if (field === 'categories') {
       // 배열을 복사해서 설정
-      const categoriesCopy = Array.isArray(profile.categories)
-        ? [...profile.categories]
-        : [];
-      console.log("편집 시작 - 현재 카테고리:", categoriesCopy);
+      const categoriesCopy = Array.isArray(profile.categories) ? [...profile.categories] : [];
+      console.log('편집 시작 - 현재 카테고리:', categoriesCopy);
       setTempValue(categoriesCopy);
-    } else if (field === "age") {
+    } else if (field === 'age') {
       setTempValue(profile.age.toString());
     } else {
-      setTempValue(profile[field] || "");
+      setTempValue(profile[field] || '');
     }
   };
 
   const handleApply = async (field) => {
     try {
-      console.log("=== 적용하기 시작 ===");
-      console.log("수정할 필드:", field);
-      console.log("tempValue:", tempValue);
-      console.log("현재 profile:", profile);
+      console.log('=== 적용하기 시작 ===');
+      console.log('수정할 필드:', field);
+      console.log('tempValue:', tempValue);
+      console.log('현재 profile:', profile);
 
       // 현재 카테고리를 영어로 변환 (모든 요청에서 사용)
-      const categoriesInEnglish = profile.categories.map(
-        (cat) => categoryMap[cat] || cat
-      );
+      const categoriesInEnglish = profile.categories.map((cat) => categoryMap[cat] || cat);
 
       let payload = {};
       let newProfileState = {};
 
-      if (field === "age") {
+      if (field === 'age') {
         const newAge = parseInt(tempValue, 10);
         if (isNaN(newAge) || newAge <= 0) {
-          alert("유효한 나이를 입력해주세요.");
+          alert('유효한 나이를 입력해주세요.');
           return;
         }
         payload = {
@@ -157,7 +153,7 @@ const Profile = () => {
           categories: categoriesInEnglish,
         };
         newProfileState = { age: newAge };
-      } else if (field === "location") {
+      } else if (field === 'location') {
         payload = {
           name: profile.name,
           gender: profile.gender,
@@ -166,13 +162,11 @@ const Profile = () => {
           categories: categoriesInEnglish,
         };
         newProfileState = { location: tempValue };
-      } else if (field === "categories") {
+      } else if (field === 'categories') {
         // 카테고리 업데이트 로직 - 한글을 영어로 변환해서 전송
-        const newCategoriesInEnglish = tempValue.map(
-          (cat) => categoryMap[cat] || cat
-        );
-        console.log("한글 카테고리:", tempValue);
-        console.log("영어로 변환:", newCategoriesInEnglish);
+        const newCategoriesInEnglish = tempValue.map((cat) => categoryMap[cat] || cat);
+        console.log('한글 카테고리:', tempValue);
+        console.log('영어로 변환:', newCategoriesInEnglish);
 
         payload = {
           name: profile.name,
@@ -184,58 +178,58 @@ const Profile = () => {
         newProfileState = { categories: tempValue }; // 화면에는 한글로 표시
       }
 
-      console.log("수정 요청 데이터:", payload);
+      console.log('수정 요청 데이터:', payload);
       const response = await updateMyProfile(payload);
-      console.log("수정 응답 데이터:", response);
+      console.log('수정 응답 데이터:', response);
 
       setProfile((prev) => {
         const updated = { ...prev, ...newProfileState };
-        console.log("업데이트된 profile:", updated);
+        console.log('업데이트된 profile:', updated);
         return updated;
       });
       setEditingField(null);
       setTempValue([]);
-      alert("프로필이 수정되었습니다.");
+      alert('프로필이 수정되었습니다.');
     } catch (err) {
-      console.error("프로필 수정 실패:", err);
-      alert("프로필 수정에 실패했습니다. 다시 시도해주세요.");
+      console.error('프로필 수정 실패:', err);
+      alert('프로필 수정에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
   const handleCancel = () => {
     setEditingField(null);
-    if (editingField === "categories") {
+    if (editingField === 'categories') {
       setTempValue([]);
     } else {
-      setTempValue("");
+      setTempValue('');
     }
   };
 
   const handleCategoryClick = (category) => {
-    if (editingField !== "categories") return;
+    if (editingField !== 'categories') return;
 
     // tempValue가 배열인지 확인하고, 아니면 빈 배열로 초기화
     const currentCategories = Array.isArray(tempValue) ? tempValue : [];
-    console.log("클릭 전 카테고리:", currentCategories);
-    console.log("클릭한 카테고리:", category);
+    console.log('클릭 전 카테고리:', currentCategories);
+    console.log('클릭한 카테고리:', category);
 
     const isSelected = currentCategories.includes(category);
-    console.log("선택 여부:", isSelected);
+    console.log('선택 여부:', isSelected);
 
     if (isSelected) {
       // 이미 선택된 카테고리면 제거
       const newCategories = currentCategories.filter((c) => c !== category);
-      console.log("제거 후:", newCategories);
+      console.log('제거 후:', newCategories);
       setTempValue(newCategories);
     } else {
       // 선택되지 않은 카테고리면 추가
-      console.log("현재 선택된 개수:", currentCategories.length);
+      console.log('현재 선택된 개수:', currentCategories.length);
       if (currentCategories.length >= 3) {
-        alert("카테고리는 최대 3개까지 선택할 수 있습니다.");
+        alert('카테고리는 최대 3개까지 선택할 수 있습니다.');
         return;
       }
       const newCategories = [...currentCategories, category];
-      console.log("추가 후:", newCategories);
+      console.log('추가 후:', newCategories);
       setTempValue(newCategories);
     }
   };
@@ -251,9 +245,9 @@ const Profile = () => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [editingField]);
 
@@ -276,10 +270,10 @@ const Profile = () => {
             onChange={(e) => setTempValue(e.target.value)}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 e.stopPropagation();
                 handleApply(fieldKey);
-              } else if (e.key === "Escape") {
+              } else if (e.key === 'Escape') {
                 e.stopPropagation();
                 handleCancel();
               }
@@ -298,9 +292,7 @@ const Profile = () => {
         </>
       ) : (
         <>
-          <span>
-            {fieldKey === "age" ? `${profile[fieldKey]}살` : profile[fieldKey]}
-          </span>
+          <span>{fieldKey === 'age' ? `${profile[fieldKey]}살` : profile[fieldKey]}</span>
           {editable && (
             <button
               className="p-edit"
@@ -318,20 +310,15 @@ const Profile = () => {
   );
 
   const renderCategoryField = () => (
-    <div
-      className="p-category-section"
-      ref={editingField === "categories" ? editingRef : null}
-    >
-      {editingField === "categories" ? (
+    <div className="p-category-section" ref={editingField === 'categories' ? editingRef : null}>
+      {editingField === 'categories' ? (
         <>
           <div className="p-category-grid">
             {categoryOptions.map((category) => (
               <button
                 key={category}
                 className={`p-category-btn ${
-                  (Array.isArray(tempValue) ? tempValue : []).includes(category)
-                    ? "active"
-                    : ""
+                  (Array.isArray(tempValue) ? tempValue : []).includes(category) ? 'active' : ''
                 }`}
                 onClick={() => handleCategoryClick(category)}
               >
@@ -339,7 +326,7 @@ const Profile = () => {
               </button>
             ))}
           </div>
-          <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+          <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
             <button
               className="p-cancel"
               onClick={(e) => {
@@ -353,7 +340,7 @@ const Profile = () => {
               className="p-apply"
               onClick={(e) => {
                 e.stopPropagation();
-                handleApply("categories");
+                handleApply('categories');
               }}
             >
               적용하기
@@ -366,26 +353,26 @@ const Profile = () => {
             className="p-field"
             onClick={(e) => {
               e.stopPropagation();
-              handleEdit("categories");
+              handleEdit('categories');
             }}
           >
             <span>관심 카테고리</span>
             <button className="p-edit">카테고리 변경</button>
           </div>
-          <div className="p-category-grid" style={{ marginTop: "10px" }}>
+          <div className="p-category-grid" style={{ marginTop: '10px' }}>
             {profile.categories && profile.categories.length > 0 ? (
               profile.categories.map((category) => (
                 <button
                   key={category}
                   className="p-category-btn active"
                   disabled
-                  style={{ cursor: "default" }}
+                  style={{ cursor: 'default' }}
                 >
                   {category}
                 </button>
               ))
             ) : (
-              <span className="p-no-category" style={{ color: "#888" }}>
+              <span className="p-no-category" style={{ color: '#888' }}>
                 선택된 카테고리가 없습니다.
               </span>
             )}
@@ -399,7 +386,7 @@ const Profile = () => {
     return (
       <div className="p-container">
         <div className="p-wrap">
-          <div style={{ textAlign: "center", padding: "50px" }}>로딩 중...</div>
+          <div style={{ textAlign: 'center', padding: '50px' }}>로딩 중...</div>
         </div>
       </div>
     );
@@ -409,9 +396,7 @@ const Profile = () => {
     return (
       <div className="p-container">
         <div className="p-wrap">
-          <div style={{ textAlign: "center", padding: "50px", color: "red" }}>
-            {error}
-          </div>
+          <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>{error}</div>
         </div>
       </div>
     );
@@ -438,9 +423,9 @@ const Profile = () => {
                 </div>
               </div>
               <div className="p-textFields">
-                {renderTextField("age", "나이 변경")}
-                {renderTextField("gender", "")}
-                {renderTextField("location", "지역 변경")}
+                {renderTextField('age', '나이 변경')}
+                {renderTextField('gender', '')}
+                {renderTextField('location', '지역 변경')}
                 {renderCategoryField()}
               </div>
             </div>
