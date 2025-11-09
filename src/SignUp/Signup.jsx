@@ -74,6 +74,7 @@ const Signup = () => {
   const [isIdAvailable, setIsIdAvailable] = useState(false);
   const [isIdChecked, setIsIdChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ageErrorMessage, setAgeErrorMessage] = useState('');
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -95,8 +96,10 @@ const Signup = () => {
     if (name === 'age') {
       const numValue = Number(value);
       if (value && (numValue < 0 || numValue > 150)) {
-        alert('진짜 당신의 나이가 맞나요??');
+        setAgeErrorMessage('진짜 당신의 나이가 맞나요??');
         return; // 0 미만이거나 150 초과인 경우 업데이트하지 않음
+      } else {
+        setAgeErrorMessage('');
       }
     }
 
@@ -273,7 +276,7 @@ const Signup = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className="input-field">
+            <div className="input-field" style={{ marginBottom: 0 }}>
               <input
                 className="s-input"
                 type="number"
@@ -285,6 +288,9 @@ const Signup = () => {
                 max="150"
               />
             </div>
+            <p className="msg-error">
+              {ageErrorMessage}
+            </p>
             <div className="select-wrap">
               <div className="select-box" onClick={toggleGenderOptions}>
                 {formData.gender || "성별"}

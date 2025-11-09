@@ -61,7 +61,9 @@
   font-size: 0.95rem;
   margin: 0;
   word-wrap: break-word;
+  word-break: break-all;
   white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .message span {
