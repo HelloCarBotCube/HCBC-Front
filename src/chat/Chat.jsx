@@ -19,6 +19,9 @@ export default function Chat() {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [myUserId, setMyUserId] = useState(null);
   const [wsConnected, setWsConnected] = useState(false);
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
+  const messagesContainerRef = useRef(null);
+  const previousMessagesLengthRef = useRef(0);
 
   const formatTime = (date) => {
     const hours = date.getHours().toString().padStart(2, '0');
@@ -90,11 +93,25 @@ export default function Chat() {
 
   useEffect(() => {
     if (!currentRoom?.roomId || !wsConnected) return;
+    setMessages([]);
+
+    try {
+      const lastReadTimes = JSON.parse(localStorage.getItem('chat_last_read') || '{}');
+      lastReadTimes[currentRoom.roomId] = Date.now();
+      localStorage.setItem('chat_last_read', JSON.stringify(lastReadTimes));
+    } catch (error) {
+      console.error('읽음 처리 오류:', error);
+    }
 
     const loadChatHistory = async () => {
+      const loadingRoomId = currentRoom.roomId;
       setIsLoadingHistory(true);
       try {
-        const history = await getChatHistory(currentRoom.roomId);
+        const history = await getChatHistory(loadingRoomId);
+
+        if (currentRoom.roomId !== loadingRoomId) {
+          return;
+        }
 
         if (Array.isArray(history) && history.length > 0) {
           const formattedMessages = history.map((msg) => {
@@ -115,26 +132,16 @@ export default function Chat() {
             };
           });
 
-          // 기존 localStorage의 메시지와 병합
-          const existingMessages = messages || [];
-          const mergedMessages = [...formattedMessages];
-
-          // API에 없는 새로운 메시지만 추가
-          existingMessages.forEach(existingMsg => {
-            const isDuplicate = formattedMessages.some(apiMsg =>
-              apiMsg.senderId === existingMsg.senderId &&
-              Math.abs((apiMsg.timestamp || 0) - (existingMsg.timestamp || 0)) < 1000 &&
-              apiMsg.text === existingMsg.text
-            );
-            if (!isDuplicate && existingMsg.timestamp) {
-              mergedMessages.push(existingMsg);
-            }
+          requestAnimationFrame(() => {
+            setMessages(formattedMessages);
+            requestAnimationFrame(() => {
+              if (messagesEndRef.current) {
+                messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+              }
+            });
           });
-
-          // 타임스탬프로 정렬
-          mergedMessages.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-
-          setMessages(mergedMessages);
+        } else {
+          setMessages([]);
         }
       } catch (error) {
         if (error.response?.status === 500) {
@@ -142,6 +149,7 @@ export default function Chat() {
         } else if (error.response?.status !== 404) {
           console.error('채팅 기록 불러오기 실패:', error.message);
         }
+        setMessages([]);
       } finally {
         setIsLoadingHistory(false);
       }
@@ -164,6 +172,14 @@ export default function Chat() {
         senderId: data.senderId,
         timestamp: data.timestamp || Date.now(),
       });
+
+      try {
+        const lastReadTimes = JSON.parse(localStorage.getItem('chat_last_read') || '{}');
+        lastReadTimes[currentRoom.roomId] = Date.now();
+        localStorage.setItem('chat_last_read', JSON.stringify(lastReadTimes));
+      } catch (error) {
+        console.error('읽음 처리 오류:', error);
+      }
     };
 
     websocketService.subscribeToRoom(currentRoom.roomId, handleMessage);
@@ -171,11 +187,31 @@ export default function Chat() {
     return () => {
       websocketService.unsubscribeFromRoom(currentRoom.roomId);
     };
-  }, [currentRoom?.roomId, myUserId, wsConnected, addMessage, setMessages, messages]);
+  }, [currentRoom?.roomId, myUserId, wsConnected, addMessage, setMessages]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    const handleScroll = () => {
+      if (!messagesContainerRef.current) return;
+
+      const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
+      const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
+
+      setIsUserScrolling(!isAtBottom);
+    };
+
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > previousMessagesLengthRef.current && !isUserScrolling) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    previousMessagesLengthRef.current = messages.length;
+  }, [messages, isUserScrolling]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -193,6 +229,14 @@ export default function Chat() {
     if (!currentRoom?.roomId) {
       alert('채팅방을 먼저 선택해주세요.');
       return;
+    }
+
+    try {
+      const sentTimes = JSON.parse(localStorage.getItem('chat_last_sent') || '{}');
+      sentTimes[currentRoom.roomId] = Date.now();
+      localStorage.setItem('chat_last_sent', JSON.stringify(sentTimes));
+    } catch (error) {
+      console.error('전송 시간 저장 오류:', error);
     }
 
     if (!websocketService.isConnected()) {
@@ -229,7 +273,7 @@ export default function Chat() {
           </div>
         )}
 
-        <div className={styles.messages}>
+        <div className={styles.messages} ref={messagesContainerRef}>
           {messages.map((msg) => (
             <div
               key={msg.id}

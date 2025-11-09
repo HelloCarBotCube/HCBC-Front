@@ -69,6 +69,7 @@ const useChatStore = create(
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         roomMessages: state.roomMessages,
+        currentRoom: state.currentRoom,
       }),
     }
   )

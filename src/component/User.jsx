@@ -144,52 +144,48 @@ export default function User() {
   const tags1 = (user.tags || []).slice(0, PER_ROW);
   const tags2 = (user.tags || []).slice(PER_ROW, PER_ROW * 2);
 
-  if (loading) {
-    return (
-      <div className="user-container">
-        <div>로딩 중</div>
-      </div>
-    );
-  }
-
   return (
     <div className={styles["user-container"]}>
       <aside className={styles["user-card"]}>
-        <div className={styles["user-wrap"]}>
-          <img src={profileImg} alt="아이콘" className={styles.icon} />
-        </div>
-
-        <div className={styles["user-body"]}>
-          <div className={styles["user-name"]}>{user.name}</div>
-          <div className={styles["user-id"]}>{user.handle}</div>
-
-          <div className={styles["user-tag-card"]}>
-            <div className={`${styles["user-tags"]} ${styles["user-tags1"]}`}>
-              {tags1.map((t, i) => (
-                <span key={`t1-${i}`} className={styles["user-tag"]}>
-                  {t}
-                </span>
-              ))}
+        {!loading && (
+          <>
+            <div className={styles["user-wrap"]}>
+              <img src={profileImg} alt="아이콘" className={styles.icon} />
             </div>
-            {tags2.length > 0 && (
-              <div className={`${styles["user-tags"]} ${styles["user-tags2"]}`}>
-                {tags2.map((t, i) => (
-                  <span key={`t2-${i}`} className={styles["user-tag"]}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
 
-          <button
-            type="button"
-            className={styles["user-button"]}
-            onClick={() => navigate("/profile")}
-          >
-            프로필
-          </button>
-        </div>
+            <div className={styles["user-body"]}>
+              <div className={styles["user-name"]}>{user.name}</div>
+              <div className={styles["user-id"]}>{user.handle}</div>
+
+              <div className={styles["user-tag-card"]}>
+                <div className={`${styles["user-tags"]} ${styles["user-tags1"]}`}>
+                  {tags1.map((t, i) => (
+                    <span key={`t1-${i}`} className={styles["user-tag"]}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                {tags2.length > 0 && (
+                  <div className={`${styles["user-tags"]} ${styles["user-tags2"]}`}>
+                    {tags2.map((t, i) => (
+                      <span key={`t2-${i}`} className={styles["user-tag"]}>
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                className={styles["user-button"]}
+                onClick={() => navigate("/profile")}
+              >
+                프로필
+              </button>
+            </div>
+          </>
+        )}
       </aside>
     </div>
   );
