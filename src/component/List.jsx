@@ -65,14 +65,12 @@ export default function Main() {
           const lastReadTime = getLastReadTime(chat.roomId);
           const lastActiveTime = new Date(chat.lastActiveAt).getTime();
 
-          // 마지막 메시지 전송 시간 가져오기 (내가 보낸 메시지)
           let lastSentTime = 0;
           try {
             const sentTimes = JSON.parse(localStorage.getItem('chat_last_sent') || '{}');
             lastSentTime = sentTimes[chat.roomId] || 0;
           } catch {}
 
-          // 내가 마지막으로 보낸 메시지 이후에 상대방이 메시지를 보냈고, 내가 읽지 않은 경우만 안읽음 표시
           const hasUnread = lastActiveTime > lastReadTime && lastActiveTime > lastSentTime;
 
           return {
