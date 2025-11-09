@@ -3,8 +3,8 @@
   height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  font-family: 'pretendard', sans-serif;
+  justify-content: left;
+  font-family: "pretendard", sans-serif;
 }
 
 .chat-box {

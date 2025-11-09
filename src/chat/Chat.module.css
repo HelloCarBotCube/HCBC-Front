@@ -13,8 +13,8 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-left: 35px;
-  padding-right: 35px;
+  padding-left: 36px;
+  padding-right: 36px;
 }
 
 .chat-date {

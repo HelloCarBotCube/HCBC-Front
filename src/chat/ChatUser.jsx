@@ -61,14 +61,12 @@ export default function User() {
         address: null,
         gender: null,
       };
+
       setUser(basicInfo);
 
-      // API로 상세 정보 불러오기
       if (currentRoom.opponentUserId) {
         try {
           const profile = await getUserProfile(currentRoom.opponentUserId);
-
-          // 태그 생성
           const tags = [];
           if (profile.gender) {
             tags.push(GENDER_LABELS[profile.gender] || profile.gender);

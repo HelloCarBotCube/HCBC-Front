@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAccessToken } from '../utils/cookies';
+import useChatStore from '../store/useChatStore';
 import axios from 'axios';
 import styles from './Random.module.css';
 import Logo from '../assets/logo';
@@ -15,6 +16,7 @@ export default function Random() {
   const accessTokenRef = useRef(null);
   const initialChatCountRef = useRef(0);
   const navigate = useNavigate();
+  const { setCurrentRoom } = useChatStore();
 
   useEffect(() => {
     accessTokenRef.current = getAccessToken();
@@ -29,6 +31,15 @@ export default function Random() {
       setStatus('waiting');
       setDotCount(1);
 
+      const initialChatResponse = await axios.get(`${API_BASE_URL}/api/chat`, {
+        headers: {
+          Authorization: `Bearer ${accessTokenRef.current}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      initialChatCountRef.current = initialChatResponse.data?.length || 0;
+
       const response = await axios.post(
         `${API_BASE_URL}/api/chat/start`,
         {},
@@ -39,17 +50,6 @@ export default function Random() {
           },
         }
       );
-
-      console.log('대기열 등록 완료:', response.data);
-
-      const chatListResponse = await axios.get(`${API_BASE_URL}/api/chat`, {
-        headers: {
-          Authorization: `Bearer ${accessTokenRef.current}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      initialChatCountRef.current = chatListResponse.data?.length || 0;
 
       dotRef.current = setInterval(() => {
         setDotCount((prev) => (prev === 3 ? 1 : prev + 1));
@@ -64,8 +64,11 @@ export default function Random() {
   };
 
   const pollForMatch = () => {
-    pollingRef.current = setInterval(async () => {
+    let checkCount = 0;
+
+    const checkMatch = async () => {
       try {
+        checkCount++;
         const response = await axios.get(`${API_BASE_URL}/api/chat`, {
           headers: {
             Authorization: `Bearer ${accessTokenRef.current}`,
@@ -73,13 +76,42 @@ export default function Random() {
           },
         });
 
-        console.log('채팅 목록 확인:', response.data?.length);
+        const currentCount = response.data?.length || 0;
 
-        if (response.data && response.data.length > initialChatCountRef.current) {
-          clearInterval(pollingRef.current);
+        if (currentCount > initialChatCountRef.current) {
+          if (pollingRef.current) clearInterval(pollingRef.current);
           if (dotRef.current) clearInterval(dotRef.current);
+
           setStatus('matched');
-          console.log('매칭 완료!');
+
+          try {
+            const newChatResponse = await axios.get(`${API_BASE_URL}/api/chat`, {
+              headers: {
+                Authorization: `Bearer ${accessTokenRef.current}`,
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (newChatResponse.data && newChatResponse.data.length > 0) {
+              const sortedChats = [...newChatResponse.data].sort(
+                (a, b) => new Date(b.lastActiveAt) - new Date(a.lastActiveAt)
+              );
+              const latestChat = sortedChats[0];
+
+              setCurrentRoom({
+                roomId: latestChat.roomId,
+                opponentId: latestChat.opponentLoginId,
+                opponentUserId: latestChat.opponentUserId,
+                otherUserName: latestChat.opponentName || '알 수 없는 사용자',
+                tags: [],
+                age: null,
+                address: null,
+                gender: null,
+              });
+            }
+          } catch (error) {
+            console.error('채팅방 정보 가져오기 실패:', error);
+          }
 
           setTimeout(() => {
             navigate('/chat');
@@ -88,7 +120,11 @@ export default function Random() {
       } catch (error) {
         console.error('채팅 목록 조회 오류:', error);
       }
-    }, 2000);
+    };
+
+    checkMatch();
+
+    pollingRef.current = setInterval(checkMatch, 2000);
   };
 
   const cancelMatching = () => {

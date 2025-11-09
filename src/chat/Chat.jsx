@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useChatStore from '../store/useChatStore';
 import websocketService from '../services/websocket';
@@ -12,29 +12,18 @@ import styles from './Chat.module.css';
 export default function Chat() {
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
+  const wsCheckIntervalRef = useRef(null);
+  const isConnectingRef = useRef(false);
 
-  const { currentRoom, messages, addMessage, setMessages } = useChatStore();
+  const currentRoom = useChatStore((state) => state.currentRoom);
+  const messages = useChatStore((state) => state.messages);
+  const addMessage = useChatStore((state) => state.addMessage);
+  const setMessages = useChatStore((state) => state.setMessages);
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [myUserId, setMyUserId] = useState(null);
-  const [wsConnected, setWsConnected] = useState(false);
-  const [isUserScrolling, setIsUserScrolling] = useState(false);
-  const messagesContainerRef = useRef(null);
-  const previousMessagesLengthRef = useRef(0);
-
-  const formatTime = (date) => {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
-
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}년 ${month}월 ${day}일`;
-  };
+  const [wsConnected, setWsConnected] = useState(websocketService.isConnected());
 
   const getUserIdFromToken = () => {
     const token = getAccessToken();
@@ -75,32 +64,54 @@ export default function Chat() {
       setMyUserId(userId);
     }
 
-    if (!websocketService.isConnected()) {
-      websocketService.connect(
-        token,
-        () => {
-          setWsConnected(true);
-        },
-        (error) => {
-          console.error('WebSocket 연결 실패:', error);
-          setWsConnected(false);
-        }
-      );
-    } else {
-      setWsConnected(true);
-    }
+    const connectWebSocket = () => {
+      if (isConnectingRef.current) {
+        return;
+      }
+
+      if (!websocketService.isConnected()) {
+        isConnectingRef.current = true;
+        websocketService.connect(
+          token,
+          () => {
+            setWsConnected(true);
+            isConnectingRef.current = false;
+          },
+          (error) => {
+            console.error('WebSocket 연결 실패:', error);
+            setWsConnected(false);
+            isConnectingRef.current = false;
+          }
+        );
+      } else {
+        setWsConnected(true);
+      }
+    };
+
+    connectWebSocket();
+
+    wsCheckIntervalRef.current = setInterval(() => {
+      const isConnected = websocketService.isConnected();
+
+      if (isConnected !== wsConnected) {
+        setWsConnected(isConnected);
+      }
+
+      if (!isConnected && !isConnectingRef.current) {
+        connectWebSocket();
+      }
+    }, 3000);
+
+    return () => {
+      if (wsCheckIntervalRef.current) {
+        clearInterval(wsCheckIntervalRef.current);
+      }
+    };
   }, [navigate]);
 
   useEffect(() => {
-    if (!currentRoom?.roomId || !wsConnected) return;
-    setMessages([]);
-
-    try {
-      const lastReadTimes = JSON.parse(localStorage.getItem('chat_last_read') || '{}');
-      lastReadTimes[currentRoom.roomId] = Date.now();
-      localStorage.setItem('chat_last_read', JSON.stringify(lastReadTimes));
-    } catch (error) {
-      console.error('읽음 처리 오류:', error);
+    if (!currentRoom?.roomId || !wsConnected) {
+      return;
     }
 
     const loadChatHistory = async () => {
@@ -144,9 +155,7 @@ export default function Chat() {
           setMessages([]);
         }
       } catch (error) {
-        if (error.response?.status === 500) {
-          console.error('서버 오류로 채팅 기록을 불러올 수 없습니다:', error.message);
-        } else if (error.response?.status !== 404) {
+        if (error.response?.status !== 500 && error.response?.status !== 404) {
           console.error('채팅 기록 불러오기 실패:', error.message);
         }
         setMessages([]);
@@ -187,31 +196,11 @@ export default function Chat() {
     return () => {
       websocketService.unsubscribeFromRoom(currentRoom.roomId);
     };
-  }, [currentRoom?.roomId, myUserId, wsConnected, addMessage, setMessages]);
+  }, [currentRoom, myUserId, wsConnected, addMessage, setMessages]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!messagesContainerRef.current) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
-      const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
-
-      setIsUserScrolling(!isAtBottom);
-    };
-
-    const container = messagesContainerRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => container.removeEventListener('scroll', handleScroll);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (messages.length > previousMessagesLengthRef.current && !isUserScrolling) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-    previousMessagesLengthRef.current = messages.length;
-  }, [messages, isUserScrolling]);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   useEffect(() => {
     const timer = setInterval(() => {
