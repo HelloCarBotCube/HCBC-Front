@@ -1,10 +1,16 @@
 .chat-page {
   display: flex;
+  flex-direction: row;
   background-color: #f8f8f8;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 
 .chat-window {
   width: 550px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   padding-left: 35px;
@@ -15,6 +21,9 @@
   text-align: center;
   font-size: 0.9rem;
   color: #8e8e8e;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  flex-shrink: 0;
 }
 
 .chat-text,
@@ -22,6 +31,7 @@
   text-align: center;
   color: #8e8e8e;
   margin-bottom: 1rem;
+  flex-shrink: 0;
 }
 
 .messages {
@@ -31,7 +41,7 @@
   gap: 10px;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(100vh - 176px);
+  min-height: 0;
 }
 
 .messages::-webkit-scrollbar {
@@ -51,6 +61,9 @@
   font-size: 0.95rem;
   margin: 0;
   word-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .message span {
@@ -87,19 +100,38 @@
   margin-top: 10px;
   padding: 10px;
   position: relative;
+  flex-shrink: 0;
+  padding-bottom: 20px;
 }
 
-.message-input input {
+.message-input input,
+.message-input textarea {
   flex: 1;
   padding: 14px 70px 14px 20px;
   border-radius: 25px;
   font-size: 0.95rem;
   outline: none;
   border: none;
+  font-family: 'pretendard', sans-serif;
+  line-height: 1.4;
+  overflow-y: auto;
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-wrap;
 }
 
-.message-input input:focus {
+.message-input input:focus,
+.message-input textarea:focus {
   border-color: #ff6b9f;
+}
+
+.message-input textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.message-input textarea::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
 }
 
 .message-input button {

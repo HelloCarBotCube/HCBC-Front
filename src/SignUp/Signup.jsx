@@ -74,6 +74,7 @@ const Signup = () => {
   const [isIdAvailable, setIsIdAvailable] = useState(false);
   const [isIdChecked, setIsIdChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ageErrorMessage, setAgeErrorMessage] = useState('');
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -90,6 +91,18 @@ const Signup = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // 나이 필드의 경우 음수 값 방지 및 경고
+    if (name === 'age') {
+      const numValue = Number(value);
+      if (value && (numValue < 0 || numValue > 150)) {
+        setAgeErrorMessage('진짜 당신의 나이가 맞나요??');
+        return; // 0 미만이거나 150 초과인 경우 업데이트하지 않음
+      } else {
+        setAgeErrorMessage('');
+      }
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (name === 'id') {
@@ -263,7 +276,7 @@ const Signup = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className="input-field">
+            <div className="input-field" style={{ marginBottom: 0 }}>
               <input
                 className="s-input"
                 type="number"
@@ -271,8 +284,13 @@ const Signup = () => {
                 placeholder="나이"
                 value={formData.age}
                 onChange={handleChange}
+                min="1"
+                max="150"
               />
             </div>
+            <p className="msg-error">
+              {ageErrorMessage}
+            </p>
             <div className="select-wrap">
               <div className="select-box" onClick={toggleGenderOptions}>
                 {formData.gender || "성별"}

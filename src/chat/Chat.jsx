@@ -19,6 +19,22 @@ export default function Chat() {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [myUserId, setMyUserId] = useState(null);
   const [wsConnected, setWsConnected] = useState(false);
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
+  const messagesContainerRef = useRef(null);
+  const previousMessagesLengthRef = useRef(0);
+
+  const formatTime = (date) => {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}년 ${month}월 ${day}일`;
+  };
 
   const getUserIdFromToken = () => {
     const token = getAccessToken();
@@ -38,8 +54,7 @@ export default function Chat() {
     const token = getAccessToken();
 
     if (!token) {
-      alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
-      navigate('/login');
+      navigate('/', { replace: true });
       return;
     }
 
@@ -78,11 +93,25 @@ export default function Chat() {
 
   useEffect(() => {
     if (!currentRoom?.roomId || !wsConnected) return;
+    setMessages([]);
+
+    try {
+      const lastReadTimes = JSON.parse(localStorage.getItem('chat_last_read') || '{}');
+      lastReadTimes[currentRoom.roomId] = Date.now();
+      localStorage.setItem('chat_last_read', JSON.stringify(lastReadTimes));
+    } catch (error) {
+      console.error('읽음 처리 오류:', error);
+    }
 
     const loadChatHistory = async () => {
+      const loadingRoomId = currentRoom.roomId;
       setIsLoadingHistory(true);
       try {
-        const history = await getChatHistory(currentRoom.roomId);
+        const history = await getChatHistory(loadingRoomId);
+
+        if (currentRoom.roomId !== loadingRoomId) {
+          return;
+        }
 
         if (Array.isArray(history) && history.length > 0) {
           const formattedMessages = history.map((msg) => {
@@ -99,15 +128,28 @@ export default function Chat() {
               text: msg.content,
               time: formatTime(new Date(msg.timestamp || msg.createdAt || Date.now())),
               senderId: msg.senderId,
+              timestamp: msg.timestamp || msg.createdAt,
             };
           });
-          setMessages(formattedMessages);
+
+          requestAnimationFrame(() => {
+            setMessages(formattedMessages);
+            requestAnimationFrame(() => {
+              if (messagesEndRef.current) {
+                messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+              }
+            });
+          });
+        } else {
+          setMessages([]);
         }
       } catch (error) {
         if (error.response?.status === 500) {
+          console.error('서버 오류로 채팅 기록을 불러올 수 없습니다:', error.message);
         } else if (error.response?.status !== 404) {
           console.error('채팅 기록 불러오기 실패:', error.message);
         }
+        setMessages([]);
       } finally {
         setIsLoadingHistory(false);
       }
@@ -128,7 +170,16 @@ export default function Chat() {
         text: data.content,
         time: formatTime(new Date(data.timestamp || Date.now())),
         senderId: data.senderId,
+        timestamp: data.timestamp || Date.now(),
       });
+
+      try {
+        const lastReadTimes = JSON.parse(localStorage.getItem('chat_last_read') || '{}');
+        lastReadTimes[currentRoom.roomId] = Date.now();
+        localStorage.setItem('chat_last_read', JSON.stringify(lastReadTimes));
+      } catch (error) {
+        console.error('읽음 처리 오류:', error);
+      }
     };
 
     websocketService.subscribeToRoom(currentRoom.roomId, handleMessage);
@@ -139,25 +190,28 @@ export default function Chat() {
   }, [currentRoom?.roomId, myUserId, wsConnected, addMessage, setMessages]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    const handleScroll = () => {
+      if (!messagesContainerRef.current) return;
 
-  const [chatList] = useState([
-    {
-      id: 1,
-      username: '봉봉지',
-      userId: '@bong_11111',
-      lastMessage: 'ㅎㅇ염',
-      unread: true,
-    },
-    {
-      id: 2,
-      username: '문강현',
-      userId: '@g.hyxn1_',
-      lastMessage: '저리가 ! 문강현 !',
-      unread: false,
-    },
-  ]);
+      const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
+      const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
+
+      setIsUserScrolling(!isAtBottom);
+    };
+
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > previousMessagesLengthRef.current && !isUserScrolling) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    previousMessagesLengthRef.current = messages.length;
+  }, [messages, isUserScrolling]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -167,19 +221,6 @@ export default function Chat() {
     return () => clearInterval(timer);
   }, []);
 
-  const formatTime = (date) => {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
-
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}년 ${month}월 ${day}일`;
-  };
-
   const handleSendMessage = (e) => {
     e.preventDefault();
     const text = e.target.message.value.trim();
@@ -188,6 +229,14 @@ export default function Chat() {
     if (!currentRoom?.roomId) {
       alert('채팅방을 먼저 선택해주세요.');
       return;
+    }
+
+    try {
+      const sentTimes = JSON.parse(localStorage.getItem('chat_last_sent') || '{}');
+      sentTimes[currentRoom.roomId] = Date.now();
+      localStorage.setItem('chat_last_sent', JSON.stringify(sentTimes));
+    } catch (error) {
+      console.error('전송 시간 저장 오류:', error);
     }
 
     if (!websocketService.isConnected()) {
@@ -224,7 +273,7 @@ export default function Chat() {
           </div>
         )}
 
-        <div className={styles.messages}>
+        <div className={styles.messages} ref={messagesContainerRef}>
           {messages.map((msg) => (
             <div
               key={msg.id}

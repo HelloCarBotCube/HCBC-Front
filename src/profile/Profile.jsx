@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 import HIcon from "../assets/profile-h.svg";
 import { getMyProfile, updateMyProfile } from "../api/profile";
+import { getAccessToken } from "../utils/cookies";
 
 const Profile = () => {
   const [profile, setProfile] = useState({
@@ -22,6 +23,25 @@ const Profile = () => {
 
   const navigate = useNavigate();
   const goHome = () => navigate("/main");
+
+  // 토큰 검증
+  useEffect(() => {
+    const token = getAccessToken();
+    if (!token) {
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   // 카테고리 옵션들
   const categoryOptions = [
@@ -63,6 +83,20 @@ const Profile = () => {
   const categoryReverseMap = Object.fromEntries(
     Object.entries(categoryMap).map(([ko, en]) => [en, ko])
   );
+
+  // 다음 주소 API 실행 함수
+  const execDaumPostcode = () => {
+    if (window.daum && window.daum.Postcode) {
+      new window.daum.Postcode({
+        oncomplete: (data) => {
+          const fullAddress = `${data.sido} ${data.sigungu} ${data.bname}`;
+          setTempValue(fullAddress);
+        },
+      }).open();
+    } else {
+      alert('주소 검색 기능을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+    }
+  };
 
   // 프로필 조회
   useEffect(() => {
@@ -123,6 +157,13 @@ const Profile = () => {
       setTempValue(categoriesCopy);
     } else if (field === "age") {
       setTempValue(profile.age.toString());
+    } else if (field === "location") {
+      // 주소 필드인 경우 현재 주소를 tempValue에 설정하고 바로 다음 주소 API 실행
+      setTempValue(profile[field] || "");
+      // setTimeout을 사용하여 상태 업데이트 후 API 실행
+      setTimeout(() => {
+        execDaumPostcode();
+      }, 0);
     } else {
       setTempValue(profile[field] || "");
     }
@@ -285,6 +326,7 @@ const Profile = () => {
               }
             }}
             autoFocus
+            readOnly={fieldKey === "location"}
           />
           <button
             className="p-apply"
@@ -326,9 +368,9 @@ const Profile = () => {
         <>
           <div className="p-category-grid">
             {categoryOptions.map((category) => (
-              <button
+              <div
                 key={category}
-                className={`p-category-btn ${
+                className={`p-category-item ${
                   (Array.isArray(tempValue) ? tempValue : []).includes(category)
                     ? "active"
                     : ""
@@ -336,10 +378,10 @@ const Profile = () => {
                 onClick={() => handleCategoryClick(category)}
               >
                 {category}
-              </button>
+              </div>
             ))}
           </div>
-          <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+          <div style={{ marginTop: "20px", display: "flex", gap: "10px", justifyContent: "center" }}>
             <button
               className="p-cancel"
               onClick={(e) => {
@@ -375,14 +417,13 @@ const Profile = () => {
           <div className="p-category-grid" style={{ marginTop: "10px" }}>
             {profile.categories && profile.categories.length > 0 ? (
               profile.categories.map((category) => (
-                <button
+                <div
                   key={category}
-                  className="p-category-btn active"
-                  disabled
+                  className="p-category-item active"
                   style={{ cursor: "default" }}
                 >
                   {category}
-                </button>
+                </div>
               ))
             ) : (
               <span className="p-no-category" style={{ color: "#888" }}>

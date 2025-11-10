@@ -94,6 +94,14 @@
   background-color: #f9fafb;
 }
 
+.chat-item-active {
+  background-color: #e8e8e8;
+}
+
+.chat-item-active:hover {
+  background-color: #e0e0e0;
+}
+
 .avatar {
   width: 40px;
   height: 40px;
@@ -136,8 +144,24 @@
 .unread-dot {
   width: 8px;
   height: 8px;
-  background-color: #3b82f6;
+  background-color: #ff6b9f;
   border-radius: 50%;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.unread-badge {
+  min-width: 20px;
+  height: 20px;
+  background-color: #ff6b9f;
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 6px;
   flex-shrink: 0;
   margin-left: 8px;
 }

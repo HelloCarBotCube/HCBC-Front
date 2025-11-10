@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAccessToken } from '../utils/cookies';
+import useChatStore from '../store/useChatStore';
 import axios from 'axios';
 import styles from './List.module.css';
 import User from '../assets/user';
@@ -10,8 +11,18 @@ const API_BASE_URL = 'http://gsmsv-1.yujun.kr:27919';
 
 export default function Main() {
   const navigate = useNavigate();
+  const { setCurrentRoom } = useChatStore();
   const [chatList, setChatList] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const getLastReadTime = (roomId) => {
+    try {
+      const lastReadTimes = JSON.parse(localStorage.getItem('chat_last_read') || '{}');
+      return lastReadTimes[roomId] || 0;
+    } catch {
+      return 0;
+    }
+  };
 
   useEffect(() => {
     fetchChatList();
@@ -50,13 +61,29 @@ export default function Main() {
 
       const mappedData = Object.values(uniqueChats)
         .sort((a, b) => new Date(b.lastActiveAt) - new Date(a.lastActiveAt))
-        .map((chat) => ({
-          id: chat.roomId,
-          username: chat.opponentName || '알 수 없는 사용자',
-          userId: `@${chat.opponentLoginId}` || '@unknown',
-          lastMessage: chat.lastMessage || '메시지 없음',
-          unread: false,
-        }));
+        .map((chat) => {
+          const lastReadTime = getLastReadTime(chat.roomId);
+          const lastActiveTime = new Date(chat.lastActiveAt).getTime();
+
+          let lastSentTime = 0;
+          try {
+            const sentTimes = JSON.parse(localStorage.getItem('chat_last_sent') || '{}');
+            lastSentTime = sentTimes[chat.roomId] || 0;
+          } catch {}
+
+          const hasUnread = lastActiveTime > lastReadTime && lastActiveTime > lastSentTime;
+
+          return {
+            roomId: chat.roomId,
+            opponentId: chat.opponentLoginId,
+            opponentUserId: chat.opponentUserId,
+            username: chat.opponentName || '알 수 없는 사용자',
+            userId: `@${chat.opponentLoginId}` || '@unknown',
+            lastMessage: chat.lastMessage || '메시지 없음',
+            unread: hasUnread,
+            unreadCount: hasUnread ? 1 : 0,
+          };
+        });
 
       setChatList(mappedData.length > 0 ? mappedData : testChats);
     } catch (error) {
@@ -67,8 +94,26 @@ export default function Main() {
     }
   };
 
-  const handleChatClick = (id) => {
-    navigate('/chat', { state: { chatId: id } });
+  const handleChatClick = (chat) => {
+    try {
+      const lastReadTimes = JSON.parse(localStorage.getItem('chat_last_read') || '{}');
+      lastReadTimes[chat.roomId] = Date.now();
+      localStorage.setItem('chat_last_read', JSON.stringify(lastReadTimes));
+    } catch (error) {
+      console.error('읽음 처리 오류:', error);
+    }
+
+    setCurrentRoom({
+      roomId: chat.roomId,
+      opponentId: chat.opponentId,
+      opponentUserId: chat.opponentUserId,
+      otherUserName: chat.username,
+      tags: [],
+      age: null,
+      address: null,
+      gender: null,
+    });
+    navigate('/chat');
   };
 
   return (
@@ -92,9 +137,9 @@ export default function Main() {
             ) : (
               chatList.map((chat) => (
                 <div
-                  key={chat.id}
+                  key={chat.roomId}
                   className={styles['chat-item']}
-                  onClick={() => handleChatClick(chat.id)}
+                  onClick={() => handleChatClick(chat)}
                 >
                   <div className={styles.avatar}>
                     <User />

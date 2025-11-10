@@ -111,22 +111,22 @@ export default function User() {
   };
 
   const handleConfirmExit = async () => {
+    setShowExitModal(false);
+
     if (currentRoom?.roomId) {
       try {
         await deleteRoom(currentRoom.roomId);
         websocketService.leaveRoom(currentRoom.roomId);
         removeRoom(currentRoom.roomId);
-        leaveRoom();
       } catch (error) {
         console.error('채팅방 삭제 실패:', error);
         websocketService.leaveRoom(currentRoom.roomId);
         removeRoom(currentRoom.roomId);
-        leaveRoom();
       }
     }
 
-    setShowExitModal(false);
-    navigate('/main');
+    leaveRoom();
+    navigate('/main', { replace: true });
   };
 
   const PER_ROW = 3;
