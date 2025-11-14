@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.css';
-import axios from 'axios';
+import API from '../api/axios';
 import EyeHide from '../assets/EyeHide';
 import EyeShow from '../assets/EyeShow';
 import Logo from '../assets/logo';
@@ -21,20 +21,20 @@ const genderMap = {
 };
 
 const categories = [
-  "운동",
-  "맛집",
-  "동물",
-  "여행",
-  "영화",
-  "게임",
-  "독서",
-  "공부",
-  "음악",
-  "🔞",
-  "웹툰",
-  "외향형",
-  "내향형",
-  "애니메이션",
+  '운동',
+  '맛집',
+  '동물',
+  '여행',
+  '영화',
+  '게임',
+  '독서',
+  '공부',
+  '음악',
+  '🔞',
+  '웹툰',
+  '외향형',
+  '내향형',
+  '애니메이션',
 ];
 
 const categoryMap = {
@@ -288,13 +288,11 @@ const Signup = () => {
                 max="150"
               />
             </div>
-            <p className="msg-error">
-              {ageErrorMessage}
-            </p>
+            <p className="msg-error">{ageErrorMessage}</p>
             <div className="select-wrap">
               <div className="select-box" onClick={toggleGenderOptions}>
-                {formData.gender || "성별"}
-                <span className="arrow">{showGenderOptions ? "▲" : "▼"}</span>
+                {formData.gender || '성별'}
+                <span className="arrow">{showGenderOptions ? '▲' : '▼'}</span>
               </div>
               {showGenderOptions && (
                 <div className="options-list">
@@ -319,11 +317,7 @@ const Signup = () => {
                 주소 찾기
               </button>
             </div>
-            <button
-              className="btn-submit"
-              onClick={() => setStep(2)}
-              disabled={!isStep1Valid}
-            >
+            <button className="btn-submit" onClick={() => setStep(2)} disabled={!isStep1Valid}>
               다음으로
             </button>
             <p className="link-login">
@@ -364,10 +358,7 @@ const Signup = () => {
                 value={formData.password}
                 onChange={handleChange}
               />
-              <span
-                className="toggle-pw"
-                onClick={() => setShowPassword(!showPassword)}
-              >
+              <span className="toggle-pw" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <EyeShow /> : <EyeHide />}
               </span>
             </div>
@@ -405,15 +396,13 @@ const Signup = () => {
         return (
           <>
             <div className="category-wrap">
-              <p className="category-text">
-                마지막으로 카테고리 3가지를 선택해주세요.
-              </p>
+              <p className="category-text">마지막으로 카테고리 3가지를 선택해주세요.</p>
               <div className="category-grid">
                 {categories.map((cat) => (
                   <div
                     key={cat}
                     className={`category-item ${
-                      formData.selectedCategories.has(cat) ? "active" : ""
+                      formData.selectedCategories.has(cat) ? 'active' : ''
                     }`}
                     onClick={() => handleCategorySelect(cat)}
                   >
