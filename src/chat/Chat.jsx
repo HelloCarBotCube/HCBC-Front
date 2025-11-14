@@ -45,7 +45,6 @@ export default function Chat() {
       const userId = payload.userId || payload.id || payload.sub || payload.user_id;
       return userId;
     } catch (error) {
-      console.error('토큰 파싱 오류:', error);
       return null;
     }
   };
@@ -69,7 +68,6 @@ export default function Chat() {
           }
         })
         .catch((error) => {
-          console.error('사용자 정보 조회 실패:', error.response?.status);
         });
     } else {
       setMyUserId(userId);
@@ -82,7 +80,6 @@ export default function Chat() {
           setWsConnected(true);
         },
         (error) => {
-          console.error('WebSocket 연결 실패:', error);
           setWsConnected(false);
         }
       );
@@ -100,7 +97,6 @@ export default function Chat() {
       lastReadTimes[currentRoom.roomId] = Date.now();
       localStorage.setItem('chat_last_read', JSON.stringify(lastReadTimes));
     } catch (error) {
-      console.error('읽음 처리 오류:', error);
     }
 
     const loadChatHistory = async () => {
@@ -145,9 +141,7 @@ export default function Chat() {
         }
       } catch (error) {
         if (error.response?.status === 500) {
-          console.error('서버 오류로 채팅 기록을 불러올 수 없습니다:', error.message);
         } else if (error.response?.status !== 404) {
-          console.error('채팅 기록 불러오기 실패:', error.message);
         }
         setMessages([]);
       } finally {
@@ -178,7 +172,6 @@ export default function Chat() {
         lastReadTimes[currentRoom.roomId] = Date.now();
         localStorage.setItem('chat_last_read', JSON.stringify(lastReadTimes));
       } catch (error) {
-        console.error('읽음 처리 오류:', error);
       }
     };
 
@@ -236,7 +229,6 @@ export default function Chat() {
       sentTimes[currentRoom.roomId] = Date.now();
       localStorage.setItem('chat_last_sent', JSON.stringify(sentTimes));
     } catch (error) {
-      console.error('전송 시간 저장 오류:', error);
     }
 
     if (!websocketService.isConnected()) {
