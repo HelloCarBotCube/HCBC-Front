@@ -40,7 +40,6 @@ export default function Random() {
         }
       );
 
-      console.log('대기열 등록 완료:', response.data);
 
       const chatListResponse = await axios.get(`${API_BASE_URL}/api/chat`, {
         headers: {
@@ -57,7 +56,6 @@ export default function Random() {
 
       pollForMatch();
     } catch (error) {
-      console.error('매칭 시작 오류:', error);
       setStatus('idle');
       alert('매칭 요청 중 오류가 발생했습니다.');
     }
@@ -73,20 +71,17 @@ export default function Random() {
           },
         });
 
-        console.log('채팅 목록 확인:', response.data?.length);
 
         if (response.data && response.data.length > initialChatCountRef.current) {
           clearInterval(pollingRef.current);
           if (dotRef.current) clearInterval(dotRef.current);
           setStatus('matched');
-          console.log('매칭 완료!');
 
           setTimeout(() => {
             navigate('/chat');
           }, 2000);
         }
       } catch (error) {
-        console.error('채팅 목록 조회 오류:', error);
       }
     }, 2000);
   };
