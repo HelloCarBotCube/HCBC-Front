@@ -94,7 +94,6 @@ export default function User() {
             gender: profile.gender,
           });
         } catch (error) {
-          console.error('상대방 프로필 불러오기 실패:', error);
         }
       }
     };
@@ -119,7 +118,6 @@ export default function User() {
         websocketService.leaveRoom(currentRoom.roomId);
         removeRoom(currentRoom.roomId);
       } catch (error) {
-        console.error('채팅방 삭제 실패:', error);
         websocketService.leaveRoom(currentRoom.roomId);
         removeRoom(currentRoom.roomId);
       }
