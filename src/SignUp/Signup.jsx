@@ -6,14 +6,6 @@ import EyeHide from '../assets/EyeHide';
 import EyeShow from '../assets/EyeShow';
 import Logo from '../assets/logo';
 
-const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://gsmsv-1.yujun.kr:27919',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
 const genderMap = {
   남자: 'MALE',
   여자: 'FEMALE',
