@@ -68,7 +68,6 @@ export default function Main() {
         setRooms(mappedRooms);
       } catch (error) {
         if (error.response?.status !== 401) {
-          console.error("채팅방 목록 불러오기 실패:", error.message);
         }
       }
     };
@@ -84,7 +83,6 @@ export default function Main() {
       lastReadTimes[room.roomId] = Date.now();
       localStorage.setItem('chat_last_read', JSON.stringify(lastReadTimes));
     } catch (error) {
-      console.error('읽음 처리 오류:', error);
     }
 
     setCurrentRoom({
