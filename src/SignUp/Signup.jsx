@@ -67,6 +67,13 @@ const Signup = () => {
   const [isIdChecked, setIsIdChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [ageErrorMessage, setAgeErrorMessage] = useState('');
+  const [idErrorMessage, setIdErrorMessage] = useState('');
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [nameErrorMessage, setNameErrorMessage] = useState('');
+
+  useEffect(() => {
+    localStorage.removeItem('signup_step');
+  }, []);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -81,26 +88,84 @@ const Signup = () => {
     };
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('signup_step', step.toString());
+  }, [step]);
+
+  useEffect(() => {
+    const handlePopState = (e) => {
+      e.preventDefault();
+      if (step > 1) {
+        setStep((prev) => prev - 1);
+      } else {
+        navigate('/');
+      }
+    };
+
+    window.history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [step, navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // 나이 필드의 경우 음수 값 방지 및 경고
+    if (name === 'name') {
+      setNameErrorMessage('');
+    }
+
     if (name === 'age') {
       const numValue = Number(value);
       if (value && (numValue < 0 || numValue > 150)) {
         setAgeErrorMessage('진짜 당신의 나이가 맞나요??');
-        return; // 0 미만이거나 150 초과인 경우 업데이트하지 않음
+        return;
+      }
+      setAgeErrorMessage('');
+    }
+
+    if (name === 'id') {
+      const koreanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+      if (koreanRegex.test(value)) {
+        setIdCheckMessage('아이디에 한글을 사용할 수 없습니다.');
+        return;
+      }
+      setIsIdChecked(false);
+      setIsIdAvailable(false);
+      setIdCheckMessage('');
+    }
+
+    if (name === 'password') {
+      const koreanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+      const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+      if (koreanRegex.test(value)) {
+        setPasswordErrorMessage('비밀번호에 한글을 사용할 수 없습니다.');
+        return;
+      }
+
+      if (value.length > 0 && value.length < 8) {
+        setPasswordErrorMessage('비밀번호는 8자 이상이어야 합니다.');
+      } else if (value.length >= 8 && !specialCharRegex.test(value)) {
+        setPasswordErrorMessage('특수문자를 최소 1개 이상 포함해야 합니다.');
       } else {
-        setAgeErrorMessage('');
+        setPasswordErrorMessage('');
       }
     }
 
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-    if (name === 'id') {
-      setIsIdChecked(false);
-      setIsIdAvailable(false);
-      setIdCheckMessage('');
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'name') {
+      const koreanRegex = /^[가-힣\s]*$/;
+      if (value && !koreanRegex.test(value)) {
+        setNameErrorMessage('이름은 한글만 입력 가능합니다.');
+      }
     }
   };
 
@@ -124,7 +189,6 @@ const Signup = () => {
     }
   };
 
-  // 아이디 중복 검사
   const handleCheckId = async () => {
     if (!formData.id.trim()) {
       setIdCheckMessage('아이디를 입력해주세요.');
@@ -183,9 +247,16 @@ const Signup = () => {
 
   const isStep1Valid = formData.name && formData.age && formData.gender && formData.address;
   const isPasswordMatch = formData.password === formData.confirmPassword;
-  const isPasswordValid = formData.password.length >= 8;
+  const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  const isPasswordValid = formData.password.length >= 8 && specialCharRegex.test(formData.password);
   const isStep2Valid =
-    formData.id && isPasswordValid && isPasswordMatch && isIdChecked && isIdAvailable;
+    formData.id &&
+    isPasswordValid &&
+    isPasswordMatch &&
+    isIdChecked &&
+    isIdAvailable &&
+    !idErrorMessage &&
+    !passwordErrorMessage;
   const isStep3Valid = formData.selectedCategories.size === 3;
 
   const handleSubmit = async () => {
@@ -215,6 +286,7 @@ const Signup = () => {
       const res = await API.post('/api/auth/signup', payload);
 
       if (res.status === 201 || res.status === 200) {
+        localStorage.removeItem('signup_step');
         alert('회원가입이 완료되었습니다!');
         navigate('/');
       }
@@ -223,6 +295,7 @@ const Signup = () => {
         switch (err.response.status) {
           case 201:
           case 200:
+            localStorage.removeItem('signup_step');
             alert('회원가입이 완료되었습니다!');
             navigate('/');
             break;
@@ -266,9 +339,11 @@ const Signup = () => {
                 placeholder="이름"
                 value={formData.name}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
-            <div className="input-field" style={{ marginBottom: 0 }}>
+            <p className="msg-error">{nameErrorMessage}</p>
+            <div className="input-field">
               <input
                 className="s-input"
                 type="number"
@@ -334,11 +409,12 @@ const Signup = () => {
                 className="btn-check"
                 type="button"
                 onClick={handleCheckId}
-                disabled={!formData.id.trim()}
+                disabled={!formData.id.trim() || !!idErrorMessage}
               >
                 중복 검사
               </button>
             </div>
+            <p className="msg-error">{idErrorMessage}</p>
             <p className={`msg ${isIdAvailable ? 'success' : 'error'}`}>{idCheckMessage}</p>
 
             <div className="input-field pw-field">
@@ -354,9 +430,7 @@ const Signup = () => {
                 {showPassword ? <EyeShow /> : <EyeHide />}
               </span>
             </div>
-            <p className="msg-error">
-              {!isPasswordValid && formData.password ? '비밀번호는 8자 이상이어야 합니다.' : ''}
-            </p>
+            <p className="msg-error">{passwordErrorMessage}</p>
 
             <div className="input-field pw-field">
               <input
