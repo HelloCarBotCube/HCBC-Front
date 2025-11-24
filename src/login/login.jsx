@@ -24,6 +24,12 @@ function Login() {
   const [showPw, setshowPw] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
   const handleLogin = async () => {
     const loginId = id.trim();
     const password = pw.trim();
@@ -43,12 +49,10 @@ function Login() {
         password: password,
       });
 
-
       const { accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn } =
         res.data || {};
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
-
 
       window.location.href = '/main';
     } catch (err) {
@@ -85,6 +89,7 @@ function Login() {
             placeholder="아이디"
             value={id}
             onChange={(e) => setId(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
         </div>
 
@@ -93,11 +98,12 @@ function Login() {
             <PwIcon />
           </span>
           <input
-            type={showPw ? "text" : "password"}
+            type={showPw ? 'text' : 'password'}
             required
             placeholder="비밀번호"
             value={pw}
             onChange={(e) => setPw(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
           <span className="pwToggle" onClick={() => setshowPw(!showPw)}>
             {showPw ? <EyeShow /> : <EyeHide />}
