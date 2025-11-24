@@ -132,6 +132,7 @@ input:focus {
   font-size: 20px;
   font-weight: 600;
   color: #ffffff;
+  cursor: pointer;
 }
 
 .l-btn:hover {
