@@ -1,18 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.css';
-import axios from 'axios';
+import API from '../api/axios';
 import EyeHide from '../assets/EyeHide';
 import EyeShow from '../assets/EyeShow';
 import Logo from '../assets/logo';
-
-const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://gsmsv-1.yujun.kr:27919',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
 
 const genderMap = {
   남자: 'MALE',
@@ -21,20 +13,20 @@ const genderMap = {
 };
 
 const categories = [
-  "운동",
-  "맛집",
-  "동물",
-  "여행",
-  "영화",
-  "게임",
-  "독서",
-  "공부",
-  "음악",
-  "🔞",
-  "웹툰",
-  "외향형",
-  "내향형",
-  "애니메이션",
+  '운동',
+  '맛집',
+  '동물',
+  '여행',
+  '영화',
+  '게임',
+  '독서',
+  '공부',
+  '음악',
+  '🔞',
+  '웹툰',
+  '외향형',
+  '내향형',
+  '애니메이션',
 ];
 
 const categoryMap = {
@@ -75,6 +67,13 @@ const Signup = () => {
   const [isIdChecked, setIsIdChecked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [ageErrorMessage, setAgeErrorMessage] = useState('');
+  const [idErrorMessage, setIdErrorMessage] = useState('');
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [nameErrorMessage, setNameErrorMessage] = useState('');
+
+  useEffect(() => {
+    localStorage.removeItem('signup_step');
+  }, []);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -89,26 +88,84 @@ const Signup = () => {
     };
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('signup_step', step.toString());
+  }, [step]);
+
+  useEffect(() => {
+    const handlePopState = (e) => {
+      e.preventDefault();
+      if (step > 1) {
+        setStep((prev) => prev - 1);
+      } else {
+        navigate('/');
+      }
+    };
+
+    window.history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [step, navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // 나이 필드의 경우 음수 값 방지 및 경고
+    if (name === 'name') {
+      setNameErrorMessage('');
+    }
+
     if (name === 'age') {
       const numValue = Number(value);
       if (value && (numValue < 0 || numValue > 150)) {
         setAgeErrorMessage('진짜 당신의 나이가 맞나요??');
-        return; // 0 미만이거나 150 초과인 경우 업데이트하지 않음
+        return;
+      }
+      setAgeErrorMessage('');
+    }
+
+    if (name === 'id') {
+      const koreanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+      if (koreanRegex.test(value)) {
+        setIdCheckMessage('아이디에 한글을 사용할 수 없습니다.');
+        return;
+      }
+      setIsIdChecked(false);
+      setIsIdAvailable(false);
+      setIdCheckMessage('');
+    }
+
+    if (name === 'password') {
+      const koreanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+      const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+      if (koreanRegex.test(value)) {
+        setPasswordErrorMessage('비밀번호에 한글을 사용할 수 없습니다.');
+        return;
+      }
+
+      if (value.length > 0 && value.length < 8) {
+        setPasswordErrorMessage('비밀번호는 8자 이상이어야 합니다.');
+      } else if (value.length >= 8 && !specialCharRegex.test(value)) {
+        setPasswordErrorMessage('특수문자를 최소 1개 이상 포함해야 합니다.');
       } else {
-        setAgeErrorMessage('');
+        setPasswordErrorMessage('');
       }
     }
 
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-    if (name === 'id') {
-      setIsIdChecked(false);
-      setIsIdAvailable(false);
-      setIdCheckMessage('');
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'name') {
+      const koreanRegex = /^[가-힣\s]*$/;
+      if (value && !koreanRegex.test(value)) {
+        setNameErrorMessage('이름은 한글만 입력 가능합니다.');
+      }
     }
   };
 
@@ -132,7 +189,6 @@ const Signup = () => {
     }
   };
 
-  // 아이디 중복 검사
   const handleCheckId = async () => {
     if (!formData.id.trim()) {
       setIdCheckMessage('아이디를 입력해주세요.');
@@ -191,9 +247,16 @@ const Signup = () => {
 
   const isStep1Valid = formData.name && formData.age && formData.gender && formData.address;
   const isPasswordMatch = formData.password === formData.confirmPassword;
-  const isPasswordValid = formData.password.length >= 8;
+  const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  const isPasswordValid = formData.password.length >= 8 && specialCharRegex.test(formData.password);
   const isStep2Valid =
-    formData.id && isPasswordValid && isPasswordMatch && isIdChecked && isIdAvailable;
+    formData.id &&
+    isPasswordValid &&
+    isPasswordMatch &&
+    isIdChecked &&
+    isIdAvailable &&
+    !idErrorMessage &&
+    !passwordErrorMessage;
   const isStep3Valid = formData.selectedCategories.size === 3;
 
   const handleSubmit = async () => {
@@ -223,6 +286,7 @@ const Signup = () => {
       const res = await API.post('/api/auth/signup', payload);
 
       if (res.status === 201 || res.status === 200) {
+        localStorage.removeItem('signup_step');
         alert('회원가입이 완료되었습니다!');
         navigate('/');
       }
@@ -231,6 +295,7 @@ const Signup = () => {
         switch (err.response.status) {
           case 201:
           case 200:
+            localStorage.removeItem('signup_step');
             alert('회원가입이 완료되었습니다!');
             navigate('/');
             break;
@@ -274,9 +339,11 @@ const Signup = () => {
                 placeholder="이름"
                 value={formData.name}
                 onChange={handleChange}
+                onBlur={handleBlur}
               />
             </div>
-            <div className="input-field" style={{ marginBottom: 0 }}>
+            <p className="msg-error">{nameErrorMessage}</p>
+            <div className="input-field">
               <input
                 className="s-input"
                 type="number"
@@ -288,13 +355,11 @@ const Signup = () => {
                 max="150"
               />
             </div>
-            <p className="msg-error">
-              {ageErrorMessage}
-            </p>
+            <p className="msg-error">{ageErrorMessage}</p>
             <div className="select-wrap">
               <div className="select-box" onClick={toggleGenderOptions}>
-                {formData.gender || "성별"}
-                <span className="arrow">{showGenderOptions ? "▲" : "▼"}</span>
+                {formData.gender || '성별'}
+                <span className="arrow">{showGenderOptions ? '▲' : '▼'}</span>
               </div>
               {showGenderOptions && (
                 <div className="options-list">
@@ -319,11 +384,7 @@ const Signup = () => {
                 주소 찾기
               </button>
             </div>
-            <button
-              className="btn-submit"
-              onClick={() => setStep(2)}
-              disabled={!isStep1Valid}
-            >
+            <button className="btn-submit" onClick={() => setStep(2)} disabled={!isStep1Valid}>
               다음으로
             </button>
             <p className="link-login">
@@ -348,11 +409,12 @@ const Signup = () => {
                 className="btn-check"
                 type="button"
                 onClick={handleCheckId}
-                disabled={!formData.id.trim()}
+                disabled={!formData.id.trim() || !!idErrorMessage}
               >
                 중복 검사
               </button>
             </div>
+            <p className="msg-error">{idErrorMessage}</p>
             <p className={`msg ${isIdAvailable ? 'success' : 'error'}`}>{idCheckMessage}</p>
 
             <div className="input-field pw-field">
@@ -364,16 +426,11 @@ const Signup = () => {
                 value={formData.password}
                 onChange={handleChange}
               />
-              <span
-                className="toggle-pw"
-                onClick={() => setShowPassword(!showPassword)}
-              >
+              <span className="toggle-pw" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <EyeShow /> : <EyeHide />}
               </span>
             </div>
-            <p className="msg-error">
-              {!isPasswordValid && formData.password ? '비밀번호는 8자 이상이어야 합니다.' : ''}
-            </p>
+            <p className="msg-error">{passwordErrorMessage}</p>
 
             <div className="input-field pw-field">
               <input
@@ -405,15 +462,13 @@ const Signup = () => {
         return (
           <>
             <div className="category-wrap">
-              <p className="category-text">
-                마지막으로 카테고리 3가지를 선택해주세요.
-              </p>
+              <p className="category-text">마지막으로 카테고리 3가지를 선택해주세요.</p>
               <div className="category-grid">
                 {categories.map((cat) => (
                   <div
                     key={cat}
                     className={`category-item ${
-                      formData.selectedCategories.has(cat) ? "active" : ""
+                      formData.selectedCategories.has(cat) ? 'active' : ''
                     }`}
                     onClick={() => handleCategorySelect(cat)}
                   >

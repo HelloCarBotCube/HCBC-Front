@@ -24,6 +24,12 @@ function Login() {
   const [showPw, setshowPw] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
   const handleLogin = async () => {
     const loginId = id.trim();
     const password = pw.trim();
@@ -43,14 +49,10 @@ function Login() {
         password: password,
       });
 
-      console.log('로그인 API 응답:', res.data);
-
       const { accessToken, refreshToken, accessTokenExpiresIn, refreshTokenExpiresIn } =
         res.data || {};
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
-
-      console.log('로그인 성공 (토큰을 쿠키에 저장)');
 
       window.location.href = '/main';
     } catch (err) {
@@ -64,7 +66,6 @@ function Login() {
       } else {
         setMessage('네트워크 오류');
       }
-      console.debug('[signin:error]', status, err?.response?.data);
     } finally {
       setLoading(false);
     }
@@ -88,6 +89,7 @@ function Login() {
             placeholder="아이디"
             value={id}
             onChange={(e) => setId(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
         </div>
 
@@ -96,11 +98,12 @@ function Login() {
             <PwIcon />
           </span>
           <input
-            type={showPw ? "text" : "password"}
+            type={showPw ? 'text' : 'password'}
             required
             placeholder="비밀번호"
             value={pw}
             onChange={(e) => setPw(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
           <span className="pwToggle" onClick={() => setshowPw(!showPw)}>
             {showPw ? <EyeShow /> : <EyeHide />}

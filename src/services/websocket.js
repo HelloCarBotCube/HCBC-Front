@@ -22,7 +22,6 @@ class WebSocketService {
     const authToken = token || getAccessToken();
 
     if (!authToken) {
-      console.error('토큰이 없습니다');
       if (onError) onError(new Error('No token provided'));
       return;
     }
@@ -44,7 +43,6 @@ class WebSocketService {
       },
       onStompError: (frame) => {
         this.connected = false;
-        console.error('STOMP 오류:', frame);
         if (onError) onError(frame);
       },
       onWebSocketClose: () => {
@@ -65,7 +63,6 @@ class WebSocketService {
 
   subscribeToRoom(roomId, onMessageReceived) {
     if (!this.client) {
-      console.error('WebSocket 클라이언트가 초기화되지 않았습니다');
       return;
     }
 
@@ -79,7 +76,6 @@ class WebSocketService {
           this.subscribeToRoom(roomId, onMessageReceived);
         } else if (attempts >= maxAttempts) {
           clearInterval(checkConnection);
-          console.error('STOMP 연결 타임아웃');
         }
       }, 100);
       return;
@@ -99,7 +95,6 @@ class WebSocketService {
 
       this.currentRoomId = roomId;
     } catch (error) {
-      console.error('채팅방 구독 실패:', error);
     }
   }
 
@@ -112,7 +107,6 @@ class WebSocketService {
 
   sendMessage(roomId, content) {
     if (!this.connected || !this.client) {
-      console.error('WebSocket 연결 안 됨');
       return;
     }
 
@@ -132,7 +126,6 @@ class WebSocketService {
         }),
       });
     } catch (error) {
-      console.error('메시지 전송 실패:', error);
     }
   }
 

@@ -9,7 +9,6 @@ export const getMyProfile = async () => {
     const response = await instance.get('/api/user/myprofile');
     return response.data;
   } catch (error) {
-    console.error('프로필 조회 실패:', error);
     throw error;
   }
 };
@@ -26,15 +25,9 @@ export const getMyProfile = async () => {
  */
 export const updateMyProfile = async (profileData) => {
   try {
-    console.log('[API] 프로필 수정 요청 시작:', profileData);
     const response = await instance.patch('/api/user/myprofile-update', profileData);
-    console.log('[API] 프로필 수정 응답:', response);
-    console.log('[API] 프로필 수정 응답 데이터:', response.data);
     return response.data;
   } catch (error) {
-    console.error('[API] 프로필 수정 실패:', error);
-    console.error('[API] 에러 응답:', error.response?.data);
-    console.error('[API] 에러 상태:', error.response?.status);
     throw error;
   }
 };

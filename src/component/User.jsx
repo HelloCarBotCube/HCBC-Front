@@ -49,7 +49,6 @@ export default function User() {
       const accessToken = getAccessToken();
 
       if (!accessToken) {
-        console.error("토큰이 없습니다");
         loadFromLocalStorage();
         setLoading(false);
         return;
@@ -64,21 +63,18 @@ export default function User() {
       });
 
       if (response.status === 401) {
-        console.error("토큰 없음/만료/무효");
         loadFromLocalStorage();
         setLoading(false);
         return;
       }
 
       if (response.status === 404) {
-        console.error("내 프로필 없음");
         loadFromLocalStorage();
         setLoading(false);
         return;
       }
 
       if (response.status === 500) {
-        console.error("토큰 없음/만료/무효");
         loadFromLocalStorage();
         setLoading(false);
         return;
@@ -89,7 +85,6 @@ export default function User() {
       }
 
       const data = await response.json();
-      console.log("API 응답 데이터:", data);
 
       const tags = [];
 
@@ -117,7 +112,6 @@ export default function User() {
         tags: tags.length > 0 ? tags : DEFAULT_USER.tags,
       });
     } catch (error) {
-      console.error("프로필 조회 오류:", error);
       loadFromLocalStorage();
     } finally {
       setLoading(false);

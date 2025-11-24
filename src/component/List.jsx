@@ -87,7 +87,6 @@ export default function Main() {
 
       setChatList(mappedData.length > 0 ? mappedData : testChats);
     } catch (error) {
-      console.error('채팅 목록 조회 오류:', error);
       setChatList([]);
     } finally {
       setLoading(false);
@@ -100,7 +99,6 @@ export default function Main() {
       lastReadTimes[chat.roomId] = Date.now();
       localStorage.setItem('chat_last_read', JSON.stringify(lastReadTimes));
     } catch (error) {
-      console.error('읽음 처리 오류:', error);
     }
 
     setCurrentRoom({
