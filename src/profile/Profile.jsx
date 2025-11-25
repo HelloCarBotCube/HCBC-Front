@@ -150,7 +150,6 @@ const Profile = () => {
 
   const handleApply = async (field) => {
     try {
-      // 현재 카테고리를 영어로 변환 (모든 요청에서 사용)
       const categoriesInEnglish = profile.categories.map((cat) => categoryMap[cat] || cat);
 
       let payload = {};
@@ -158,8 +157,8 @@ const Profile = () => {
 
       if (field === 'age') {
         const newAge = parseInt(tempValue, 10);
-        if (isNaN(newAge) || newAge <= 0) {
-          alert('유효한 나이를 입력해주세요.');
+        if (isNaN(newAge) || newAge <= 0 || newAge > 150) {
+          alert('나이는 1~150 사이의 숫자를 입력해주세요.');
           return;
         }
         payload = {
@@ -171,6 +170,10 @@ const Profile = () => {
         };
         newProfileState = { age: newAge };
       } else if (field === 'location') {
+        if (!tempValue || tempValue.trim() === '') {
+          alert('주소를 입력해주세요.');
+          return;
+        }
         payload = {
           name: profile.name,
           gender: profile.gender,
@@ -180,7 +183,10 @@ const Profile = () => {
         };
         newProfileState = { location: tempValue };
       } else if (field === 'categories') {
-        // 카테고리 업데이트 로직 - 한글을 영어로 변환해서 전송
+        if (!Array.isArray(tempValue) || tempValue.length !== 3) {
+          alert('카테고리는 정확히 3개를 선택해주세요.');
+          return;
+        }
         const newCategoriesInEnglish = tempValue.map((cat) => categoryMap[cat] || cat);
 
         payload = {
