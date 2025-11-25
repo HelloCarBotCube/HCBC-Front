@@ -42,6 +42,8 @@ function Login() {
     setMessage('');
 
     clearTokens();
+    localStorage.removeItem('chat_last_read');
+    localStorage.removeItem('chat_last_sent');
 
     try {
       const res = await axiosInstance.post('/auth/signin', {
