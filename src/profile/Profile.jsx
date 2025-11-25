@@ -81,6 +81,18 @@ const Profile = () => {
     Object.entries(categoryMap).map(([ko, en]) => [en, ko])
   );
 
+  const genderMap = {
+    MALE: '남자',
+    FEMALE: '여자',
+    OTHER: '기타',
+  };
+
+  const genderReverseMap = {
+    남자: 'MALE',
+    여자: 'FEMALE',
+    기타: 'OTHER',
+  };
+
   const execDaumPostcode = () => {
     if (window.daum && window.daum.Postcode) {
       new window.daum.Postcode({
@@ -111,7 +123,7 @@ const Profile = () => {
           name: data.name || '',
           loginId: data.loginId || '',
           age: data.age || '',
-          gender: data.gender || '',
+          gender: genderMap[data.gender] || data.gender || '',
           location: data.address || '',
           categories: categoriesInKorean,
         };
@@ -137,9 +149,7 @@ const Profile = () => {
     } else if (field === 'age') {
       setTempValue(profile.age.toString());
     } else if (field === 'location') {
-      // 주소 필드인 경우 현재 주소를 tempValue에 설정하고 바로 다음 주소 API 실행
       setTempValue(profile[field] || '');
-      // setTimeout을 사용하여 상태 업데이트 후 API 실행
       setTimeout(() => {
         execDaumPostcode();
       }, 0);
@@ -161,22 +171,38 @@ const Profile = () => {
           alert('나이는 1~150 사이의 숫자를 입력해주세요.');
           return;
         }
+        const genderInEnglish = genderReverseMap[profile.gender] || profile.gender;
         payload = {
           name: profile.name,
-          gender: profile.gender,
+          gender: genderInEnglish,
           age: newAge,
           address: profile.location,
           categories: categoriesInEnglish,
         };
         newProfileState = { age: newAge };
+      } else if (field === 'gender') {
+        if (!['남자', '여자', '기타'].includes(tempValue)) {
+          alert('올바른 성별을 선택해주세요.');
+          return;
+        }
+        const genderInEnglish = genderReverseMap[tempValue] || tempValue;
+        payload = {
+          name: profile.name,
+          gender: genderInEnglish,
+          age: parseInt(profile.age, 10) || 0,
+          address: profile.location,
+          categories: categoriesInEnglish,
+        };
+        newProfileState = { gender: tempValue };
       } else if (field === 'location') {
         if (!tempValue || tempValue.trim() === '') {
           alert('주소를 입력해주세요.');
           return;
         }
+        const genderInEnglish = genderReverseMap[profile.gender] || profile.gender;
         payload = {
           name: profile.name,
-          gender: profile.gender,
+          gender: genderInEnglish,
           age: parseInt(profile.age, 10) || 0,
           address: tempValue,
           categories: categoriesInEnglish,
@@ -188,15 +214,16 @@ const Profile = () => {
           return;
         }
         const newCategoriesInEnglish = tempValue.map((cat) => categoryMap[cat] || cat);
+        const genderInEnglish = genderReverseMap[profile.gender] || profile.gender;
 
         payload = {
           name: profile.name,
-          gender: profile.gender,
+          gender: genderInEnglish,
           age: parseInt(profile.age, 10) || 0,
           address: profile.location,
           categories: newCategoriesInEnglish,
         };
-        newProfileState = { categories: tempValue }; // 화면에는 한글로 표시
+        newProfileState = { categories: tempValue };
       }
 
       const response = await updateMyProfile(payload);
@@ -437,7 +464,7 @@ const Profile = () => {
               </div>
               <div className="p-textFields">
                 {renderTextField('age', '나이 변경')}
-                {renderTextField('gender', '')}
+                {renderTextField('gender', '성별 변경')}
                 {renderTextField('location', '지역 변경')}
                 {renderCategoryField()}
               </div>
