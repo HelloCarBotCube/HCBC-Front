@@ -83,7 +83,7 @@ export const getChatHistory = async (roomId, startIndex = 0, count = 50) => {
 
 export const getMyInfo = async () => {
   try {
-    const response = await chatApi.get('/api/users/me');
+    const response = await chatApi.get('/api/user/myprofile');
     return response.data;
   } catch (error) {
     throw error;
