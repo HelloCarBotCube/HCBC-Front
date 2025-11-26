@@ -75,12 +75,12 @@ instance.interceptors.response.use(
       }
 
       try {
-        const response = await axios.post(
-          'http://gsmsv-1.yujun.kr:27919/api/auth/reissue',
+        const response = await axios.patch(
+          `${instance.defaults.baseURL}/api/auth/reissue`,
           {},
           {
             headers: {
-              refreshToken: refreshToken,
+              RefreshToken: refreshToken,
             },
           }
         );
